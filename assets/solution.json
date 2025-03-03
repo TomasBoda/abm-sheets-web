@@ -1,0 +1,466 @@
+{
+  "cell-1-1": {
+    "formula": "task 1",
+    "value": "task 1"
+  },
+  "cell-1-4": {
+    "formula": "task 2",
+    "value": "task 2"
+  },
+  "cell-1-9": {
+    "formula": "task 3",
+    "value": "task 3"
+  },
+  "cell-1-12": {
+    "formula": "task 4",
+    "value": "task 4"
+  },
+  "cell-3-1": {
+    "formula": "position",
+    "value": "position"
+  },
+  "cell-3-2": {
+    "formula": "speed",
+    "value": "speed"
+  },
+  "cell-3-4": {
+    "formula": "position",
+    "value": "position"
+  },
+  "cell-3-5": {
+    "formula": "speed",
+    "value": "speed"
+  },
+  "cell-3-7": {
+    "formula": "finish",
+    "value": "finish"
+  },
+  "cell-3-9": {
+    "formula": "position",
+    "value": ""
+  },
+  "cell-3-10": {
+    "formula": "speed",
+    "value": ""
+  },
+  "cell-3-12": {
+    "formula": "position",
+    "value": "position"
+  },
+  "cell-3-13": {
+    "formula": "speed",
+    "value": "speed"
+  },
+  "cell-3-14": {
+    "formula": "finished",
+    "value": "finished"
+  },
+  "cell-3-16": {
+    "formula": "finished",
+    "value": "finished"
+  },
+  "cell-5-1": {
+    "formula": "=0=cell(5,1) + cell(5,2)",
+    "value": ""
+  },
+  "cell-5-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(5,2)",
+    "value": ""
+  },
+  "cell-5-4": {
+    "formula": "=0=if(or(cell(5,4) ge stat(5,7), cell(4,4) ge stat(5,7), cell(6,4) ge stat(5,7)), cell(5,4), cell(5,4) + cell(5,5))",
+    "value": ""
+  },
+  "cell-5-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(5,5)",
+    "value": ""
+  },
+  "cell-5-7": {
+    "formula": "=100",
+    "value": ""
+  },
+  "cell-5-9": {
+    "formula": "=0=if(or(cell(5,9) ge stat(5,7), cell(4,9) ge stat(5,7), cell(6,9) ge stat(5,7)), cell(5,9), cell(5,9) + cell(5,10))",
+    "value": ""
+  },
+  "cell-5-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(5,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-5-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(5,12), cell(5,12) + cell(5,13))",
+    "value": ""
+  },
+  "cell-5-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(5,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-5-14": {
+    "formula": "=cell(5,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-5-16": {
+    "formula": "=sum(5,14,15,14) gt 0",
+    "value": ""
+  },
+  "cell-6-1": {
+    "formula": "=0=cell(6,1) + cell(6,2)",
+    "value": ""
+  },
+  "cell-6-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(6,2)",
+    "value": ""
+  },
+  "cell-6-4": {
+    "formula": "=0=if(or(cell(6,4) ge stat(5,7), cell(5,4) ge stat(5,7), cell(7,4) ge stat(5,7)), cell(6,4), cell(6,4) + cell(6,5))",
+    "value": ""
+  },
+  "cell-6-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(6,5)",
+    "value": ""
+  },
+  "cell-6-9": {
+    "formula": "=0=if(or(cell(6,9) ge stat(5,7), cell(5,9) ge stat(5,7), cell(7,9) ge stat(5,7)), cell(6,9), cell(6,9) + cell(6,10))",
+    "value": ""
+  },
+  "cell-6-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(6,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-6-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(6,12), cell(6,12) + cell(6,13))",
+    "value": ""
+  },
+  "cell-6-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(6,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-6-14": {
+    "formula": "=cell(6,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-7-1": {
+    "formula": "=0=cell(7,1) + cell(7,2)",
+    "value": ""
+  },
+  "cell-7-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(7,2)",
+    "value": ""
+  },
+  "cell-7-4": {
+    "formula": "=0=if(or(cell(7,4) ge stat(5,7), cell(6,4) ge stat(5,7), cell(8,4) ge stat(5,7)), cell(7,4), cell(7,4) + cell(7,5))",
+    "value": ""
+  },
+  "cell-7-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(7,5)",
+    "value": ""
+  },
+  "cell-7-9": {
+    "formula": "=0=if(or(cell(7,9) ge stat(5,7), cell(6,9) ge stat(5,7), cell(8,9) ge stat(5,7)), cell(7,9), cell(7,9) + cell(7,10))",
+    "value": ""
+  },
+  "cell-7-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(7,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-7-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(7,12), cell(7,12) + cell(7,13))",
+    "value": ""
+  },
+  "cell-7-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(7,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-7-14": {
+    "formula": "=cell(7,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-8-1": {
+    "formula": "=0=cell(8,1) + cell(8,2)",
+    "value": ""
+  },
+  "cell-8-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(8,2)",
+    "value": ""
+  },
+  "cell-8-4": {
+    "formula": "=0=if(or(cell(8,4) ge stat(5,7), cell(7,4) ge stat(5,7), cell(9,4) ge stat(5,7)), cell(8,4), cell(8,4) + cell(8,5))",
+    "value": ""
+  },
+  "cell-8-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(8,5)",
+    "value": ""
+  },
+  "cell-8-9": {
+    "formula": "=0=if(or(cell(8,9) ge stat(5,7), cell(7,9) ge stat(5,7), cell(9,9) ge stat(5,7)), cell(8,9), cell(8,9) + cell(8,10))",
+    "value": ""
+  },
+  "cell-8-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(8,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-8-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(8,12), cell(8,12) + cell(8,13))",
+    "value": ""
+  },
+  "cell-8-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(8,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-8-14": {
+    "formula": "=cell(8,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-9-1": {
+    "formula": "=0=cell(9,1) + cell(9,2)",
+    "value": ""
+  },
+  "cell-9-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(9,2)",
+    "value": ""
+  },
+  "cell-9-4": {
+    "formula": "=0=if(or(cell(9,4) ge stat(5,7), cell(8,4) ge stat(5,7), cell(10,4) ge stat(5,7)), cell(9,4), cell(9,4) + cell(9,5))",
+    "value": ""
+  },
+  "cell-9-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(9,5)",
+    "value": ""
+  },
+  "cell-9-9": {
+    "formula": "=0=if(or(cell(9,9) ge stat(5,7), cell(8,9) ge stat(5,7), cell(10,9) ge stat(5,7)), cell(9,9), cell(9,9) + cell(9,10))",
+    "value": ""
+  },
+  "cell-9-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(9,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-9-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(9,12), cell(9,12) + cell(9,13))",
+    "value": ""
+  },
+  "cell-9-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(9,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-9-14": {
+    "formula": "=cell(9,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-10-1": {
+    "formula": "=0=cell(10,1) + cell(10,2)",
+    "value": ""
+  },
+  "cell-10-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(10,2)",
+    "value": ""
+  },
+  "cell-10-4": {
+    "formula": "=0=if(or(cell(10,4) ge stat(5,7), cell(9,4) ge stat(5,7), cell(11,4) ge stat(5,7)), cell(10,4), cell(10,4) + cell(10,5))",
+    "value": ""
+  },
+  "cell-10-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(10,5)",
+    "value": ""
+  },
+  "cell-10-9": {
+    "formula": "=0=if(or(cell(10,9) ge stat(5,7), cell(9,9) ge stat(5,7), cell(11,9) ge stat(5,7)), cell(10,9), cell(10,9) + cell(10,10))",
+    "value": ""
+  },
+  "cell-10-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(10,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-10-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(10,12), cell(10,12) + cell(10,13))",
+    "value": ""
+  },
+  "cell-10-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(10,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-10-14": {
+    "formula": "=cell(10,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-11-1": {
+    "formula": "=0=cell(11,1) + cell(11,2)",
+    "value": ""
+  },
+  "cell-11-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(11,2)",
+    "value": ""
+  },
+  "cell-11-4": {
+    "formula": "=0=if(or(cell(11,4) ge stat(5,7), cell(10,4) ge stat(5,7), cell(12,4) ge stat(5,7)), cell(11,4), cell(11,4) + cell(11,5))",
+    "value": ""
+  },
+  "cell-11-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(11,5)",
+    "value": ""
+  },
+  "cell-11-9": {
+    "formula": "=0=if(or(cell(11,9) ge stat(5,7), cell(10,9) ge stat(5,7), cell(12,9) ge stat(5,7)), cell(11,9), cell(11,9) + cell(11,10))",
+    "value": ""
+  },
+  "cell-11-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(11,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-11-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(11,12), cell(11,12) + cell(11,13))",
+    "value": ""
+  },
+  "cell-11-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(11,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-11-14": {
+    "formula": "=cell(11,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-12-1": {
+    "formula": "=0=cell(12,1) + cell(12,2)",
+    "value": ""
+  },
+  "cell-12-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(12,2)",
+    "value": ""
+  },
+  "cell-12-4": {
+    "formula": "=0=if(or(cell(12,4) ge stat(5,7), cell(11,4) ge stat(5,7), cell(13,4) ge stat(5,7)), cell(12,4), cell(12,4) + cell(12,5))",
+    "value": ""
+  },
+  "cell-12-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(12,5)",
+    "value": ""
+  },
+  "cell-12-9": {
+    "formula": "=0=if(or(cell(12,9) ge stat(5,7), cell(11,9) ge stat(5,7), cell(13,9) ge stat(5,7)), cell(12,9), cell(12,9) + cell(12,10))",
+    "value": ""
+  },
+  "cell-12-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(12,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-12-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(12,12), cell(12,12) + cell(12,13))",
+    "value": ""
+  },
+  "cell-12-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(12,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-12-14": {
+    "formula": "=cell(12,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-13-1": {
+    "formula": "=0=cell(13,1) + cell(13,2)",
+    "value": ""
+  },
+  "cell-13-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(13,2)",
+    "value": ""
+  },
+  "cell-13-4": {
+    "formula": "=0=if(or(cell(13,4) ge stat(5,7), cell(12,4) ge stat(5,7), cell(14,4) ge stat(5,7)), cell(13,4), cell(13,4) + cell(13,5))",
+    "value": ""
+  },
+  "cell-13-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(13,5)",
+    "value": ""
+  },
+  "cell-13-9": {
+    "formula": "=0=if(or(cell(13,9) ge stat(5,7), cell(12,9) ge stat(5,7), cell(14,9) ge stat(5,7)), cell(13,9), cell(13,9) + cell(13,10))",
+    "value": ""
+  },
+  "cell-13-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(13,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-13-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(13,12), cell(13,12) + cell(13,13))",
+    "value": ""
+  },
+  "cell-13-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(13,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-13-14": {
+    "formula": "=cell(13,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-14-1": {
+    "formula": "=0=cell(14,1) + cell(14,2)",
+    "value": ""
+  },
+  "cell-14-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(14,2)",
+    "value": ""
+  },
+  "cell-14-4": {
+    "formula": "=0=if(or(cell(14,4) ge stat(5,7), cell(13,4) ge stat(5,7), cell(15,4) ge stat(5,7)), cell(14,4), cell(14,4) + cell(14,5))",
+    "value": ""
+  },
+  "cell-14-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(14,5)",
+    "value": ""
+  },
+  "cell-14-9": {
+    "formula": "=0=if(or(cell(14,9) ge stat(5,7), cell(13,9) ge stat(5,7), cell(15,9) ge stat(5,7)), cell(14,9), cell(14,9) + cell(14,10))",
+    "value": ""
+  },
+  "cell-14-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(14,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-14-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(14,12), cell(14,12) + cell(14,13))",
+    "value": ""
+  },
+  "cell-14-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(14,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-14-14": {
+    "formula": "=cell(14,12) ge stat(5,7)",
+    "value": ""
+  },
+  "cell-15-1": {
+    "formula": "=0=cell(15,1) + cell(15,2)",
+    "value": ""
+  },
+  "cell-15-2": {
+    "formula": "=choice(1,2,3,4,5)=cell(15,2)",
+    "value": ""
+  },
+  "cell-15-4": {
+    "formula": "=0=if(or(cell(15,4) ge stat(5,7), cell(14,4) ge stat(5,7), cell(16,4) ge stat(5,7)), cell(15,4), cell(15,4) + cell(15,5))",
+    "value": ""
+  },
+  "cell-15-5": {
+    "formula": "=choice(1,2,3,4,5)=cell(15,5)",
+    "value": ""
+  },
+  "cell-15-9": {
+    "formula": "=0=if(or(cell(15,9) ge stat(5,7), cell(14,9) ge stat(5,7), cell(16,9) ge stat(5,7)), cell(15,9), cell(15,9) + cell(15,10))",
+    "value": ""
+  },
+  "cell-15-10": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(15,10) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-15-12": {
+    "formula": "=0=if(stat(5,16) gt 0, cell(15,12), cell(15,12) + cell(15,13))",
+    "value": ""
+  },
+  "cell-15-13": {
+    "formula": "=choice(1,2,3,4,5)=max(1, cell(15,13) + rand(-0.5, 0.5))",
+    "value": ""
+  },
+  "cell-15-14": {
+    "formula": "=cell(15,12) ge stat(5,7)",
+    "value": ""
+  }
+}

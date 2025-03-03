@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+
+  font-family: "Source Code Pro", monospace;
+  font-style: normal;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-0: rgb(15, 15, 15);
+  --bg-1: rgb(25, 25, 25);
+  --bg-2: rgb(33, 33, 33);
+  --bg-3: rgb(41, 41, 41);
+  --bg-4: rgb(49, 49, 49);
+  --bg-5: rgb(57, 57, 57);
+  --bg-6: rgb(65, 65, 65);
+
+  --text-1: rgb(240, 240, 240);
+  --text-2: rgb(220, 220, 220);
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+
+  margin: 0;
+  padding: 0;
+}
