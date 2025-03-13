@@ -1,5 +1,5 @@
 import { CellId } from "@/components/spreadsheet/spreadsheet.component";
-import { BooleanValue, CellCoordsValue, NumberValue, Value, ValueType } from "./runtime";
+import { BooleanValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
 
 export namespace Functions {
 
@@ -77,13 +77,17 @@ export namespace Functions {
     }
 
     export function sum(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
-        const c1 = expectCellCoords(args, 0).value;
-        const c2 = expectCellCoords(args, 1).value;
+        const range = expectCellRange(args, 0).value;
+
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
 
         let sum = 0;
 
-        for (let r = c1.ri; r <= c2.ri; r++) {
-            for (let c = c1.ci; c <= c2.ci; c++) {
+        for (let r = r1; r <= r2; r++) {
+            for (let c = c1; c <= c2; c++) {
                 const cell = history.get(`cell-${r}-${c}`);
                 const value = cell ? cell[step] : "0";
 
@@ -141,8 +145,8 @@ function expectBoolean(args: Value[], index: number): BooleanValue {
     return expectArg(args, index, ValueType.Boolean) as BooleanValue;
 }
 
-function expectCellCoords(args: Value[], index: number): CellCoordsValue {
-    return expectArg(args, index, ValueType.CellCoords) as CellCoordsValue;
+function expectCellRange(args: Value[], index: number): CellRangeValue {
+    return expectArg(args, index, ValueType.CellRange) as CellRangeValue;
 }
 
 function expectArg(args: Value[], index: number, type: ValueType): Value {

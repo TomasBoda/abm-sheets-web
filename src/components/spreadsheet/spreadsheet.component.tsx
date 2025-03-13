@@ -486,7 +486,7 @@ export function Spreadsheet() {
 
     function setCellIndicatorText({ ri, ci }: CellCoords): void {
         const currentCell = document.getElementById("current-cell") as HTMLDivElement;
-        currentCell.innerText = `${columnIndexToText(ci)}${ri}`;
+        currentCell.innerText = `${columnIndexToText(ci)}${ri + 1}`;
     }
 
     function isRowSelected({ ri }): boolean {

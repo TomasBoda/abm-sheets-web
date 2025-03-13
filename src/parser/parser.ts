@@ -5,6 +5,7 @@ export enum NodeType {
     BooleanLiteral,
     Identifier,
     CellLiteral,
+    CellRangeLiteral,
     RelationalExpression,
     BinaryExpression,
     UnaryExpression,
@@ -39,6 +40,12 @@ export interface CellLiteral extends Expression {
     type: NodeType.CellLiteral;
     row: CellAxis;
     col: CellAxis;
+}
+
+export interface CellRangeLiteral extends Expression {
+    type: NodeType.CellRangeLiteral;
+    left: CellLiteral;
+    right: CellLiteral;
 }
 
 export interface RelationalExpression extends Expression {
@@ -154,7 +161,7 @@ export class Parser {
     }
 
     private parseCallExpression(): Expression {
-        const result = this.parsePrimaryExpression();
+        const result = this.parseCellRangeExpression();
 
         if (result.type === NodeType.Identifier && this.at().type === TokenType.OpenParen) {
             this.expect(TokenType.OpenParen);
@@ -180,6 +187,23 @@ export class Parser {
         }
 
         return result;
+    }
+
+    private parseCellRangeExpression(): Expression {
+        const left = this.parsePrimaryExpression();
+
+        if (this.at().type === TokenType.Colon) {
+            this.next();
+            const right = this.parseIdentifier();
+
+            return {
+                type: NodeType.CellRangeLiteral,
+                left,
+                right,
+            } as CellRangeLiteral;
+        }
+
+        return left;
     }
 
     private parsePrimaryExpression(): Expression {

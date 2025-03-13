@@ -1,12 +1,12 @@
 import { CellId, variables } from "@/components/spreadsheet/spreadsheet.component";
 import { Functions } from "./functions";
-import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
+import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
 
-export enum ValueType { Number, Boolean, String, CellCoords };
+export enum ValueType { Number, Boolean, String, CellRange };
 
 export interface Value {
     type: ValueType;
-    value: number | boolean | string | { ri: number; ci: number };
+    value: number | boolean | string | number[];
 }
 
 export interface NumberValue {
@@ -24,9 +24,9 @@ export interface StringValue {
     value: string;
 }
 
-export interface CellCoordsValue {
-    type: ValueType.CellCoords;
-    value: { ri: number; ci: number; };
+export interface CellRangeValue {
+    type: ValueType.CellRange;
+    value: number[];
 }
 
 type FunctionCall = (history: Map<CellId, string[]>, step: number, args: Value[]) => Value;
@@ -75,7 +75,13 @@ export class Runtime {
     }
 
     public run(expression: Expression): string {
-        const result = this.runExpression(expression);
+        let result;
+
+        try {
+            result = this.runExpression(expression);
+        } catch (e) {
+            return "ERROR";
+        }
 
         switch (result.type) {
             case ValueType.Number:
@@ -105,6 +111,8 @@ export class Runtime {
                 return this.runIdentifier(expression as Identifier);
             case NodeType.CellLiteral:
                 return this.runCellLiteral(expression as CellLiteral);
+            case NodeType.CellRangeLiteral:
+                return this.runCellRangeLiteral(expression as CellRangeLiteral);
             default:
                 throw new Error(`Unsupported expression '${NodeType[expression.type]}' in runExpression()`);
         }
@@ -119,14 +127,7 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        const evaluatedArgs = args.map(arg => {
-            if (arg.type === NodeType.CellLiteral) {
-                const cellLiteral = arg as CellLiteral;
-                return { type: ValueType.CellCoords, value: { ri: cellLiteral.row.index, ci: cellLiteral.col.index } };
-            } else {
-                return this.runExpression(arg)
-            }
-        });
+        const evaluatedArgs = args.map(arg => this.runExpression(arg));
         const result = fn(this.history, this.step, evaluatedArgs);
 
         return result;
@@ -270,5 +271,13 @@ export class Runtime {
         } else {
             return { type: ValueType.Number, value: parseFloat(cellValue) };
         }
+    }
+
+    private runCellRangeLiteral(expression: CellRangeLiteral): Value {
+        const { left, right } = expression;
+        
+        const value = [left.col.index, left.row.index, right.col.index, right.row.index];
+
+        return { type: ValueType.CellRange, value } as CellRangeValue;
     }
 }

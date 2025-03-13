@@ -12,6 +12,7 @@ export enum TokenType {
 
     Comma,
     Dot,
+    Colon,
 
     EOF,
 };
@@ -56,6 +57,11 @@ export class Lexer {
                 }
                 case ".": {
                     this.token(TokenType.Dot, value);
+                    this.next();
+                    break;
+                }
+                case ":": {
+                    this.token(TokenType.Colon, value);
                     this.next();
                     break;
                 }
