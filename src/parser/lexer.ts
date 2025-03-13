@@ -68,7 +68,7 @@ export class Lexer {
                     break;
                 }
                 default: {
-                    if (this.isAlpha(value)) {
+                    if (this.isAlpha(value) || this.at() === "$") {
                         this.tokenizeIdentifier(value);
                         break;
                     }
@@ -93,7 +93,7 @@ export class Lexer {
         
         this.next();
 
-        while (this.at() !== undefined && this.isAlpha(this.at()!)) {
+        while (this.at() !== undefined && (this.isAlpha(this.at()!) || this.isNumber(this.at()!) || this.at()! === "$")) {
             identifier += this.next()!;
         }
 

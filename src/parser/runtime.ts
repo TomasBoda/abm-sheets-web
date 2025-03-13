@@ -1,12 +1,12 @@
 import { CellId, variables } from "@/components/spreadsheet/spreadsheet.component";
 import { Functions } from "./functions";
-import { BinaryExpression, BooleanLiteral, CallExpression, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
+import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
 
-export enum ValueType { Number, Boolean, String };
+export enum ValueType { Number, Boolean, String, CellCoords };
 
 export interface Value {
     type: ValueType;
-    value: number | boolean | string;
+    value: number | boolean | string | { ri: number; ci: number };
 }
 
 export interface NumberValue {
@@ -24,6 +24,11 @@ export interface StringValue {
     value: string;
 }
 
+export interface CellCoordsValue {
+    type: ValueType.CellCoords;
+    value: { ri: number; ci: number; };
+}
+
 type FunctionCall = (history: Map<CellId, string[]>, step: number, args: Value[]) => Value;
 
 export class Runtime {
@@ -31,17 +36,36 @@ export class Runtime {
     private step: number;
     private history: Map<CellId, string[]>;
 
+    /*
+        IF
+        AND
+        OR
+
+        RAND
+        ROUND
+
+        MAX
+        MIN
+        SUM
+        AVERAGE
+
+        COUNT
+        CONCATENATE
+        NOW
+    */
+
     private functions: Map<string, FunctionCall> = new Map([
         ["if", Functions.conditional],
+        ["and", Functions.and],
+        ["or", Functions.or],
         ["cell", Functions.cell],
         ["stat", Functions.stat],
         ["rand", Functions.rand],
+        ["randbetween", Functions.randbetween],
         ["choice", Functions.choice],
         ["sum", Functions.sum],
         ["min", Functions.min],
         ["max", Functions.max],
-        ["and", Functions.and],
-        ["or", Functions.or],
     ]);
 
     public runWithHistory(expression: Expression, step: number, history: Map<CellId, string[]>) {
@@ -79,6 +103,8 @@ export class Runtime {
                 return this.runBooleanLiteral(expression as BooleanLiteral);
             case NodeType.Identifier:
                 return this.runIdentifier(expression as Identifier);
+            case NodeType.CellLiteral:
+                return this.runCellLiteral(expression as CellLiteral);
             default:
                 throw new Error(`Unsupported expression '${NodeType[expression.type]}' in runExpression()`);
         }
@@ -93,7 +119,14 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        const evaluatedArgs = args.map(arg => this.runExpression(arg));
+        const evaluatedArgs = args.map(arg => {
+            if (arg.type === NodeType.CellLiteral) {
+                const cellLiteral = arg as CellLiteral;
+                return { type: ValueType.CellCoords, value: { ri: cellLiteral.row.index, ci: cellLiteral.col.index } };
+            } else {
+                return this.runExpression(arg)
+            }
+        });
         const result = fn(this.history, this.step, evaluatedArgs);
 
         return result;
@@ -220,5 +253,22 @@ export class Runtime {
         }
 
         return result;
+    }
+
+    private runCellLiteral(expression: CellLiteral): Value {
+        const { row: { index: ri }, col: { index: ci } } = expression;
+        const cell = this.history.get(`cell-${ri}-${ci}`);
+
+        if (!cell) {
+            return { type: ValueType.Number, value: 0 };
+        }
+
+        const cellValue = cell[this.step];
+
+        if (isNaN(parseFloat(cellValue))) {
+            return { type: ValueType.String, value: cellValue };
+        } else {
+            return { type: ValueType.Number, value: parseFloat(cellValue) };
+        }
     }
 }

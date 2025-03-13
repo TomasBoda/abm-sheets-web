@@ -1,6 +1,6 @@
 import { Evaluator } from "@/parser/evaluator";
 import { AlignLeft, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
@@ -10,10 +10,11 @@ import { useSelection } from "./useSelection.hook";
 import { useModal } from "@/hooks/useModal";
 import { VariablesModal } from "@/modals/variables-modal";
 import { Value } from "@/parser/runtime";
+import { columnIndexToText } from "@/parser/parser";
 
 export type CellCoords = { ri: number; ci: number; }
 
-export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(30, 20);
+export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(26, 26);
 export let variables: Map<string, Value> = new Map();
 
 export type CellId = `cell-${number}-${number}`;
@@ -74,29 +75,54 @@ export function Spreadsheet() {
         if (dragWithCopy) {
             const baseCellCoors = getCellCoors(Array.from(selectedCells)[0]);
             const newUsedCells: CellId[] = [];
-
+    
             for (let i = 1; i < Array.from(selectedCells).length; i++) {
                 const currentCellCoors = getCellCoors(Array.from(selectedCells)[i]);
-
+    
                 const rowOffset = currentCellCoors.ri - baseCellCoors.ri;
                 const colOffset = currentCellCoors.ci - baseCellCoors.ci;
-
-                const regex = /cell\((\d+),\s*(\d+)\)/g;
-
+    
+                const regex = /\$?[A-Z]+\$?\d+/g;
+    
+                function shiftCellReference(ref: string): string {
+                    const match = ref.match(/(\$?)([A-Z]+)(\$?)(\d+)/);
+    
+                    if (!match) return ref;
+    
+                    const [, colDollar, colLetters, rowDollar, rowNumber] = match;
+    
+                    let newColLetters = colLetters;
+                    let newRowNumber = parseInt(rowNumber, 10);
+    
+                    if (!colDollar) {
+                        const currentColIndex = colLetters.split('').reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
+                        const newColIndex = currentColIndex + colOffset;
+    
+                        newColLetters = '';
+                        let index = newColIndex;
+                        while (index > 0) {
+                            const charCode = ((index - 1) % 26) + 65;
+                            newColLetters = String.fromCharCode(charCode) + newColLetters;
+                            index = Math.floor((index - 1) / 26);
+                        }
+                    }
+    
+                    if (!rowDollar) {
+                        newRowNumber += rowOffset;
+                    }
+    
+                    return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
+                }
+    
                 let copiedCellFormula = data[baseCellCoors.ri][baseCellCoors.ci].formula;
-
-                const newFormula = copiedCellFormula.replace(regex, (match, row, col) => {
-                    const newRow = parseInt(row, 10) + rowOffset;
-                    const newCol = parseInt(col, 10) + colOffset;
-                    return `cell(${newRow},${newCol})`;
-                });
-
+    
+                const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
+    
                 data[currentCellCoors.ri][currentCellCoors.ci].formula = newFormula;
                 evaluateUsedCells([getCellId({ ri: currentCellCoors.ri, ci: currentCellCoors.ci })]);
-                //evaluateCell({ ri: cellRow, ci: cellCol });
                 newUsedCells.push(getCellId(currentCellCoors));
             }
-
+    
             addUsedCells(newUsedCells);
         }
     }
@@ -307,32 +333,57 @@ export function Spreadsheet() {
     function onCellPaste(): void {
         const currentCellCoors = getCellCoors(Array.from(selectedCells)[0]);
         const copiedCellCoors = getCellCoors(Array.from(copiedCells)[0]);
-
+    
         const rowOffset = currentCellCoors.ri - copiedCellCoors.ri;
         const colOffset = currentCellCoors.ci - copiedCellCoors.ci;
-
-        const regex = /cell\((\d+),\s*(\d+)\)/g;
-
+    
+        const regex = /\$?[A-Z]+\$?\d+/g;
+    
         const newUsedCells: CellId[] = [];
-
+    
+        function shiftCellReference(ref: string): string {
+            const match = ref.match(/(\$?)([A-Z]+)(\$?)(\d+)/);
+    
+            if (!match) return ref;
+    
+            const [, colDollar, colLetters, rowDollar, rowNumber] = match;
+    
+            let newColLetters = colLetters;
+            let newRowNumber = parseInt(rowNumber, 10);
+    
+            if (!colDollar) {
+                const currentColIndex = colLetters.split('').reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
+                const newColIndex = currentColIndex + colOffset;
+    
+                newColLetters = '';
+                let index = newColIndex;
+                while (index > 0) {
+                    const charCode = ((index - 1) % 26) + 65;
+                    newColLetters = String.fromCharCode(charCode) + newColLetters;
+                    index = Math.floor((index - 1) / 26);
+                }
+            }
+    
+            if (!rowDollar) {
+                newRowNumber += rowOffset;
+            }
+    
+            return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
+        }
+    
         for (const copiedCell of Array.from(copiedCells)) {
             const cellRow = getCellCoors(copiedCell).ri + rowOffset;
             const cellCol = getCellCoors(copiedCell).ci + colOffset;
-
+    
             let copiedCellFormula = data[getCellCoors(copiedCell).ri][getCellCoors(copiedCell).ci].formula;
-
-            const newFormula = copiedCellFormula.replace(regex, (match, row, col) => {
-                const newRow = parseInt(row, 10) + rowOffset;
-                const newCol = parseInt(col, 10) + colOffset;
-                return `cell(${newRow},${newCol})`;
-            });
-
+    
+            const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
+    
             data[cellRow][cellCol].formula = newFormula;
             evaluateUsedCells([getCellId({ ri: cellRow, ci: cellCol })]);
-            //evaluateCell({ ri: cellRow, ci: cellCol });
             newUsedCells.push(getCellId({ ri: cellRow, ci: cellCol }));
         }
-
+    
         addUsedCells(newUsedCells);
     }
 
@@ -435,7 +486,7 @@ export function Spreadsheet() {
 
     function setCellIndicatorText({ ri, ci }: CellCoords): void {
         const currentCell = document.getElementById("current-cell") as HTMLDivElement;
-        currentCell.innerText = `(${ri},${ci})`;
+        currentCell.innerText = `${columnIndexToText(ci)}${ri}`;
     }
 
     function isRowSelected({ ri }): boolean {
@@ -511,7 +562,7 @@ export function Spreadsheet() {
                             
                             {data[0].map((cell: SpreadsheetCell, ci: number) =>
                                 <ColCell $selected={isColSelected({ ci })} $special={true} key={ci}>
-                                    {ci}
+                                    {columnIndexToText(ci)}
                                 </ColCell>
                             )}
                         </ColumnRow>
@@ -520,7 +571,7 @@ export function Spreadsheet() {
                             {data.map((row: SpreadsheetRow, ri: number) =>
                                 <Row $entries={row.length + 1} key={ri}>
                                     <RowCell $selected={isRowSelected({ ri })} $special={true}>
-                                        {ri}
+                                        {ri + 1}
                                     </RowCell>
 
                                     {row.map((cell: SpreadsheetCell, ci: number) =>
@@ -711,10 +762,6 @@ const Cell = styled.div<{ $selected: boolean; $special?: boolean; }>`
     background-color: ${({ $special, $selected }) => $selected ? "var(--bg-3)" : ($special ? "var(--bg-0)" : "var(--bg-1)")};
     
     border: ${({ $special }) => $special && "1px solid transparent"};
-
-    &:hover ${CellDrag} {
-        opacity: 1;
-    }
 `;
 
 const ColumnRow = styled(Row)`

@@ -1,5 +1,5 @@
 import { CellId } from "@/components/spreadsheet/spreadsheet.component";
-import { BooleanValue, NumberValue, Value, ValueType } from "./runtime";
+import { BooleanValue, CellCoordsValue, NumberValue, Value, ValueType } from "./runtime";
 
 export namespace Functions {
 
@@ -17,6 +17,15 @@ export namespace Functions {
         const min = expectNumber(args, 0).value;
         const max = expectNumber(args, 1).value;
         const result = Math.random() * (max - min) + min;
+
+        return { type: ValueType.Number, value: result };
+    }
+
+    export function randbetween(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+        const min = expectNumber(args, 0).value;
+        const max = expectNumber(args, 1).value;
+
+        const result = Math.floor(Math.random() * (max - min + 1)) + min;
 
         return { type: ValueType.Number, value: result };
     }
@@ -68,16 +77,13 @@ export namespace Functions {
     }
 
     export function sum(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
-        const r1 = expectNumber(args, 0).value;
-        const c1 = expectNumber(args, 1).value;
-
-        const r2 = expectNumber(args, 2).value;
-        const c2 = expectNumber(args, 3).value;
+        const c1 = expectCellCoords(args, 0).value;
+        const c2 = expectCellCoords(args, 1).value;
 
         let sum = 0;
 
-        for (let r = r1; r <= r2; r++) {
-            for (let c = c1; c <= c2; c++) {
+        for (let r = c1.ri; r <= c2.ri; r++) {
+            for (let c = c1.ci; c <= c2.ci; c++) {
                 const cell = history.get(`cell-${r}-${c}`);
                 const value = cell ? cell[step] : "0";
 
@@ -133,6 +139,10 @@ function expectNumber(args: Value[], index: number): NumberValue {
 
 function expectBoolean(args: Value[], index: number): BooleanValue {
     return expectArg(args, index, ValueType.Boolean) as BooleanValue;
+}
+
+function expectCellCoords(args: Value[], index: number): CellCoordsValue {
+    return expectArg(args, index, ValueType.CellCoords) as CellCoordsValue;
 }
 
 function expectArg(args: Value[], index: number, type: ValueType): Value {

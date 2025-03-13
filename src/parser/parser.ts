@@ -4,6 +4,7 @@ export enum NodeType {
     NumericLiteral,
     BooleanLiteral,
     Identifier,
+    CellLiteral,
     RelationalExpression,
     BinaryExpression,
     UnaryExpression,
@@ -27,6 +28,17 @@ export interface BooleanLiteral extends Expression {
 export interface Identifier extends Expression {
     type: NodeType.Identifier;
     value: string;
+}
+
+type CellAxis = {
+    index: number;
+    fixed: boolean;
+}
+
+export interface CellLiteral extends Expression {
+    type: NodeType.CellLiteral;
+    row: CellAxis;
+    col: CellAxis;
 }
 
 export interface RelationalExpression extends Expression {
@@ -53,6 +65,25 @@ export interface CallExpression extends Expression {
     type: NodeType.CallExpression;
     identifier: string;
     args: Expression[];
+}
+
+export const columnIndexToText = (index: number): string => {
+    let column = "";
+    index += 1;
+    while (index > 0) {
+        index--;
+        column = String.fromCharCode((index % 26) + "A".charCodeAt(0)) + column;
+        index = Math.floor(index / 26);
+    }
+    return column;
+}
+
+export const columnTextToIndex = (text: string): number => {
+    let index = 0;
+    for (let i = 0; i < text.length; i++) {
+        index = index * 26 + (text.charCodeAt(i) - "A".charCodeAt(0) + 1);
+    }
+    return index;
 }
 
 export class Parser {
@@ -178,7 +209,26 @@ export class Parser {
 
     private parseIdentifier(): Expression {
         const value = this.expect(TokenType.Identifier).value;
-        return { type: NodeType.Identifier, value } as Identifier;
+
+        const cellRegex = /^([$]?)([A-Z]{1,2})([$]?)(\d+)$/;
+        const match = value.match(cellRegex);
+
+        if (!match) {
+            return { type: NodeType.Identifier, value } as Identifier;
+        }
+
+        const [, colFixed, col, rowFixed, row] = match;
+
+        let colIndex = columnTextToIndex(col) - 1;
+        let rowIndex = parseInt(row) - 1;
+
+        const cellLiteral = {
+            type: NodeType.CellLiteral,
+            row: { index: rowIndex, fixed: rowFixed === "$" },
+            col: { index: colIndex, fixed: colFixed === "$" },
+        } as CellLiteral;
+
+        return cellLiteral;
     }
 
     private parseUnaryExpression(): Expression {
