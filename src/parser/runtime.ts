@@ -36,24 +36,6 @@ export class Runtime {
     private step: number;
     private history: Map<CellId, string[]>;
 
-    /*
-        IF
-        AND
-        OR
-
-        RAND
-        ROUND
-
-        MAX
-        MIN
-        SUM
-        AVERAGE
-
-        COUNT
-        CONCATENATE
-        NOW
-    */
-
     private functions: Map<string, FunctionCall> = new Map([
         ["if", Functions.conditional],
         ["and", Functions.and],

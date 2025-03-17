@@ -10,7 +10,8 @@ import { useSelection } from "./useSelection.hook";
 import { useModal } from "@/hooks/useModal";
 import { VariablesModal } from "@/modals/variables-modal";
 import { Value } from "@/parser/runtime";
-import { columnIndexToText } from "@/parser/parser";
+import { Utils } from "@/utils/utils";
+import { getSortedCells } from "@/utils/topological-sort";
 
 export type CellCoords = { ri: number; ci: number; }
 
@@ -45,6 +46,17 @@ export function Spreadsheet() {
 
     // history
     const [history, setHistory] = useState<Map<CellId, string[]>>(new Map());
+
+    useEffect(() => {
+        data[0][0].formula = "= B1 + 1"
+        data[0][1].formula = "= 1"
+
+        const usedCells = new Set<CellId>();
+        usedCells.add("cell-0-0");
+        usedCells.add("cell-0-1");
+
+        setUsedCells(usedCells);
+    }, []);
 
     useEffect(() => {
         for (const [key, value] of history.entries()) {
@@ -421,7 +433,15 @@ export function Spreadsheet() {
             return data[ri][ci].formula[0] === "=";
         });
 
-        const history = new Evaluator().evaluateCells(usedCellsWithFormula, steps);
+        const sortedCells = getSortedCells(usedCellsWithFormula.map(cellId => {
+            const { ri, ci } = getCellCoors(cellId);
+            const formula = data[ri][ci].formula;
+            return { id: cellId, formula };
+        }));
+
+        console.log(sortedCells);
+
+        const history = new Evaluator().evaluateCells(sortedCells, steps);
 
         for (const [key, value] of history.entries()) {
             const cellId = key;
@@ -486,7 +506,7 @@ export function Spreadsheet() {
 
     function setCellIndicatorText({ ri, ci }: CellCoords): void {
         const currentCell = document.getElementById("current-cell") as HTMLDivElement;
-        currentCell.innerText = `${columnIndexToText(ci)}${ri + 1}`;
+        currentCell.innerText = `${Utils.columnIndexToText(ci)}${ri + 1}`;
     }
 
     function isRowSelected({ ri }): boolean {
@@ -562,7 +582,7 @@ export function Spreadsheet() {
                             
                             {data[0].map((cell: SpreadsheetCell, ci: number) =>
                                 <ColCell $selected={isColSelected({ ci })} $special={true} key={ci}>
-                                    {columnIndexToText(ci)}
+                                    {Utils.columnIndexToText(ci)}
                                 </ColCell>
                             )}
                         </ColumnRow>
