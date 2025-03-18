@@ -1,5 +1,6 @@
 import { CellId } from "@/components/spreadsheet/spreadsheet.component";
 import { BooleanValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
+import { Utils } from "@/utils/utils";
 
 export namespace Functions {
 
@@ -42,7 +43,7 @@ export namespace Functions {
         const ri = expectNumber(args, 0).value;
         const ci = expectNumber(args, 1).value;
 
-        const cell = history.get(`cell-${ri}-${ci}`);
+        const cell = history.get(Utils.cellCoordsToId({ ri, ci }));
 
         if (!cell) {
             return { type: ValueType.Number, value: 0 };
@@ -61,7 +62,7 @@ export namespace Functions {
         const ri = expectNumber(args, 0).value;
         const ci = expectNumber(args, 1).value;
 
-        const cell = history.get(`cell-${ri}-${ci}`);
+        const cell = history.get(Utils.cellCoordsToId({ ri, ci }));
 
         if (!cell) {
             return { type: ValueType.Number, value: 0 };
@@ -88,7 +89,7 @@ export namespace Functions {
 
         for (let r = r1; r <= r2; r++) {
             for (let c = c1; c <= c2; c++) {
-                const cell = history.get(`cell-${r}-${c}`);
+                const cell = history.get(Utils.cellCoordsToId({ ri: r, ci: c }));
                 const value = cell ? cell[step] : "0";
 
                 sum += isNaN(parseFloat(value)) ? 0 : parseFloat(value);

@@ -1,6 +1,7 @@
 import { CellId, variables } from "@/components/spreadsheet/spreadsheet.component";
 import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
+import { Utils } from "@/utils/utils";
 
 export enum ValueType { Number, Boolean, String, CellRange };
 
@@ -240,7 +241,7 @@ export class Runtime {
 
     private runCellLiteral(expression: CellLiteral): Value {
         const { row: { index: ri }, col: { index: ci } } = expression;
-        const cell = this.history.get(`cell-${ri}-${ci}`);
+        const cell = this.history.get(Utils.cellCoordsToId({ ri, ci }));
 
         if (!cell) {
             return { type: ValueType.Number, value: 0 };

@@ -1,4 +1,4 @@
-import { CellId, getCellId } from "@/components/spreadsheet/spreadsheet.component";
+import { CellId } from "@/components/spreadsheet/spreadsheet.component";
 import { Utils } from "./utils";
 
 class GraphNode {
@@ -34,7 +34,7 @@ const buildCellDependencies = (cells: CellItem[]): CellDependencyItem[] => {
         const cellReferences = Utils.getCellFormulaDependencies(formula);
 
         for (const reference of cellReferences) {
-            dependencies.push(getCellId(reference));
+            dependencies.push(Utils.cellCoordsToId(reference));
         }
 
         dependencyItems.push({ id, dependencies });
