@@ -42,15 +42,4 @@ export namespace Utils {
         }
         return index;
     }
-
-    export const getCellFormulaDependencies = (formula: string): CellCoords[] => {
-        const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
-        const matches = [...formula.matchAll(regex)].map(match => {
-            return {
-                ri: parseInt(match[2]) - 1,
-                ci: columnTextToIndex(match[1]) - 1,
-            };
-        });
-        return matches;
-    }
 }

@@ -247,7 +247,12 @@ export class Runtime {
             return { type: ValueType.Number, value: 0 };
         }
 
-        const cellValue = cell[this.step];
+        // take the current value if it exists, otherwise from the previous step
+        const index = cell.length === this.step + 2
+            ? this.step + 1
+            : this.step;
+
+        const cellValue = cell[index];
 
         if (isNaN(parseFloat(cellValue))) {
             return { type: ValueType.String, value: cellValue };

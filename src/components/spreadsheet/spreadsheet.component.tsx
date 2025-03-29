@@ -23,7 +23,14 @@ export type CellId = `${string}${number}`;
 export function Spreadsheet() {
 
     const { showModal } = useModal();
-    const { selectedCells, selectAllCells, isCellSelected, selectionListeners, dragWithCopy } = useSelection();
+    const {
+        selectedCells,
+        selectAllCells,
+        deselectAllCells,
+        isCellSelected,
+        selectionListeners,
+        dragWithCopy
+    } = useSelection();
 
     const [step, setStep] = useState<number>(0);
     const [steps, setSteps] = useState<number>(100);
@@ -77,11 +84,7 @@ export function Spreadsheet() {
     // cmd key down
     useEffect(() => {
         const handleCmdKey = (event: any) => {
-            if (event.ctrlKey || event.metaKey) {
-                setCmdKey(true);
-            } else {
-                setCmdKey(false);
-            }
+            setCmdKey(event.ctrlKey || event.metaKey);
         }
 
         window.addEventListener("keydown", handleCmdKey);
@@ -425,13 +428,12 @@ export function Spreadsheet() {
             return data[ri][ci].formula[0] === "=";
         });
 
-        /* const sortedCells = getSortedCells(usedCellsWithFormula.map(cellId => {
+        // topological sort
+        const sortedCells = getSortedCells(usedCellsWithFormula.map(cellId => {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             const formula = data[ri][ci].formula;
             return { id: cellId, formula };
-        })); */
-
-        const sortedCells = usedCellsWithFormula;
+        }));
 
         const history = new Evaluator().evaluateCells(sortedCells, steps);
 
@@ -567,7 +569,7 @@ export function Spreadsheet() {
         <Container>
             <Header>
                 <Logo>
-                    <Grid2x2Plus size={20} />
+                    <Grid2x2Plus size={20} color="var(--primary)" />
                     ABM Sheets
                 </Logo>
 
@@ -603,10 +605,10 @@ export function Spreadsheet() {
                     Run
                 </Button>
 
-                <Button onClick={showVariableModal}>
+                {/* <Button onClick={showVariableModal}>
                     <AlignLeft size={12} />
                     Variables
-                </Button>
+                </Button> */}
 
                 <Button onClick={() => exportAndSave()}>
                     <Download size={12} />
@@ -678,7 +680,7 @@ const Header = styled.div`
     width: 100%;
 
     display: grid;
-    grid-template-columns: auto 1fr 150px 100px auto auto auto;
+    grid-template-columns: auto 1fr 150px 100px auto auto;
     align-items: center;
     gap: 15px;
 `;
@@ -828,7 +830,7 @@ const ColumnRow = styled(Row)`
     position: sticky;
     top: 0;
 
-    z-index: 2;
+    z-index: 10;
 `;
 
 const ColCell = styled(Cell)`
@@ -847,5 +849,5 @@ const TopLeftCell = styled(RowCell)`
     left: 0;
     top: 0;
 
-    z-index: 10;
+    z-index: 100;
 `;

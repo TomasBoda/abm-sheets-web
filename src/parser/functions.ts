@@ -90,7 +90,7 @@ export namespace Functions {
         for (let r = r1; r <= r2; r++) {
             for (let c = c1; c <= c2; c++) {
                 const cell = history.get(Utils.cellCoordsToId({ ri: r, ci: c }));
-                const value = cell ? cell[step] : "0";
+                const value = cell ? cell[cell.length === step + 2 ? step + 1 : step] : "0";
 
                 sum += isNaN(parseFloat(value)) ? 0 : parseFloat(value);
             }

@@ -1,20 +1,5 @@
-import { CellId } from "@/components/spreadsheet/spreadsheet.component";
+import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.component";
 import { Utils } from "./utils";
-
-class GraphNode {
-
-    public cellId: CellId;
-    public children: GraphNode[];
-
-    constructor(cellId: CellId, children: GraphNode[]) {
-        this.cellId = cellId;
-        this.children = children;
-    }
-
-    public addChild(child: GraphNode): void {
-        this.children.push(child);
-    }
-}
 
 export interface CellItem {
     id: CellId;
@@ -26,12 +11,68 @@ export interface CellDependencyItem {
     dependencies: CellId[];
 }
 
+const getNormalDependencies = (formula: string): CellId[] => {
+    const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
+    const matches = [...formula.matchAll(regex)].map(match => {
+        return {
+            ri: parseInt(match[2]) - 1,
+            ci: Utils.columnTextToIndex(match[1]) - 1,
+        };
+    });
+    return matches.map(match => Utils.cellCoordsToId(match));
+}
+
+export const getRangeDependencies = (formula: string): CellId[] => {
+    const rangeRegex = /([A-Z]+)(\d+):([A-Z]+)(\d+)/g;
+    let matches: any;
+    let cells: CellId[] = [];
+
+    while ((matches = rangeRegex.exec(formula)) !== null) {
+        let [, startCol, startRow, endCol, endRow] = matches;
+        let startRowNum = parseInt(startRow, 10);
+        let endRowNum = parseInt(endRow, 10);
+
+        if (startCol === endCol && startRowNum <= endRowNum) {
+            for (let i = startRowNum; i <= endRowNum; i++) {
+                cells.push(`${startCol}${i}`);
+            }
+        }
+    }
+
+    return cells;
+}
+
+const getCellFormulaDependencies = (formula: string): CellCoords[] => {
+    const normalDependencies = getNormalDependencies(formula);
+    const rangeDependencies = getRangeDependencies(formula);
+
+    const dependencySet = new Set<CellId>([...normalDependencies, ...rangeDependencies]);
+    const dependencies = Array.from(dependencySet);
+
+    return dependencies.map(dependency => Utils.cellIdToCoords(dependency));
+
+    /* const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
+    const matches = [...formula.matchAll(regex)].map(match => {
+        return {
+            ri: parseInt(match[2]) - 1,
+            ci: Utils.columnTextToIndex(match[1]) - 1,
+        };
+    });
+    return matches; */
+}
+
+const getPrunedFormula = (formula: string): string => {
+    const parts = formula.split("=");
+    return parts[1];
+}
+
 const buildCellDependencies = (cells: CellItem[]): CellDependencyItem[] => {
     const dependencyItems: CellDependencyItem[] = [];
     
     cells.forEach(({ id, formula }: CellItem) => {
         const dependencies: CellId[] = [];
-        const cellReferences = Utils.getCellFormulaDependencies(formula);
+        const prunedFormula = getPrunedFormula(formula);
+        const cellReferences = getCellFormulaDependencies(prunedFormula);
 
         for (const reference of cellReferences) {
             dependencies.push(Utils.cellCoordsToId(reference));
@@ -77,5 +118,6 @@ const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
 
 export const getSortedCells = (cells: CellItem[]) => {
     const dependencies = buildCellDependencies(cells);
-    return topologicalSort(dependencies);
+    const sortedCells = topologicalSort(dependencies);
+    return sortedCells;
 }

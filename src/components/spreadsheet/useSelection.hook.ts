@@ -58,7 +58,11 @@ export const useSelection = () => {
         setSelectedCells(newSelectedCells);
     }
 
+    const deselectAllCells = (): void => {
+        setSelectedCells(new Set<CellId>());
+    }
+
     const selectionListeners = { handleMouseDown, handleMouseMove, handleMouseUp };
 
-    return { selectedCells, selectAllCells, isCellSelected, selectionListeners, dragWithCopy };
+    return { selectedCells, selectAllCells, deselectAllCells, isCellSelected, selectionListeners, dragWithCopy };
 }
