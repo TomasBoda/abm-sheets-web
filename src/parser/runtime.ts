@@ -3,7 +3,7 @@ import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
 import { Utils } from "@/utils/utils";
 
-export enum ValueType { Number, Boolean, String, CellRange };
+export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
 
 export interface Value {
     type: ValueType;
@@ -25,6 +25,11 @@ export interface StringValue {
     value: string;
 }
 
+export interface CellLiteralValue {
+    type: ValueType.CellLiteral;
+    value: number[];
+}
+
 export interface CellRangeValue {
     type: ValueType.CellRange;
     value: number[];
@@ -37,18 +42,20 @@ export class Runtime {
     private step: number;
     private history: Map<CellId, string[]>;
 
+    private inCallExpression: boolean = false;
+
     private functions: Map<string, FunctionCall> = new Map([
         ["if", Functions.conditional],
         ["and", Functions.and],
         ["or", Functions.or],
-        ["cell", Functions.cell],
-        ["stat", Functions.stat],
         ["rand", Functions.rand],
         ["randbetween", Functions.randbetween],
         ["choice", Functions.choice],
         ["sum", Functions.sum],
         ["min", Functions.min],
         ["max", Functions.max],
+
+        ["prev", Functions.prev],
     ]);
 
     public runWithHistory(expression: Expression, step: number, history: Map<CellId, string[]>) {
@@ -110,7 +117,10 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
+        this.inCallExpression = true;
         const evaluatedArgs = args.map(arg => this.runExpression(arg));
+        this.inCallExpression = false;
+
         const result = fn(this.history, this.step, evaluatedArgs);
 
         return result;
@@ -241,6 +251,11 @@ export class Runtime {
 
     private runCellLiteral(expression: CellLiteral): Value {
         const { row: { index: ri }, col: { index: ci } } = expression;
+
+        if (this.inCallExpression) {
+            return { type: ValueType.CellLiteral, value: [ri, ci] } as CellLiteralValue;
+        }
+
         const cell = this.history.get(Utils.cellCoordsToId({ ri, ci }));
 
         if (!cell) {
