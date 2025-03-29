@@ -20,11 +20,15 @@
 
   --text-1: rgb(240, 240, 240);
   --text-2: rgb(220, 220, 220);
+
+  --primary: #fcba03;
 }
 
 html {
   width: 100vw;
   height: 100vh;
+
+  overflow: hidden;
 }
 
 body {

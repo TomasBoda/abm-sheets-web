@@ -1,3 +1,4 @@
+import { Utils } from "@/utils/utils";
 import { Lexer, Token, TokenType } from "./lexer";
 
 export enum NodeType {
@@ -72,25 +73,6 @@ export interface CallExpression extends Expression {
     type: NodeType.CallExpression;
     identifier: string;
     args: Expression[];
-}
-
-export const columnIndexToText = (index: number): string => {
-    let column = "";
-    index += 1;
-    while (index > 0) {
-        index--;
-        column = String.fromCharCode((index % 26) + "A".charCodeAt(0)) + column;
-        index = Math.floor(index / 26);
-    }
-    return column;
-}
-
-export const columnTextToIndex = (text: string): number => {
-    let index = 0;
-    for (let i = 0; i < text.length; i++) {
-        index = index * 26 + (text.charCodeAt(i) - "A".charCodeAt(0) + 1);
-    }
-    return index;
 }
 
 export class Parser {
@@ -243,7 +225,7 @@ export class Parser {
 
         const [, colFixed, col, rowFixed, row] = match;
 
-        let colIndex = columnTextToIndex(col) - 1;
+        let colIndex = Utils.columnTextToIndex(col) - 1;
         let rowIndex = parseInt(row) - 1;
 
         const cellLiteral = {

@@ -1,5 +1,7 @@
 import { CellId } from "@/components/spreadsheet/spreadsheet.component";
-import { BooleanValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
+import { BooleanValue, CellLiteralValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
+import { Utils } from "@/utils/utils";
+import { CellLiteral } from "./parser";
 
 export namespace Functions {
 
@@ -38,44 +40,6 @@ export namespace Functions {
         return { type: ValueType.Number, value: numbers[randomIndex] };
     }
 
-    export function cell(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
-        const ri = expectNumber(args, 0).value;
-        const ci = expectNumber(args, 1).value;
-
-        const cell = history.get(`cell-${ri}-${ci}`);
-
-        if (!cell) {
-            return { type: ValueType.Number, value: 0 };
-        }
-
-        const cellValue = cell[step];
-
-        if (isNaN(parseFloat(cellValue))) {
-            return { type: ValueType.String, value: cellValue };
-        } else {
-            return { type: ValueType.Number, value: parseFloat(cellValue) };
-        }
-    }
-
-    export function stat(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
-        const ri = expectNumber(args, 0).value;
-        const ci = expectNumber(args, 1).value;
-
-        const cell = history.get(`cell-${ri}-${ci}`);
-
-        if (!cell) {
-            return { type: ValueType.Number, value: 0 };
-        }
-
-        const cellValue = cell[step];
-
-        if (isNaN(parseFloat(cellValue))) {
-            return { type: ValueType.String, value: cellValue };
-        } else {
-            return { type: ValueType.Number, value: parseFloat(cellValue) };
-        }
-    }
-
     export function sum(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const range = expectCellRange(args, 0).value;
 
@@ -88,8 +52,8 @@ export namespace Functions {
 
         for (let r = r1; r <= r2; r++) {
             for (let c = c1; c <= c2; c++) {
-                const cell = history.get(`cell-${r}-${c}`);
-                const value = cell ? cell[step] : "0";
+                const cell = history.get(Utils.cellCoordsToId({ ri: r, ci: c }));
+                const value = cell ? cell[cell.length === step + 2 ? step + 1 : step] : "0";
 
                 sum += isNaN(parseFloat(value)) ? 0 : parseFloat(value);
             }
@@ -135,6 +99,26 @@ export namespace Functions {
 
         return { type: ValueType.Boolean, value: false };
     }
+
+    // cell utilities
+
+    export function prev(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+        const cell = expectCellLiteral(args, 0);
+
+        const value = history.get(Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] }));
+
+        if (!value || step < 1) {
+            return { type: ValueType.Number, value: 0 };
+        }
+
+        const cellValue = value[value.length - 2];
+
+        if (isNaN(parseFloat(cellValue))) {
+            return { type: ValueType.String, value: cellValue };
+        } else {
+            return { type: ValueType.Number, value: parseFloat(cellValue) };
+        }
+    }
 }
 
 function expectNumber(args: Value[], index: number): NumberValue {
@@ -143,6 +127,10 @@ function expectNumber(args: Value[], index: number): NumberValue {
 
 function expectBoolean(args: Value[], index: number): BooleanValue {
     return expectArg(args, index, ValueType.Boolean) as BooleanValue;
+}
+
+function expectCellLiteral(args: Value[], index: number): CellLiteralValue {
+    return expectArg(args, index, ValueType.CellLiteral) as CellLiteralValue;
 }
 
 function expectCellRange(args: Value[], index: number): CellRangeValue {

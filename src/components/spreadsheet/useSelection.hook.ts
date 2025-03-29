@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { CellCoords, CellId, data, getCellId } from "./spreadsheet.component";
+import { CellCoords, CellId, data } from "./spreadsheet.component";
+import { Utils } from "@/utils/utils";
 
 export const useSelection = () => {
 
-    const [selectedCells, setSelectedCells] = useState(new Set<CellId>(['cell-0-0']));
+    const [selectedCells, setSelectedCells] = useState(new Set<CellId>(["A1"]));
     const [dragging, setDragging] = useState(false);
     const [startPos, setStartPos] = useState({ ri: null, ci: null });
 
@@ -16,7 +17,7 @@ export const useSelection = () => {
         setStartPos({ ri, ci });
 
         const newSelectedCells = new Set<CellId>();
-        newSelectedCells.add(getCellId({ ri, ci }));
+        newSelectedCells.add(Utils.cellCoordsToId({ ri, ci }));
         setSelectedCells(newSelectedCells);
     };
 
@@ -32,7 +33,7 @@ export const useSelection = () => {
 
         for (let r = rowStart; r <= rowEnd; r++) {
             for (let c = colStart; c <= colEnd; c++) {
-                newSelectedCells.add(getCellId({ ri: r, ci: c }));
+                newSelectedCells.add(Utils.cellCoordsToId({ ri: r, ci: c }));
             }
         }
 
@@ -43,21 +44,25 @@ export const useSelection = () => {
         setDragging(false);
     };
 
-    const isCellSelected = ({ ri, ci }: CellCoords) => selectedCells.has(getCellId({ ri, ci }));
+    const isCellSelected = ({ ri, ci }: CellCoords) => selectedCells.has(Utils.cellCoordsToId({ ri, ci }));
 
     const selectAllCells = (): void => {
         const newSelectedCells = new Set<CellId>();
 
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
-                newSelectedCells.add(getCellId({ ri, ci }));                
+                newSelectedCells.add(Utils.cellCoordsToId({ ri, ci }));                
             }
         }
 
         setSelectedCells(newSelectedCells);
     }
 
+    const deselectAllCells = (): void => {
+        setSelectedCells(new Set<CellId>());
+    }
+
     const selectionListeners = { handleMouseDown, handleMouseMove, handleMouseUp };
 
-    return { selectedCells, selectAllCells, isCellSelected, selectionListeners, dragWithCopy };
+    return { selectedCells, selectAllCells, deselectAllCells, isCellSelected, selectionListeners, dragWithCopy };
 }

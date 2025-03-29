@@ -1,8 +1,9 @@
 import { CellId, variables } from "@/components/spreadsheet/spreadsheet.component";
 import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
+import { Utils } from "@/utils/utils";
 
-export enum ValueType { Number, Boolean, String, CellRange };
+export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
 
 export interface Value {
     type: ValueType;
@@ -24,6 +25,11 @@ export interface StringValue {
     value: string;
 }
 
+export interface CellLiteralValue {
+    type: ValueType.CellLiteral;
+    value: number[];
+}
+
 export interface CellRangeValue {
     type: ValueType.CellRange;
     value: number[];
@@ -36,36 +42,20 @@ export class Runtime {
     private step: number;
     private history: Map<CellId, string[]>;
 
-    /*
-        IF
-        AND
-        OR
-
-        RAND
-        ROUND
-
-        MAX
-        MIN
-        SUM
-        AVERAGE
-
-        COUNT
-        CONCATENATE
-        NOW
-    */
+    private inCallExpression: boolean = false;
 
     private functions: Map<string, FunctionCall> = new Map([
         ["if", Functions.conditional],
         ["and", Functions.and],
         ["or", Functions.or],
-        ["cell", Functions.cell],
-        ["stat", Functions.stat],
         ["rand", Functions.rand],
         ["randbetween", Functions.randbetween],
         ["choice", Functions.choice],
         ["sum", Functions.sum],
         ["min", Functions.min],
         ["max", Functions.max],
+
+        ["prev", Functions.prev],
     ]);
 
     public runWithHistory(expression: Expression, step: number, history: Map<CellId, string[]>) {
@@ -127,7 +117,10 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
+        this.inCallExpression = true;
         const evaluatedArgs = args.map(arg => this.runExpression(arg));
+        this.inCallExpression = false;
+
         const result = fn(this.history, this.step, evaluatedArgs);
 
         return result;
@@ -258,13 +251,23 @@ export class Runtime {
 
     private runCellLiteral(expression: CellLiteral): Value {
         const { row: { index: ri }, col: { index: ci } } = expression;
-        const cell = this.history.get(`cell-${ri}-${ci}`);
+
+        if (this.inCallExpression) {
+            return { type: ValueType.CellLiteral, value: [ri, ci] } as CellLiteralValue;
+        }
+
+        const cell = this.history.get(Utils.cellCoordsToId({ ri, ci }));
 
         if (!cell) {
             return { type: ValueType.Number, value: 0 };
         }
 
-        const cellValue = cell[this.step];
+        // take the current value if it exists, otherwise from the previous step
+        const index = cell.length === this.step + 2
+            ? this.step + 1
+            : this.step;
+
+        const cellValue = cell[index];
 
         if (isNaN(parseFloat(cellValue))) {
             return { type: ValueType.String, value: cellValue };

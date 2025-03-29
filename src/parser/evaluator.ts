@@ -1,6 +1,7 @@
 import { CellCoords, CellId, data } from "@/components/spreadsheet/spreadsheet.component";
 import { Parser } from "./parser";
 import { Runtime } from "./runtime";
+import { Utils } from "@/utils/utils";
 
 export class Evaluator {
 
@@ -8,7 +9,7 @@ export class Evaluator {
         const history = new Map<CellId, string[]>();
 
         for (const cellId of cells) {
-            const { ri, ci } = this.getCellCoors(cellId);
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
             const cell = data[ri][ci];
 
             const cellParts = cell.formula.split("=");
@@ -40,7 +41,7 @@ export class Evaluator {
 
         for (let step = 0; step < steps; step++) {
             for (const cellId of cells) {
-                const { ri, ci } = this.getCellCoors(cellId);
+                const { ri, ci } = Utils.cellIdToCoords(cellId);
                 const cell = data[ri][ci];
 
                 const formula = cell.formula.split("=")[cell.formula.split("=").length - 1];
@@ -52,11 +53,5 @@ export class Evaluator {
         }
 
         return history;
-    }
-
-    private getCellCoors(cellId: string): CellCoords {
-        const ri = parseInt(cellId.split("-")[1]);
-        const ci = parseInt(cellId.split("-")[2]);
-        return { ri, ci };
     }
 }
