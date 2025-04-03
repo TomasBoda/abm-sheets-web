@@ -1,73 +1,71 @@
 import { Evaluator } from "@/parser/evaluator";
 import { AlignLeft, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
 import { SpreadsheetUtil } from "./spreadsheet-util";
-import { SpreadsheetCell, SpreadsheetData, SpreadsheetRow, CellCoords, CellId } from "./spreadsheet.model";
+import { SpreadsheetCell, SpreadsheetData, SpreadsheetRow, CellCoords, CellId, History } from "./spreadsheet.model";
 import { useSelection } from "./useSelection.hook";
 import { useModal } from "@/hooks/useModal";
 import { VariablesModal } from "@/modals/variables-modal";
 import { Value } from "@/parser/runtime";
 import { Utils } from "@/utils/utils";
 import { getSortedCells } from "@/utils/topological-sort";
+import { Constants } from "@/utils/constants";
 
 export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(26, 26);
 export let variables: Map<string, Value> = new Map();
 
 export function Spreadsheet() {
 
-    const { showModal } = useModal();
+    // hooks
+
     const {
         selectedCells,
         selectAllCells,
-        deselectAllCells,
         isCellSelected,
         selectionListeners,
         dragWithCopy
     } = useSelection();
 
-    const [step, setStep] = useState<number>(0);
-    const [steps, setSteps] = useState<number>(100);
+    // state
 
-    const [history, setHistory] = useState<Map<CellId, string[]>>(new Map());
+    const [step, setStep] = useState<number>(Constants.DEFAULT_STEP);
+    const [steps, setSteps] = useState<number>(Constants.DEFAULT_STEPS);
+
+    const [history, setHistory] = useState<History>(new Map());
 
     const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set<CellId>());
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
 
-    // select initial cell
-    useEffect(() => {
-        onCellClick(Utils.cellIdToCoords("A1"));
+    // effects
+
+    useEffect(function selectInitialCell() {
+        const coords = Utils.cellIdToCoords(Constants.DEFAULT_CELL);
+        onCellClick(coords);
     }, []);
 
-    // update cell values in steps
-    useEffect(() => {
-        for (const [key, value] of history.entries()) {
-            const cellId = key;
-            const values = value;
-
-            const { ri, ci } = Utils.cellIdToCoords(cellId);
-            getCellSpan({ ri, ci }).innerText = values[step]
+    useEffect(function updateCellValuesEachStep() {
+        for (const [cellId, values] of history.entries()) {
+            const coords = Utils.cellIdToCoords(cellId);
+            getCellSpan(coords).innerText = values[step]
         }
     }, [step]);
 
-    // evaluate cells on change
-    useEffect(() => {
-        evaluateUsedCells();
-    }, [usedCells]);
+    useEffect(() => evaluateUsedCells(), [usedCells]);
 
-    // if more than 1 cell is selected, clear formula
-    useEffect(() => {
-        if (selectedCells.size > 1) {
-            setFormulaValue("");
+    useEffect(function clearFormulaOnMultiSelect() {
+        if (selectedCells.size === 1) {
+            return;
         }
+
+        setFormulaValue("");
     }, [selectedCells]);
 
-    // cmd key down
-    useEffect(() => {
+    useEffect(function subscribeToCmdKey() {
         const handleCmdKey = (event: any) => {
             setCmdKey(event.ctrlKey || event.metaKey);
         }
@@ -79,41 +77,43 @@ export function Spreadsheet() {
             window.removeEventListener("keydown", handleCmdKey);
             window.removeEventListener("keyup", handleCmdKey);
         }
-    }, [])
+    }, []);
 
-    // drag & drop
-    useEffect(() => {
+    useEffect(function subscribeToDragAndDrop() {
         const handleDragOver = (event: any) => {
             event.preventDefault();
         };
-    
+
         const handleDrop = (event: any) => {
             event.preventDefault();
-          
-            const files = event.dataTransfer.files;
+            
+            const { files } = event.dataTransfer;
 
-            if (files.length > 0) {
-                const file = files[0];
-        
-                if (file.type === "application/json") {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        try {
-                            // @ts-ignore
-                            const jsonData = JSON.parse(e.target.result);
-                            importAndLoad(jsonData);
-                        } catch (error) {
-                            console.error("Invalid JSON file:", error);
-                        }
-                    };
-
-                    reader.readAsText(file);
-                } else {
-                    console.error("Only JSON files are allowed");
-                }
+            if (files.length === 0) {
+                return;
             }
-        };
+
+            const file = files[0];
+
+            if (file.type !== "application/json") {
+                console.error("Only JSON files are allowed");
+            }
     
+            const fileReader = new FileReader();
+            
+            fileReader.onload = (event: ProgressEvent<FileReader>) => {
+                try {
+                    const data = event.target.result as string;
+                    const parsed = JSON.parse(data);
+                    importAndLoad(parsed);
+                } catch (error) {
+                    console.error("Invalid JSON file");
+                }
+            };
+
+            fileReader.readAsText(file);
+        }
+
         window.addEventListener("dragover", handleDragOver);
         window.addEventListener("drop", handleDrop);
     
@@ -123,23 +123,27 @@ export function Spreadsheet() {
         };
     }, []);
 
-    function onMouseUp() {
+    // handlers
+
+    const onMouseUp = () => {
         if (!dragWithCopy) {
             return;
         }
 
-        const baseCellCoors = Utils.cellIdToCoords(Array.from(selectedCells)[0]);
+        const baseCell = Array.from(selectedCells)[0];
+        const baseCellCoors = Utils.cellIdToCoords(baseCell);
         const newUsedCells: CellId[] = [];
 
         for (let i = 1; i < Array.from(selectedCells).length; i++) {
-            const currentCellCoors = Utils.cellIdToCoords(Array.from(selectedCells)[i]);
+            const currentCell = Array.from(selectedCells)[i];
+            const currentCellCoors = Utils.cellIdToCoords(currentCell);
 
             const rowOffset = currentCellCoors.ri - baseCellCoors.ri;
             const colOffset = currentCellCoors.ci - baseCellCoors.ci;
 
             const regex = /\$?[A-Z]+\$?\d+/g;
 
-            function shiftCellReference(ref: string): string {
+            const shiftCellReference = (ref: string): string => {
                 const match = ref.match(/(\$?)([A-Z]+)(\$?)(\d+)/);
 
                 if (!match) return ref;
@@ -150,11 +154,12 @@ export function Spreadsheet() {
                 let newRowNumber = parseInt(rowNumber, 10);
 
                 if (!colDollar) {
-                    const currentColIndex = colLetters.split('').reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
+                    const currentColIndex = colLetters.split("").reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
                     const newColIndex = currentColIndex + colOffset;
 
-                    newColLetters = '';
+                    newColLetters = "";
                     let index = newColIndex;
+
                     while (index > 0) {
                         const charCode = ((index - 1) % 26) + 65;
                         newColLetters = String.fromCharCode(charCode) + newColLetters;
@@ -175,48 +180,46 @@ export function Spreadsheet() {
 
             data[currentCellCoors.ri][currentCellCoors.ci].formula = newFormula;
             const cellId = Utils.cellCoordsToId(currentCellCoors);
-            evaluateUsedCells([cellId]);
             newUsedCells.push(cellId);
         }
 
         addUsedCells(newUsedCells);
     }
 
-    // formula utilities
+    // formula
 
-    function getFormulaElement(): HTMLInputElement {
+    const getFormulaElement = () => {
         return document.getElementById("formula") as HTMLInputElement;
     }
 
-    function setFormulaFocus(): void {
+    const setFormulaFocus = () => {
         getFormulaElement().focus();
     }
 
-    function setFormulaValue(value: string): void {
+    const setFormulaValue = (value: string) => {
         getFormulaElement().value = value;
     }
 
-    function onFormulaKeyDown(event: any): void {
-        if (event.key === 'Enter') {
+    const onFormulaEnter = () => {
+        const coords = getFirstSelectedCell();
+        const { formula } = data[coords.ri][coords.ci];
+
+        if (formula.trim() !== "") {
+            addUsedCell(coords);
+        } else {
+            removeUsedCell(coords);
+        }
+    }
+
+    const onFormulaKeyDown = (event: any) => {
+        if (event.key === "Enter") {
             event.preventDefault();
             onFormulaEnter();
             return;
         }
     }
 
-    function onFormulaEnter(): void {
-        const { ri, ci } = getFirstSelectedCell();
-
-        if (data[ri][ci].formula.trim() !== "") {
-            addUsedCell({ ri, ci });
-        } else {
-            removeUsedCell({ ri, ci });
-        }
-
-        setCellIndicatorText({ ri: 0, ci: 0 });
-    }
-
-    function onFormulaInput(value: string): void {
+    const onFormulaInput = (value: string) => {
         const { ri, ci } = getFirstSelectedCell();
         data[ri][ci].formula = value;
 
@@ -229,10 +232,9 @@ export function Spreadsheet() {
         }
     }
 
-    // cell keyboard handlers
+    // cell key handlers
 
-    function onCellKeyDown(event: any) {
-        // backspace
+    const onCellKeyDown = (event: any) => {
         if (event.key === "Backspace") {
             event.preventDefault();
             onCellBackspace();
@@ -240,21 +242,18 @@ export function Spreadsheet() {
         }
 
         if (event.ctrlKey || event.metaKey) {
-            // ctrl + c
             if (event.key === "c") {
                 event.preventDefault();
                 onCellCopy();
                 return;
             }
 
-            // ctrl + v
             if (event.key === "v") {
                 event.preventDefault();
                 onCellPaste();
                 return;
             }
 
-            // ctrl + a
             if (event.key === "a") {
                 event.preventDefault();
                 onCellSelectAll();
@@ -267,12 +266,13 @@ export function Spreadsheet() {
         setFormulaFocus();
     };
 
-    function onCellBackspace(): void {
+    const onCellBackspace = () => {
         for (const cellId of Array.from(selectedCells)) {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
 
             data[ri][ci].formula = "";
             data[ri][ci].value = "";
+
             getCellSpan({ ri, ci }).innerText = "";
             removeUsedCell({ ri, ci });
         }
@@ -280,7 +280,7 @@ export function Spreadsheet() {
         setFormulaValue("");
     }
 
-    function onCellCopy(): void {
+    const onCellCopy = () => {
         const newCopiedCells = new Set<CellId>();
 
         for (const cellId of Array.from(selectedCells)) {
@@ -290,7 +290,7 @@ export function Spreadsheet() {
         setCopiedCells(newCopiedCells);
     }
 
-    function onCellPaste(): void {
+    const onCellPaste = () => {
         const currentCellCoors = Utils.cellIdToCoords(Array.from(selectedCells)[0]);
         const copiedCellCoors = Utils.cellIdToCoords(Array.from(copiedCells)[0]);
     
@@ -301,7 +301,7 @@ export function Spreadsheet() {
     
         const newUsedCells: CellId[] = [];
     
-        function shiftCellReference(ref: string): string {
+        const shiftCellReference = (ref: string): string => {
             const match = ref.match(/(\$?)([A-Z]+)(\$?)(\d+)/);
     
             if (!match) return ref;
@@ -341,44 +341,46 @@ export function Spreadsheet() {
             const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
     
             data[cellRow][cellCol].formula = newFormula;
-            evaluateUsedCells([Utils.cellCoordsToId({ ri: cellRow, ci: cellCol })]);
-            newUsedCells.push(Utils.cellCoordsToId({ ri: cellRow, ci: cellCol }));
+            const cellId = Utils.cellCoordsToId({ ri: cellRow, ci: cellCol });
+            newUsedCells.push(cellId);
         }
     
         addUsedCells(newUsedCells);
     }
 
-    function onCellSelectAll(): void {
+    const onCellSelectAll = () => {
         selectAllCells();
     }
 
     // cell mouse handlers
 
-    function onCellClick({ ri, ci }: CellCoords): void {
+    const onCellClickWithCmd = ({ ri, ci }: CellCoords) => {
+        const input = getFormulaElement();
+        const cellId = Utils.cellCoordsToId({ ri, ci });
+
+        const { selectionStart, selectionEnd, value } = input;
+
+        const textStart = value.substring(0, selectionStart);
+        const textEnd = value.substring(selectionEnd);
+
+        const newValue = textStart + cellId + textEnd;
+        input.value = newValue;
+
+        const coords = Utils.cellIdToCoords(Array.from(selectedCells)[0]);
+        data[coords.ri][coords.ci].formula = newValue;
+
+        const newPosition = selectionStart + cellId.length;
+        input.setSelectionRange(newPosition, newPosition);
+        setFormulaFocus();
+    }
+
+    const onCellClick = ({ ri, ci }: CellCoords) => {
         if (cmdKey) {
-            const input = getFormulaElement();
-            const textToInsert = Utils.cellCoordsToId({ ri, ci });
-
-            const { selectionStart, selectionEnd, value } = input;
-
-            const newValue =
-                value.substring(0, selectionStart) +
-                textToInsert +
-                value.substring(selectionEnd);
-
-            input.value = newValue;
-
-            const coords = Utils.cellIdToCoords(Array.from(selectedCells)[0]);
-            data[coords.ri][coords.ci].formula = newValue;
-
-            const newPosition = selectionStart + textToInsert.length;
-            input.setSelectionRange(newPosition, newPosition);
-            input.focus();
-
+            onCellClickWithCmd({ ri, ci });
             return;
         }
 
-        const formula = data[ri][ci].formula;
+        const { formula } = data[ri][ci];
         setFormulaValue(formula);
 
         setCellIndicatorText({ ri, ci });
@@ -386,29 +388,29 @@ export function Spreadsheet() {
         evaluateUsedCells();
     }
 
-    function onCellDoubleClick({ ri, ci }: CellCoords): void {
-        const formula = data[ri][ci].formula;
+    const onCellDoubleClick = ({ ri, ci }: CellCoords) => {
+        const { formula } = data[ri][ci];
         setFormulaValue(formula);
         setFormulaFocus();
-
         setCellIndicatorText({ ri, ci });
     }
 
     // evaluation
 
-    function run(): void {
-        setStep(0);
+    const run = () => {
+        setStep(Constants.DEFAULT_STEP);
         evaluateUsedCells();
     }
     
-    function evaluateUsedCells(cells: CellId[] = Array.from(usedCells)): void {
-        const usedCellsWithFormula = cells.filter(cellId => {
+    const evaluateUsedCells = () => {
+        const cells = Array.from(usedCells);
+
+        const cellsWithFormula = cells.filter(cellId => {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             return data[ri][ci].formula[0] === "=";
         });
 
-        // topological sort
-        const sortedCells = getSortedCells(usedCellsWithFormula.map(cellId => {
+        const sortedCells = getSortedCells(cellsWithFormula.map(cellId => {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             const formula = data[ri][ci].formula;
             return { id: cellId, formula };
@@ -416,42 +418,37 @@ export function Spreadsheet() {
 
         const history = new Evaluator().evaluateCells(sortedCells, steps);
 
-        for (const [key, value] of history.entries()) {
-            const cellId = key;
-            const values = value;
-
-            const { ri, ci } = Utils.cellIdToCoords(cellId);
-            getCellSpan({ ri, ci }).innerText = values[step];
+        for (const [cellId, values] of history.entries()) {
+            const coords = Utils.cellIdToCoords(cellId);
+            getCellSpan(coords).innerText = values[step];
         }
 
         setHistory(history);
-
-        cells.filter(cellId => {
-            const { ri, ci } = Utils.cellIdToCoords(cellId);
-            return data[ri][ci].formula[0] !== "=";
-        }).forEach(cellId => {
-            const { ri, ci } = Utils.cellIdToCoords(cellId);
-            getCellSpan({ ri, ci }).innerText = data[ri][ci].formula;
-        });
     }
 
     // utilities
 
-    function getCellSpan({ ri, ci }: CellCoords): HTMLSpanElement {
-        return (document.getElementById(Utils.cellCoordsToId({ ri, ci })) as HTMLDivElement).children[0] as HTMLSpanElement;
+    const getCellSpan = (coords: CellCoords): HTMLSpanElement => {
+        const cellId = Utils.cellCoordsToId(coords);
+        const cellElement = document.getElementById(cellId) as HTMLDivElement;
+        const spanElement = cellElement.children[0] as HTMLSpanElement;
+        return spanElement;
     }
 
-    function getFirstSelectedCell(): CellCoords {
-        return Utils.cellIdToCoords(Array.from(selectedCells)[0]);
+    const getFirstSelectedCell = (): CellCoords => {
+        const cellId = Array.from(selectedCells)[0]
+        return Utils.cellIdToCoords(cellId);
     }
 
-    function addUsedCell({ ri, ci }: CellCoords): void {
+    const addUsedCell = (coords: CellCoords) => {
+        const cellId = Utils.cellCoordsToId(coords);
+
         const newUsedCells = new Set<CellId>(usedCells);
-        newUsedCells.add(Utils.cellCoordsToId({ ri, ci }));
+        newUsedCells.add(cellId);
         setUsedCells(newUsedCells);
     }
 
-    function addUsedCells(cellIds: CellId[]): void {
+    const addUsedCells = (cellIds: CellId[]) => {
         const newUsedCells = new Set<CellId>(usedCells);
 
         for (const cellId of cellIds) {
@@ -461,34 +458,26 @@ export function Spreadsheet() {
         setUsedCells(newUsedCells);
     }
 
-    function removeUsedCell({ ri, ci }: CellCoords): void {
+    const removeUsedCell = (coords: CellCoords) => {
+        const cellId = Utils.cellCoordsToId(coords);
+
         const newUsedCells = new Set<CellId>(usedCells);
-        newUsedCells.delete(Utils.cellCoordsToId({ ri, ci }));
+        newUsedCells.delete(cellId);
         setUsedCells(newUsedCells);
     }
 
-    function setCellIndicatorText({ ri, ci }: CellCoords): void {
+    const setCellIndicatorText = ({ ri, ci }: CellCoords) => {
         const currentCell = document.getElementById("current-cell") as HTMLDivElement;
-        currentCell.innerText = `${Utils.columnIndexToText(ci)}${ri + 1}`;
-    }
 
-    function isRowSelected({ ri }): boolean {
-        return Array.from(selectedCells).find(cellId => {
-            const coords = Utils.cellIdToCoords(cellId);
-            return coords.ri == ri;
-        }) !== undefined;
-    }
+        const cellCol = Utils.columnIndexToText(ci);
+        const cellRow = ri + 1;
 
-    function isColSelected({ ci }): boolean {
-        return Array.from(selectedCells).find(cellId => {
-            const coords = Utils.cellIdToCoords(cellId);
-            return coords.ci == ci;
-        }) !== undefined;
+        currentCell.innerText = `${cellCol}${cellRow}`;
     }
 
     // import and export
 
-    function importAndLoad(importedData: any) {
+    const importAndLoad = (importedData: any) => {
         const newUsedCells: CellId[] = [];
 
         for (const [cellId, cellData] of Object.entries(importedData)) {
@@ -500,7 +489,6 @@ export function Spreadsheet() {
 
             if (formula[0] === "=") {
                 newUsedCells.push(cellId as CellId);
-                evaluateUsedCells([cellId as CellId]);
             } else {
                 getCellSpan({ ri, ci }).innerText = formula;
             }
@@ -509,40 +497,42 @@ export function Spreadsheet() {
         addUsedCells(newUsedCells);
     }
 
-    function exportAndSave() {
-        const download = (data: any) => {
-            const jsonString = JSON.stringify(data, null, 2);
-            const blob = new Blob([jsonString], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "export.json";
-            document.body.appendChild(a); 
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
+    const exportAndSave = () => {
         const object = {};
 
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
-                const formula = data[ri][ci].formula;
-                const value = data[ri][ci].value;
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const { formula, value } = data[ri][ci];
 
                 if (formula.trim() === "" && value.trim() === "") {
                     continue;
                 }
                 
-                object[Utils.cellCoordsToId({ ri, ci })] = {
-                    formula: data[ri][ci].formula,
-                    value: data[ri][ci].value,
-                }
+                object[cellId] = { formula, value };
             }
         }
 
-        download(object);
+        Utils.download(object);
     }
+
+    const selectedRows = useMemo(() => {
+        const rows = new Set<number>();
+        selectedCells.forEach(cellId => {
+            const coords = Utils.cellIdToCoords(cellId);
+            rows.add(coords.ri);
+        });
+        return rows;
+    }, [selectedCells]);
+
+    const selectedCols = useMemo(() => {
+        const cols = new Set<number>();
+        selectedCells.forEach(cellId => {
+            const coords = Utils.cellIdToCoords(cellId);
+            cols.add(coords.ci);
+        });
+        return cols;
+    }, [selectedCells]);
 
     return (
         <Container>
@@ -554,8 +544,8 @@ export function Spreadsheet() {
 
                 <TextField
                     id="formula"
-                    onKeyDown={e => onFormulaKeyDown(e)}
-                    onChange={value => onFormulaInput(value)}
+                    onKeyDown={onFormulaKeyDown}
+                    onChange={onFormulaInput}
                     placeholder="Enter formula"
                 />
 
@@ -594,10 +584,17 @@ export function Spreadsheet() {
                 <TableWrapper>
                     <Table id="table">
                         <ColumnRow $entries={data[0].length + 1}>
-                            <TopLeftCell id="current-cell" $selected={false} $special={true} />
+                            <TopLeftCell
+                                id="current-cell"
+                                $selected={false}
+                                $special={true}
+                            />
                             
                             {data[0].map((cell: SpreadsheetCell, ci: number) =>
-                                <ColCell $selected={isColSelected({ ci })} $special={true} key={ci}>
+                                <ColCell
+                                    $selected={selectedCols.has(ci)}
+                                    $special={true}
+                                    key={ci}>
                                     {Utils.columnIndexToText(ci)}
                                 </ColCell>
                             )}
@@ -606,7 +603,7 @@ export function Spreadsheet() {
                         <Wrapper onMouseUp={selectionListeners.handleMouseUp}>
                             {data.map((row: SpreadsheetRow, ri: number) =>
                                 <Row $entries={row.length + 1} key={ri}>
-                                    <RowCell $selected={isRowSelected({ ri })} $special={true}>
+                                    <RowCell $selected={selectedRows.has(ri)} $special={true}>
                                         {ri + 1}
                                     </RowCell>
 
