@@ -1,5 +1,5 @@
-import Head from "next/head";
 import { IndexScreen } from "@/screens/index.screen";
+import Head from "next/head";
 
 export default function IndexPage() {
 

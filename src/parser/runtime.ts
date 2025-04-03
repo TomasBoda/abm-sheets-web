@@ -1,8 +1,8 @@
 import { variables } from "@/components/spreadsheet/spreadsheet.component";
+import { History } from "@/components/spreadsheet/spreadsheet.model";
+import { Utils } from "@/utils/utils";
 import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
-import { Utils } from "@/utils/utils";
-import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 
 export enum ValueType {
     Number, Boolean, String,

@@ -4,7 +4,7 @@ import { TextField } from "@/components/text-field/text-field.component";
 import { Parser } from "@/parser/parser";
 import { Runtime } from "@/parser/runtime";
 import { useState } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const AddVariableModal = ({ hideModal }: { hideModal: () => void }) => {
 

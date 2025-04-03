@@ -1,7 +1,6 @@
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
-import { BooleanValue, CellLiteralValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
 import { Utils } from "@/utils/utils";
-import { CellLiteral } from "./parser";
+import { BooleanValue, CellLiteralValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
 
 export namespace Functions {
 
@@ -15,7 +14,7 @@ export namespace Functions {
         return condition ? subsequent : alternate;
     }
 
-    export function rand(history: History, step: number, args: Value[]): Value {
+    export function rand(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const min = expectNumber(args, 0).value;
         const max = expectNumber(args, 1).value;
         const result = Math.random() * (max - min) + min;
@@ -23,7 +22,7 @@ export namespace Functions {
         return { type: ValueType.Number, value: result };
     }
 
-    export function randbetween(history: History, step: number, args: Value[]): Value {
+    export function randbetween(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const min = expectNumber(args, 0).value;
         const max = expectNumber(args, 1).value;
 
@@ -32,7 +31,7 @@ export namespace Functions {
         return { type: ValueType.Number, value: result };
     }
 
-    export function choice(history: History, step: number, args: Value[]): Value {
+    export function choice(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const numbers: number[] = args.map((arg, index) => expectNumber(args, index).value);
 
         const randomIndex = Math.floor(Math.random() * numbers.length);
@@ -40,7 +39,7 @@ export namespace Functions {
         return { type: ValueType.Number, value: numbers[randomIndex] };
     }
 
-    export function sum(history: History, step: number, args: Value[]): Value {
+    export function sum(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -62,21 +61,21 @@ export namespace Functions {
         return { type: ValueType.Number, value: sum };
     }
 
-    export function min(history: History, step: number, args: Value[]): Value {
+    export function min(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const lower = expectNumber(args, 0).value;
         const upper = expectNumber(args, 1).value;
 
         return { type: ValueType.Number, value: Math.min(lower, upper) };
     }
 
-    export function max(history: History, step: number, args: Value[]): Value {
+    export function max(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const lower = expectNumber(args, 0).value;
         const upper = expectNumber(args, 1).value;
 
         return { type: ValueType.Number, value: Math.max(lower, upper) };
     }
 
-    export function and(history: History, step: number, args: Value[]): Value {
+    export function and(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         for (let i = 0; i < args.length; i++) {
             const value = expectBoolean(args, i);
             
@@ -88,7 +87,7 @@ export namespace Functions {
         return { type: ValueType.Boolean, value: true };
     }
 
-    export function or(history: History, step: number, args: Value[]): Value {
+    export function or(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         for (let i = 0; i < args.length; i++) {
             const value = expectBoolean(args, i);
             
@@ -102,7 +101,7 @@ export namespace Functions {
 
     // cell utilities
 
-    export function prev(history: History, step: number, args: Value[]): Value {
+    export function prev(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
         const cell = expectCellLiteral(args, 0);
 
         const value = history.get(Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] }));

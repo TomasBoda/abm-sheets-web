@@ -1,18 +1,16 @@
 import { Evaluator } from "@/parser/evaluator";
-import { AlignLeft, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play } from "lucide-react";
+import { Value } from "@/parser/runtime";
+import { Constants } from "@/utils/constants";
+import { getSortedCells } from "@/utils/topological-sort";
+import { Utils } from "@/utils/utils";
+import { ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
 import { SpreadsheetUtil } from "./spreadsheet-util";
-import { SpreadsheetCell, SpreadsheetData, SpreadsheetRow, CellCoords, CellId, History } from "./spreadsheet.model";
+import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetData, SpreadsheetRow } from "./spreadsheet.model";
 import { useSelection } from "./useSelection.hook";
-import { useModal } from "@/hooks/useModal";
-import { VariablesModal } from "@/modals/variables-modal";
-import { Value } from "@/parser/runtime";
-import { Utils } from "@/utils/utils";
-import { getSortedCells } from "@/utils/topological-sort";
-import { Constants } from "@/utils/constants";
 
 export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(26, 26);
 export let variables: Map<string, Value> = new Map();
@@ -120,69 +118,6 @@ export function Spreadsheet() {
             window.removeEventListener("drop", handleDrop);
         };
     }, []);
-
-    // handlers
-
-    const onMouseUp = () => {
-        if (!dragWithCopy) {
-            return;
-        }
-
-        const baseCell = Array.from(selectedCells)[0];
-        const baseCellCoors = Utils.cellIdToCoords(baseCell);
-        const newUsedCells: CellId[] = [];
-
-        for (let i = 1; i < Array.from(selectedCells).length; i++) {
-            const currentCell = Array.from(selectedCells)[i];
-            const currentCellCoors = Utils.cellIdToCoords(currentCell);
-
-            const rowOffset = currentCellCoors.ri - baseCellCoors.ri;
-            const colOffset = currentCellCoors.ci - baseCellCoors.ci;
-
-            const regex = /\$?[A-Z]+\$?\d+/g;
-
-            const shiftCellReference = (ref: string): string => {
-                const match = ref.match(/(\$?)([A-Z]+)(\$?)(\d+)/);
-
-                if (!match) return ref;
-
-                const [, colDollar, colLetters, rowDollar, rowNumber] = match;
-
-                let newColLetters = colLetters;
-                let newRowNumber = parseInt(rowNumber, 10);
-
-                if (!colDollar) {
-                    const currentColIndex = colLetters.split("").reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
-                    const newColIndex = currentColIndex + colOffset;
-
-                    newColLetters = "";
-                    let index = newColIndex;
-
-                    while (index > 0) {
-                        const charCode = ((index - 1) % 26) + 65;
-                        newColLetters = String.fromCharCode(charCode) + newColLetters;
-                        index = Math.floor((index - 1) / 26);
-                    }
-                }
-
-                if (!rowDollar) {
-                    newRowNumber += rowOffset;
-                }
-
-                return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
-            }
-
-            let copiedCellFormula = data[baseCellCoors.ri][baseCellCoors.ci].formula;
-
-            const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
-
-            data[currentCellCoors.ri][currentCellCoors.ci].formula = newFormula;
-            const cellId = Utils.cellCoordsToId(currentCellCoors);
-            newUsedCells.push(cellId);
-        }
-
-        addUsedCells(newUsedCells);
-    }
 
     // formula
 
@@ -393,6 +328,69 @@ export function Spreadsheet() {
         setCellIndicatorText({ ri, ci });
     }
 
+    // mouse handlers
+
+    const onMouseUp = () => {
+        if (!dragWithCopy) {
+            return;
+        }
+
+        const baseCell = Array.from(selectedCells)[0];
+        const baseCellCoors = Utils.cellIdToCoords(baseCell);
+        const newUsedCells: CellId[] = [];
+
+        for (let i = 1; i < Array.from(selectedCells).length; i++) {
+            const currentCell = Array.from(selectedCells)[i];
+            const currentCellCoors = Utils.cellIdToCoords(currentCell);
+
+            const rowOffset = currentCellCoors.ri - baseCellCoors.ri;
+            const colOffset = currentCellCoors.ci - baseCellCoors.ci;
+
+            const regex = /\$?[A-Z]+\$?\d+/g;
+
+            const shiftCellReference = (ref: string): string => {
+                const match = ref.match(/(\$?)([A-Z]+)(\$?)(\d+)/);
+
+                if (!match) return ref;
+
+                const [, colDollar, colLetters, rowDollar, rowNumber] = match;
+
+                let newColLetters = colLetters;
+                let newRowNumber = parseInt(rowNumber, 10);
+
+                if (!colDollar) {
+                    const currentColIndex = colLetters.split("").reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
+                    const newColIndex = currentColIndex + colOffset;
+
+                    newColLetters = "";
+                    let index = newColIndex;
+
+                    while (index > 0) {
+                        const charCode = ((index - 1) % 26) + 65;
+                        newColLetters = String.fromCharCode(charCode) + newColLetters;
+                        index = Math.floor((index - 1) / 26);
+                    }
+                }
+
+                if (!rowDollar) {
+                    newRowNumber += rowOffset;
+                }
+
+                return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
+            }
+
+            let copiedCellFormula = data[baseCellCoors.ri][baseCellCoors.ci].formula;
+
+            const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
+
+            data[currentCellCoors.ri][currentCellCoors.ci].formula = newFormula;
+            const cellId = Utils.cellCoordsToId(currentCellCoors);
+            newUsedCells.push(cellId);
+        }
+
+        addUsedCells(newUsedCells);
+    }
+
     // evaluation
 
     const run = () => {
@@ -513,6 +511,8 @@ export function Spreadsheet() {
 
         Utils.download(object);
     }
+
+    // other
 
     const selectedRows = useMemo(() => {
         const rows = new Set<number>();
