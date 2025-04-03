@@ -1,5 +1,5 @@
-import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
 import styled from "styled-components";
+import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
 
 export function IndexScreen() {
     

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
 import { SpreadsheetUtil } from "./spreadsheet-util";
-import { SpreadsheetCell, SpreadsheetData, SpreadsheetRow } from "./spreadsheet.model";
+import { SpreadsheetCell, SpreadsheetData, SpreadsheetRow, CellCoords, CellId } from "./spreadsheet.model";
 import { useSelection } from "./useSelection.hook";
 import { useModal } from "@/hooks/useModal";
 import { VariablesModal } from "@/modals/variables-modal";
@@ -13,12 +13,8 @@ import { Value } from "@/parser/runtime";
 import { Utils } from "@/utils/utils";
 import { getSortedCells } from "@/utils/topological-sort";
 
-export type CellCoords = { ri: number; ci: number; }
-
 export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(26, 26);
 export let variables: Map<string, Value> = new Map();
-
-export type CellId = `${string}${number}`;
 
 export function Spreadsheet() {
 
@@ -41,17 +37,6 @@ export function Spreadsheet() {
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
-
-    useEffect(() => {
-        /* data[0][0].formula = "= B1 + 1"
-        data[0][1].formula = "= 1"
-
-        const usedCells = new Set<CellId>();
-        usedCells.add("cell-0-0");
-        usedCells.add("cell-0-1");
-
-        setUsedCells(usedCells); */
-    }, []);
 
     // select initial cell
     useEffect(() => {
@@ -137,12 +122,6 @@ export function Spreadsheet() {
             window.removeEventListener("drop", handleDrop);
         };
     }, []);
-
-    const showVariableModal = () => {
-        showModal(({ hideModal }) => (
-            <VariablesModal hideModal={hideModal} />
-        ))
-    }
 
     function onMouseUp() {
         if (!dragWithCopy) {
@@ -604,11 +583,6 @@ export function Spreadsheet() {
                     <Play size={12} />
                     Run
                 </Button>
-
-                {/* <Button onClick={showVariableModal}>
-                    <AlignLeft size={12} />
-                    Variables
-                </Button> */}
 
                 <Button onClick={() => exportAndSave()}>
                     <Download size={12} />

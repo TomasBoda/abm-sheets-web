@@ -1,4 +1,4 @@
-import { CellId } from "@/components/spreadsheet/spreadsheet.component";
+import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 import { BooleanValue, CellLiteralValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
 import { Utils } from "@/utils/utils";
 import { CellLiteral } from "./parser";

@@ -28,7 +28,7 @@ const Container = styled.div`
     justify-content: center;
     gap: 6px;
 
-    padding: 8px;
+    padding: 8px 15px;
 
     border: 2px solid var(--text-1);
     border-radius: 7px;

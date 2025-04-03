@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { CellCoords, CellId, data } from "./spreadsheet.component";
+import { data } from "./spreadsheet.component";
 import { Utils } from "@/utils/utils";
+import { CellCoords, CellId } from "./spreadsheet.model";
 
 export const useSelection = () => {
 
@@ -64,5 +65,12 @@ export const useSelection = () => {
 
     const selectionListeners = { handleMouseDown, handleMouseMove, handleMouseUp };
 
-    return { selectedCells, selectAllCells, deselectAllCells, isCellSelected, selectionListeners, dragWithCopy };
+    return {
+        selectedCells,
+        selectAllCells,
+        deselectAllCells,
+        isCellSelected,
+        selectionListeners,
+        dragWithCopy,
+    };
 }

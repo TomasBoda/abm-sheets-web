@@ -1,7 +1,8 @@
-import { CellCoords, CellId, data } from "@/components/spreadsheet/spreadsheet.component";
+import { data } from "@/components/spreadsheet/spreadsheet.component";
 import { Parser } from "./parser";
 import { Runtime } from "./runtime";
 import { Utils } from "@/utils/utils";
+import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 
 export class Evaluator {
 

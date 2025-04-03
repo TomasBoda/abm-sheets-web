@@ -1,4 +1,4 @@
-import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.component";
+import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "./utils";
 
 export interface CellItem {

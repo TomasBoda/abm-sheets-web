@@ -1,7 +1,8 @@
-import { CellId, variables } from "@/components/spreadsheet/spreadsheet.component";
+import { variables } from "@/components/spreadsheet/spreadsheet.component";
 import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
 import { Utils } from "@/utils/utils";
+import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 
 export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
 

@@ -20,6 +20,7 @@ export const TextField = ({ id, value, onChange, onKeyDown, placeholder, disable
             onKeyDown={onKeyDown}
             placeholder={placeholder ?? "Enter text"}
             disabled={disabled}
+            autoComplete="off"
         />
     )
 }
