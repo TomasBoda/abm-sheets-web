@@ -11,4 +11,4 @@ export type CellId = `${string}${number}`;
 
 export type CellCoords = { ri: number; ci: number; };
 
-export type History = Map<CellId, string[]>;
+export type History = History;

@@ -58,11 +58,9 @@ export function Spreadsheet() {
     useEffect(() => evaluateUsedCells(), [usedCells]);
 
     useEffect(function clearFormulaOnMultiSelect() {
-        if (selectedCells.size === 1) {
-            return;
+        if (selectedCells.size > 1) {
+            setFormulaValue("");
         }
-
-        setFormulaValue("");
     }, [selectedCells]);
 
     useEffect(function subscribeToCmdKey() {
@@ -544,8 +542,8 @@ export function Spreadsheet() {
 
                 <TextField
                     id="formula"
-                    onKeyDown={onFormulaKeyDown}
-                    onChange={onFormulaInput}
+                    onKeyDown={event => onFormulaKeyDown(event)}
+                    onChange={value => onFormulaInput(value)}
                     placeholder="Enter formula"
                 />
 

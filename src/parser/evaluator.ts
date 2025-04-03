@@ -2,12 +2,12 @@ import { data } from "@/components/spreadsheet/spreadsheet.component";
 import { Parser } from "./parser";
 import { Runtime } from "./runtime";
 import { Utils } from "@/utils/utils";
-import { CellId } from "@/components/spreadsheet/spreadsheet.model";
+import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 
 export class Evaluator {
 
     public evaluateCells(cells: CellId[], steps: number) {
-        const history = new Map<CellId, string[]>();
+        const history: History = new Map();
 
         for (const cellId of cells) {
             const { ri, ci } = Utils.cellIdToCoords(cellId);

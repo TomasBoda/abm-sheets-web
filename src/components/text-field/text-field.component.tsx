@@ -9,7 +9,7 @@ interface Props {
     disabled?: boolean;
 }
 
-export const TextField = ({ id, value, onChange, onKeyDown, placeholder, disabled = false }: Props) => {
+export const TextField = ({ id, value, onChange, onKeyDown, placeholder = "Enter text", disabled = false }: Props) => {
 
     return (
         <Input
@@ -18,7 +18,7 @@ export const TextField = ({ id, value, onChange, onKeyDown, placeholder, disable
             value={value}
             onChange={e => onChange?.(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder={placeholder ?? "Enter text"}
+            placeholder={placeholder}
             disabled={disabled}
             autoComplete="off"
         />

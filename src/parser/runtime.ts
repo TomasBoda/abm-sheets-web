@@ -2,9 +2,12 @@ import { variables } from "@/components/spreadsheet/spreadsheet.component";
 import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
 import { Utils } from "@/utils/utils";
-import { CellId } from "@/components/spreadsheet/spreadsheet.model";
+import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 
-export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
+export enum ValueType {
+    Number, Boolean, String,
+    CellLiteral, CellRange
+};
 
 export interface Value {
     type: ValueType;
@@ -36,12 +39,12 @@ export interface CellRangeValue {
     value: number[];
 }
 
-type FunctionCall = (history: Map<CellId, string[]>, step: number, args: Value[]) => Value;
+type FunctionCall = (history: History, step: number, args: Value[]) => Value;
 
 export class Runtime {
 
     private step: number;
-    private history: Map<CellId, string[]>;
+    private history: History;
 
     private inCallExpression: boolean = false;
 
@@ -59,7 +62,7 @@ export class Runtime {
         ["prev", Functions.prev],
     ]);
 
-    public runWithHistory(expression: Expression, step: number, history: Map<CellId, string[]>) {
+    public runWithHistory(expression: Expression, step: number, history: History) {
         this.step = step;
         this.history = history;
         return this.run(expression);

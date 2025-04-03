@@ -1,19 +1,9 @@
 
 export enum TokenType {
-    Identifier,
-    Number,
-    Boolean,
-
-    OpenParen,
-    CloseParen,
-
-    BinOp,
-    RelOp,
-
-    Comma,
-    Dot,
-    Colon,
-
+    Identifier, Number, Boolean,
+    OpenParen, CloseParen,
+    BinOp, RelOp,
+    Comma, Dot, Colon,
     EOF,
 };
 
@@ -31,8 +21,8 @@ export class Lexer {
         this.formula = formula.split("");
         this.tokens = [];
 
-        while (this.at() !== undefined) {
-            const value = this.at()!;
+        while (this.at()) {
+            const value = this.at();
 
             if (this.isSkippable(value)) {
                 this.next();
@@ -103,13 +93,7 @@ export class Lexer {
             identifier += this.next()!;
         }
 
-        // keywords
         switch (identifier) {
-            case "true":
-            case "false": {
-                this.token(TokenType.Boolean, identifier);
-                break;
-            }
             case "eq":
             case "neq":
             case "gt":
@@ -117,6 +101,11 @@ export class Lexer {
             case "lt":
             case "le": {
                 this.token(TokenType.RelOp, identifier);
+                break;
+            }
+            case "true":
+            case "false": {
+                this.token(TokenType.Boolean, identifier);
                 break;
             }
             default: {
