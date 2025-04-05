@@ -1,7 +1,7 @@
 import { Button } from "@/components/button/button.component";
 import { variables } from "@/components/spreadsheet/spreadsheet.component";
 import { useModal } from "@/hooks/useModal";
-import { Value } from "@/parser/runtime";
+import { Value } from "@/runtime/runtime";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";

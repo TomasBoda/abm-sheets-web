@@ -1,8 +1,8 @@
 import { Button } from "@/components/button/button.component";
 import { variables } from "@/components/spreadsheet/spreadsheet.component";
 import { TextField } from "@/components/text-field/text-field.component";
-import { Parser } from "@/parser/parser";
-import { Runtime } from "@/parser/runtime";
+import { Parser } from "@/runtime/parser";
+import { Runtime } from "@/runtime/runtime";
 import { useState } from "react";
 import styled from "styled-components";
 

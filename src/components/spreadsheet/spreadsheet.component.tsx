@@ -1,5 +1,5 @@
-import { Evaluator } from "@/parser/evaluator";
-import { Value } from "@/parser/runtime";
+import { Evaluator } from "@/runtime/evaluator";
+import { Value } from "@/runtime/runtime";
 import { Constants } from "@/utils/constants";
 import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
@@ -118,6 +118,24 @@ export function Spreadsheet() {
             window.removeEventListener("drop", handleDrop);
         };
     }, []);
+
+    useEffect(function subscribeToArrowKeys() {
+        const handleKey = (event: any) => {
+            if (cmdKey && event.key === "ArrowLeft") {
+                prevStep();
+            }
+
+            if (cmdKey && event.key === "ArrowRight") {
+                nextStep();
+            }
+        }
+
+        window.addEventListener("keydown", handleKey);
+
+        return () => {
+            window.removeEventListener("keydown", handleKey);
+        }
+    }, [cmdKey]);
 
     // formula
 
@@ -392,11 +410,6 @@ export function Spreadsheet() {
     }
 
     // evaluation
-
-    const run = () => {
-        setStep(Constants.DEFAULT_STEP);
-        evaluateUsedCells();
-    }
     
     const evaluateUsedCells = () => {
         const cells = Array.from(usedCells);
@@ -420,6 +433,47 @@ export function Spreadsheet() {
         }
 
         setHistory(history);
+    }
+
+    // import and export
+
+    const importAndLoad = (importedData: any) => {
+        const newUsedCells: CellId[] = [];
+
+        for (const [cellId, cellData] of Object.entries(importedData)) {
+            const { formula, value } = cellData as any;
+            const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
+
+            data[ri][ci].formula = formula;
+            data[ri][ci].value = value;
+
+            if (formula[0] === "=") {
+                newUsedCells.push(cellId as CellId);
+            } else {
+                getCellSpan({ ri, ci }).innerText = formula;
+            }
+        }
+
+        addUsedCells(newUsedCells);
+    }
+
+    const exportAndSave = () => {
+        const object = {};
+
+        for (let ri = 0; ri < data.length; ri++) {
+            for (let ci = 0; ci < data[ri].length; ci++) {
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const { formula, value } = data[ri][ci];
+
+                if (formula.trim() === "" && value.trim() === "") {
+                    continue;
+                }
+                
+                object[cellId] = { formula, value };
+            }
+        }
+
+        Utils.download(object);
     }
 
     // utilities
@@ -471,45 +525,12 @@ export function Spreadsheet() {
         currentCell.innerText = `${cellCol}${cellRow}`;
     }
 
-    // import and export
-
-    const importAndLoad = (importedData: any) => {
-        const newUsedCells: CellId[] = [];
-
-        for (const [cellId, cellData] of Object.entries(importedData)) {
-            const { formula, value } = cellData as any;
-            const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
-
-            data[ri][ci].formula = formula;
-            data[ri][ci].value = value;
-
-            if (formula[0] === "=") {
-                newUsedCells.push(cellId as CellId);
-            } else {
-                getCellSpan({ ri, ci }).innerText = formula;
-            }
-        }
-
-        addUsedCells(newUsedCells);
+    const prevStep = () => {
+        setStep(prev => Math.max(0, prev - 1))
     }
 
-    const exportAndSave = () => {
-        const object = {};
-
-        for (let ri = 0; ri < data.length; ri++) {
-            for (let ci = 0; ci < data[ri].length; ci++) {
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value } = data[ri][ci];
-
-                if (formula.trim() === "" && value.trim() === "") {
-                    continue;
-                }
-                
-                object[cellId] = { formula, value };
-            }
-        }
-
-        Utils.download(object);
+    const nextStep = () => {
+        setStep(prev => Math.min(prev + 1, steps))
     }
 
     // other
@@ -533,7 +554,7 @@ export function Spreadsheet() {
     }, [selectedCells]);
 
     return (
-        <Container>
+        <Container id="container">
             <Header>
                 <Logo>
                     <Grid2x2Plus size={20} color="var(--primary)" />
@@ -548,7 +569,7 @@ export function Spreadsheet() {
                 />
 
                 <Stepper>
-                    <Icon onClick={() => setStep(prev => Math.max(0, prev - 1))}>
+                    <Icon onClick={prevStep}>
                         <ChevronLeft size={16} color="var(--text-1)" />
                     </Icon>
                     
@@ -556,7 +577,7 @@ export function Spreadsheet() {
                         value={step.toString()}
                         disabled={true}
                     />
-                    <Icon onClick={() => setStep(prev => Math.min(prev + 1, steps))}>
+                    <Icon onClick={nextStep}>
                         <ChevronRight size={16} color="var(--text-1)" />
                     </Icon>
                 </Stepper>
@@ -566,11 +587,6 @@ export function Spreadsheet() {
                     onChange={value => value === "" ? setSteps(0) : setSteps(parseInt(value))}
                     placeholder="Steps"
                 />
-
-                <Button onClick={() => run()}>
-                    <Play size={12} />
-                    Run
-                </Button>
 
                 <Button onClick={() => exportAndSave()}>
                     <Download size={12} />
@@ -649,7 +665,7 @@ const Header = styled.div`
     width: 100%;
 
     display: grid;
-    grid-template-columns: auto 1fr 150px 100px auto auto;
+    grid-template-columns: auto 1fr 150px 100px auto;
     align-items: center;
     gap: 15px;
 `;
