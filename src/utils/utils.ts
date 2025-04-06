@@ -47,6 +47,29 @@ export namespace Utils {
         return index;
     }
 
+    export const getFormula = (formula: string): { defaultFormula?: string; primaryFormula?: string; }  => {
+        const parts = formula.split("=");
+
+        if (parts.length === 0) {
+            return {
+                defaultFormula: undefined,
+                primaryFormula: undefined
+            };
+        }
+
+        if (parts.length === 2) {
+            return {
+                defaultFormula: undefined,
+                primaryFormula: parts[1],
+            }
+        }
+
+        return {
+            defaultFormula: parts[1],
+            primaryFormula: parts[2],
+        };
+    }
+
     export const download = (data: any): void => {
         const jsonString = JSON.stringify(data, null, 2);
         const blob = new Blob([jsonString], { type: "application/json" });

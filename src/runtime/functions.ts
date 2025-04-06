@@ -1,12 +1,10 @@
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
-import { BooleanValue, CellLiteralValue, CellRangeValue, NumberValue, Value, ValueType } from "./runtime";
+import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue, StringValue, Value, ValueType } from "./runtime";
 
 export namespace Functions {
 
-    export function conditional(history: History, step: number, args: Value[]): Value {
-        // TODO: this does not work because cell(ri, ci) does not return boolean even though it should
-
+    export function conditional({ args }: FuncProps): Value {
         const condition = expectBoolean(args, 0).value;
         const subsequent = args[1];
         const alternate = args[2];
@@ -14,32 +12,31 @@ export namespace Functions {
         return condition ? subsequent : alternate;
     }
 
-    export function rand(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
-        const min = expectNumber(args, 0).value;
-        const max = expectNumber(args, 1).value;
-        const result = Math.random() * (max - min) + min;
-
-        return { type: ValueType.Number, value: result };
+    export function rand({}: FuncProps): Value {
+        const result = Math.random();
+        return createNumber(result);
     }
 
-    export function randbetween(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function randbetween({ args }: FuncProps): Value {
         const min = expectNumber(args, 0).value;
         const max = expectNumber(args, 1).value;
 
         const result = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        return { type: ValueType.Number, value: result };
+        return createNumber(result);
     }
 
-    export function choice(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
-        const numbers: number[] = args.map((arg, index) => expectNumber(args, index).value);
+    export function choice({ args }: FuncProps): Value {
+        const numbers = args.map((arg, index) =>
+            expectNumber(args, index).value);
 
-        const randomIndex = Math.floor(Math.random() * numbers.length);
-        
-        return { type: ValueType.Number, value: numbers[randomIndex] };
+        const index = Math.floor(Math.random() * numbers.length);
+        const result = numbers[index];
+
+        return createNumber(result);
     }
 
-    export function sum(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function sum({ args, step, history }: FuncProps): Value {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -58,67 +55,78 @@ export namespace Functions {
             }
         }
 
-        return { type: ValueType.Number, value: sum };
+        return createNumber(sum);
     }
 
-    export function min(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function min({ args }: FuncProps): Value {
         const lower = expectNumber(args, 0).value;
         const upper = expectNumber(args, 1).value;
+        const result = Math.min(lower, upper);
 
-        return { type: ValueType.Number, value: Math.min(lower, upper) };
+        return createNumber(result);
     }
 
-    export function max(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function max({ args }: FuncProps): Value {
         const lower = expectNumber(args, 0).value;
         const upper = expectNumber(args, 1).value;
+        const result = Math.max(lower, upper);
 
-        return { type: ValueType.Number, value: Math.max(lower, upper) };
+        return createNumber(result);
     }
 
-    export function and(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function and({ args }: FuncProps): Value {
         for (let i = 0; i < args.length; i++) {
             const value = expectBoolean(args, i);
             
             if (!value.value) {
-                return { type: ValueType.Boolean, value: false };
+                return createBoolean(false);
             }
         }
 
-        return { type: ValueType.Boolean, value: true };
+        return createBoolean(true);
     }
 
-    export function or(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function or({ args }: FuncProps): Value {
         for (let i = 0; i < args.length; i++) {
             const value = expectBoolean(args, i);
             
             if (value.value) {
-                return { type: ValueType.Boolean, value: true };
+                return createBoolean(true);
             }
         }
 
-        return { type: ValueType.Boolean, value: false };
+        return createBoolean(false);
     }
 
     // cell utilities
 
-    export function prev(history: Map<CellId, string[]>, step: number, args: Value[]): Value {
+    export function prev({ args, step, history }: FuncProps): Value {
         const cell = expectCellLiteral(args, 0);
+        const cellId = Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] });
 
-        const value = history.get(Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] }));
+        const value = history.get(cellId);
 
         if (!value || step < 1) {
-            return { type: ValueType.Number, value: 0 };
+            return createNumber(0);
         }
 
         const cellValue = value[value.length - 2];
 
         if (isNaN(parseFloat(cellValue))) {
-            return { type: ValueType.String, value: cellValue };
+            return createString(cellValue);
         } else {
-            return { type: ValueType.Number, value: parseFloat(cellValue) };
+            return createNumber(parseFloat(cellValue));
         }
     }
 }
+
+// utils
+
+const createNumber = (value: number): NumberValue => ({ type: ValueType.Number, value });
+const createBoolean = (value: boolean): BooleanValue => ({ type: ValueType.Boolean, value });
+const createString = (value: string): StringValue => ({ type: ValueType.String, value });
+
+// expect
 
 function expectNumber(args: Value[], index: number): NumberValue {
     return expectArg(args, index, ValueType.Number) as NumberValue;

@@ -49,13 +49,6 @@ export interface CellRangeLiteral extends Expression {
     right: CellLiteral;
 }
 
-export interface RelationalExpression extends Expression {
-    type: NodeType.RelationalExpression;
-    left: Expression;
-    right: Expression;
-    operator: string;
-}
-
 export interface BinaryExpression extends Expression {
     type: NodeType.BinaryExpression;
     left: Expression;
@@ -66,6 +59,13 @@ export interface BinaryExpression extends Expression {
 export interface UnaryExpression extends Expression {
     type: NodeType.UnaryExpression;
     value: Expression;
+    operator: string;
+}
+
+export interface RelationalExpression extends Expression {
+    type: NodeType.RelationalExpression;
+    left: Expression;
+    right: Expression;
     operator: string;
 }
 

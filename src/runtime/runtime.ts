@@ -4,10 +4,7 @@ import { Utils } from "@/utils/utils";
 import { Functions } from "./functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
 
-export enum ValueType {
-    Number, Boolean, String,
-    CellLiteral, CellRange
-};
+export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
 
 export interface Value {
     type: ValueType;
@@ -39,7 +36,13 @@ export interface CellRangeValue {
     value: number[];
 }
 
-type FunctionCall = (history: History, step: number, args: Value[]) => Value;
+export type FuncProps = {
+    args: Value[];
+    step: number;
+    history: History;
+}
+
+export type FuncCall = (props: FuncProps) => Value;
 
 export class Runtime {
 
@@ -48,7 +51,7 @@ export class Runtime {
 
     private inCallExpression: boolean = false;
 
-    private functions: Map<string, FunctionCall> = new Map([
+    private functions: Map<string, FuncCall> = new Map([
         ["if", Functions.conditional],
         ["and", Functions.and],
         ["or", Functions.or],
@@ -62,14 +65,14 @@ export class Runtime {
         ["prev", Functions.prev],
     ]);
 
-    public runWithHistory(expression: Expression, step: number, history: History) {
+    public run(expression: Expression, step: number, history: History) {
         this.step = step;
         this.history = history;
-        return this.run(expression);
+        return this.runFormula(expression);
     }
 
-    public run(expression: Expression): string {
-        let result;
+    public runFormula(expression: Expression): string {
+        let result: Value;
 
         try {
             result = this.runExpression(expression);
@@ -78,12 +81,18 @@ export class Runtime {
         }
 
         switch (result.type) {
-            case ValueType.Number:
-                return (result as NumberValue).value.toFixed(2).toString();
-            case ValueType.Boolean:
-                return (result as BooleanValue).value ? "1" : "0";
-            case ValueType.String:
-                return (result as StringValue).value;
+            case ValueType.Number: {
+                const { value } = result as NumberValue;
+                return value.toFixed(2).toString();
+            }
+            case ValueType.Boolean: {
+                const { value } = result as BooleanValue;
+                return value ? "TRUE" : "FALSE";
+            }
+            case ValueType.String: {
+                const { value } = result as StringValue;
+                return value;
+            }
         }
     }
 
@@ -115,19 +124,24 @@ export class Runtime {
     private runCallExpression(expression: CallExpression): Value {
         const { identifier, args } = expression;
 
-        const fn = this.functions.get(identifier);
+        const func = this.functions.get(identifier);
 
-        if (fn === undefined) {
+        if (func === undefined) {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        this.inCallExpression = true;
+        if (identifier === "prev") {
+            this.inCallExpression = true;
+        }
+
         const evaluatedArgs = args.map(arg => this.runExpression(arg));
         this.inCallExpression = false;
 
-        const result = fn(this.history, this.step, evaluatedArgs);
-
-        return result;
+        return func({
+            args: evaluatedArgs,
+            step: this.step,
+            history: this.history
+        });
     }
 
     private runRelationalExpression(expression: RelationalExpression): BooleanValue {
@@ -144,33 +158,25 @@ export class Runtime {
             throw new Error("RHS of relational expression must be a number");
         }
 
-        const lhs = leftValue as NumberValue;
-        const rhs = rightValue as NumberValue;
+        const { value: lhs } = leftValue as NumberValue;
+        const { value: rhs } = rightValue as NumberValue;
 
-        let result: boolean;
-
-        switch (operator) {
-            case "eq":
-                result = lhs.value === rhs.value;
-                break;
-            case "neq":
-                result = lhs.value !== rhs.value;
-                break;
-            case "gt":
-                result = lhs.value > rhs.value;
-                break;
-            case "ge":
-                result = lhs.value >= rhs.value;
-                break;
-            case "lt":
-                result = lhs.value < rhs.value;
-                break;
-            case "le":
-                result = lhs.value <= rhs.value;
-                break;
-            default:
-                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+        const operators = {
+            "eq": (lhs: number, rhs: number) => lhs === rhs,
+            "neq": (lhs: number, rhs: number) => lhs !== rhs,
+            "gt": (lhs: number, rhs: number) => lhs > rhs,
+            "ge": (lhs: number, rhs: number) => lhs >= rhs,
+            "lt": (lhs: number, rhs: number) => lhs < rhs,
+            "le": (lhs: number, rhs: number) => lhs <= rhs,
         }
+
+        const func = operators[operator];
+
+        if (!func) {
+            throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+        }
+
+        const result: boolean = func(lhs, rhs);
 
         return { type: ValueType.Boolean, value: result };
     }
@@ -254,24 +260,21 @@ export class Runtime {
     }
 
     private runCellLiteral(expression: CellLiteral): Value {
-        const { row: { index: ri }, col: { index: ci } } = expression;
+        const ri = expression.row.index;
+        const ci = expression.col.index;
+        const cellId = Utils.cellCoordsToId({ ri, ci });
 
         if (this.inCallExpression) {
             return { type: ValueType.CellLiteral, value: [ri, ci] } as CellLiteralValue;
         }
 
-        const cell = this.history.get(Utils.cellCoordsToId({ ri, ci }));
+        const cellHistory = this.history.get(cellId);
 
-        if (!cell) {
+        if (!cellHistory) {
             return { type: ValueType.Number, value: 0 };
         }
 
-        // take the current value if it exists, otherwise from the previous step
-        const index = cell.length === this.step + 2
-            ? this.step + 1
-            : this.step;
-
-        const cellValue = cell[index];
+        const cellValue = cellHistory[cellHistory.length - 1];
 
         if (isNaN(parseFloat(cellValue))) {
             return { type: ValueType.String, value: cellValue };

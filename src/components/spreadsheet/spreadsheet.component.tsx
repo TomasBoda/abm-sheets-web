@@ -526,11 +526,11 @@ export function Spreadsheet() {
     }
 
     const prevStep = () => {
-        setStep(prev => Math.max(0, prev - 1))
+        setStep(prev => Math.max(0, prev - 1));
     }
 
     const nextStep = () => {
-        setStep(prev => Math.min(prev + 1, steps))
+        setStep(prev => Math.min(prev + 1, steps - 1));
     }
 
     // other
@@ -574,7 +574,7 @@ export function Spreadsheet() {
                     </Icon>
                     
                     <TextField
-                        value={step.toString()}
+                        value={(step + 1).toString()}
                         disabled={true}
                     />
                     <Icon onClick={nextStep}>
