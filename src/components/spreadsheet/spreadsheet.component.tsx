@@ -37,6 +37,8 @@ export function Spreadsheet() {
     const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set<CellId>());
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
+    const [referencedCells, setReferencedCells] = useState<Set<CellId>>(new Set<CellId>());
+
     const [cmdKey, setCmdKey] = useState<boolean>(false);
 
     // effects
@@ -181,6 +183,8 @@ export function Spreadsheet() {
             data[ri][ci].value = "";
             getCellSpan({ ri, ci }).innerText = "";
         }
+
+        selectReferencedCells(value);
     }
 
     // cell key handlers
@@ -323,6 +327,8 @@ export function Spreadsheet() {
         const newPosition = selectionStart + cellId.length;
         input.setSelectionRange(newPosition, newPosition);
         setFormulaFocus();
+
+        selectReferencedCells(newValue);
     }
 
     const onCellClick = ({ ri, ci }: CellCoords) => {
@@ -335,7 +341,7 @@ export function Spreadsheet() {
         setFormulaValue(formula);
 
         setCellIndicatorText({ ri, ci });
-
+        selectReferencedCells(formula);
         evaluateUsedCells();
     }
 
@@ -525,6 +531,13 @@ export function Spreadsheet() {
         currentCell.innerText = `${cellCol}${cellRow}`;
     }
 
+    const selectReferencedCells = (formula: string) => {
+        const cellIds = Utils.getCellIdsFromFormula(formula);
+        const referencedCells = new Set<CellId>();
+        cellIds.forEach(cellId => referencedCells.add(cellId));
+        setReferencedCells(referencedCells);
+    }
+
     const prevStep = () => {
         setStep(prev => Math.max(0, prev - 1));
     }
@@ -601,12 +614,14 @@ export function Spreadsheet() {
                             <TopLeftCell
                                 id="current-cell"
                                 $selected={false}
+                                $referenced={false}
                                 $special={true}
                             />
                             
                             {data[0].map((cell: SpreadsheetCell, ci: number) =>
                                 <ColCell
                                     $selected={selectedCols.has(ci)}
+                                    $referenced={false}
                                     $special={true}
                                     key={ci}>
                                     {Utils.columnIndexToText(ci)}
@@ -617,7 +632,10 @@ export function Spreadsheet() {
                         <Wrapper onMouseUp={selectionListeners.handleMouseUp}>
                             {data.map((row: SpreadsheetRow, ri: number) =>
                                 <Row $entries={row.length + 1} key={ri}>
-                                    <RowCell $selected={selectedRows.has(ri)} $special={true}>
+                                    <RowCell
+                                        $selected={selectedRows.has(ri)}
+                                        $referenced={false}
+                                        $special={true}>
                                         {ri + 1}
                                     </RowCell>
 
@@ -633,6 +651,7 @@ export function Spreadsheet() {
                                             onMouseEnter={() => selectionListeners.handleMouseMove({ ri, ci })}
                                             onMouseUp={() => !cmdKey ? onMouseUp() : {}}
                                             $selected={isCellSelected({ ri, ci })}
+                                            $referenced={referencedCells.has(Utils.cellCoordsToId({ ri, ci }))}
                                         >
                                             <span>{""}</span>
                                             <CellDrag
@@ -780,7 +799,7 @@ const CellDrag = styled.div`
     opacity: 0;
 `;
 
-const Cell = styled.div<{ $selected: boolean; $special?: boolean; }>`
+const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; }>`
     width: 100px;
     height: 35px;
 
@@ -801,13 +820,15 @@ const Cell = styled.div<{ $selected: boolean; $special?: boolean; }>`
     outline: none;
     border: 1px solid var(--bg-6);
 
+    border-color: ${({ $referenced }) => $referenced && "var(--primary)"};
+
     cursor: pointer;
     transition: all 50ms;
 
     user-select: none;
 
     background-color: ${({ $special, $selected }) => $selected ? "var(--bg-3)" : ($special ? "var(--bg-0)" : "var(--bg-1)")};
-    
+
     border: ${({ $special }) => $special && "1px solid transparent"};
 `;
 

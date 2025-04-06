@@ -1,7 +1,7 @@
 import { data } from "@/components/spreadsheet/spreadsheet.component";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
-import { Parser } from "./parser";
+import { Expression, Parser } from "./parser";
 import { Runtime } from "./runtime";
 
 export class Evaluator {
@@ -22,10 +22,14 @@ export class Evaluator {
     }
 
     private evaluateFormula(formula: string, step: number, history: History): string {
-        const expression = new Parser().parse(formula);
-        console.log(expression);
-        const result = new Runtime().run(expression, step, history);
-        return result;
+        try {
+            const expression = new Parser().parse(formula);
+            const result = new Runtime().run(expression, step, history);
+            return result;
+        } catch (e) {
+            console.log(e);
+            return "ERROR";
+        }
     }
 
     public evaluateCells(cells: CellId[], steps: number) {

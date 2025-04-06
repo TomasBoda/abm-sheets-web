@@ -2,6 +2,16 @@ import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.model";
 
 export namespace Utils {
 
+    export const getCellIdsFromFormula = (formula: string): CellId[] => {
+        const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
+        const cellIds = [...formula.matchAll(regex)].map(match => {
+            const ri = parseInt(match[2]) - 1;
+            const ci = Utils.columnTextToIndex(match[1]) - 1;
+            return Utils.cellCoordsToId({ ri, ci });
+        });
+        return cellIds;
+    }
+
     export const cellCoordsToId = ({ ri, ci }: CellCoords): CellId => {
         const col = columnIndexToText(ci);
         const row = ri + 1;

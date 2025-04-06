@@ -72,13 +72,7 @@ export class Runtime {
     }
 
     public runFormula(expression: Expression): string {
-        let result: Value;
-
-        try {
-            result = this.runExpression(expression);
-        } catch (e) {
-            return "ERROR";
-        }
+        const result = this.runExpression(expression)
 
         switch (result.type) {
             case ValueType.Number: {
@@ -277,6 +271,10 @@ export class Runtime {
         const cellValue = cellHistory[cellHistory.length - 1];
 
         if (isNaN(parseFloat(cellValue))) {
+            if (["TRUE", "FALSE"].includes(cellValue)) {
+                return { type: ValueType.Boolean, value: cellValue === "TRUE" };
+            }
+
             return { type: ValueType.String, value: cellValue };
         } else {
             return { type: ValueType.Number, value: parseFloat(cellValue) };

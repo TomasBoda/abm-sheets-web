@@ -5,7 +5,9 @@ import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue,
 export namespace Functions {
 
     export function conditional({ args }: FuncProps): Value {
+        console.log(args);
         const condition = expectBoolean(args, 0).value;
+
         const subsequent = args[1];
         const alternate = args[2];
 
