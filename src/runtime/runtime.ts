@@ -2,7 +2,7 @@ import { variables } from "@/components/spreadsheet/spreadsheet.component";
 import { History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
 import { Functions } from "./functions";
-import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, UnaryExpression } from "./parser";
+import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "./parser";
 
 export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
 
@@ -63,6 +63,7 @@ export class Runtime {
         ["max", Functions.max],
 
         ["prev", Functions.prev],
+        ["history", Functions.history],
     ]);
 
     public run(expression: Expression, step: number, history: History) {
@@ -104,6 +105,8 @@ export class Runtime {
                 return this.runNumericLiteral(expression as NumericLiteral);
             case NodeType.BooleanLiteral:
                 return this.runBooleanLiteral(expression as BooleanLiteral);
+            case NodeType.StringLiteral:
+                return this.runStringLiteral(expression as StringLiteral);
             case NodeType.Identifier:
                 return this.runIdentifier(expression as Identifier);
             case NodeType.CellLiteral:
@@ -124,7 +127,7 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        if (identifier === "prev") {
+        if (identifier === "prev" || identifier === "history") {
             this.inCallExpression = true;
         }
 
@@ -239,6 +242,11 @@ export class Runtime {
     private runBooleanLiteral(expression: BooleanLiteral): BooleanValue {
         const { value } = expression;
         return { type: ValueType.Boolean, value };
+    }
+
+    private runStringLiteral(expression: StringLiteral): StringValue {
+        const { value } = expression;
+        return { type: ValueType.String, value };
     }
 
     private runIdentifier(expression: Identifier): Value {

@@ -27,7 +27,6 @@ export class Evaluator {
             const result = new Runtime().run(expression, step, history);
             return result;
         } catch (e) {
-            console.log(e);
             return "ERROR";
         }
     }

@@ -4,6 +4,7 @@ import { Lexer, Token, TokenType } from "./lexer";
 export enum NodeType {
     NumericLiteral,
     BooleanLiteral,
+    StringLiteral,
     Identifier,
     CellLiteral,
     CellRangeLiteral,
@@ -25,6 +26,11 @@ export interface NumericLiteral extends Expression {
 export interface BooleanLiteral extends Expression {
     type: NodeType.BooleanLiteral;
     value: boolean;
+}
+
+export interface StringLiteral extends Expression {
+    type: NodeType.StringLiteral;
+    value: string;
 }
 
 export interface Identifier extends Expression {
@@ -194,10 +200,14 @@ export class Parser {
                 return this.parseNumericLiteral();
             case TokenType.Boolean:
                 return this.parseBooleanLiteral();
+            case TokenType.String:
+                return this.parseStringLiteral();
             case TokenType.Identifier:
                 return this.parseIdentifier();
             case TokenType.BinOp:
                 return this.parseUnaryExpression();
+            case TokenType.OpenParen:
+                return this.parseParenthesisedExpression();
             default:
                 throw new Error(`Unknown token '${TokenType[this.at().type]}' in parsePrimaryExpression()`);
         }
@@ -211,6 +221,11 @@ export class Parser {
     private parseBooleanLiteral(): Expression {
         const value = this.expect(TokenType.Boolean).value;
         return { type: NodeType.BooleanLiteral, value: value === "true" } as BooleanLiteral;
+    }
+
+    private parseStringLiteral(): Expression {
+        const value = this.expect(TokenType.String).value;
+        return { type: NodeType.StringLiteral, value } as StringLiteral;
     }
 
     private parseIdentifier(): Expression {
@@ -247,6 +262,13 @@ export class Parser {
         const value = this.parseExpression();
 
         return { type: NodeType.UnaryExpression, value, operator } as UnaryExpression;
+    }
+
+    private parseParenthesisedExpression(): Expression {
+        this.expect(TokenType.OpenParen);
+        const expression = this.parseExpression();
+        this.expect(TokenType.CloseParen);
+        return expression;
     }
 
     // utilities

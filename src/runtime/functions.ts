@@ -5,7 +5,6 @@ import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue,
 export namespace Functions {
 
     export function conditional({ args }: FuncProps): Value {
-        console.log(args);
         const condition = expectBoolean(args, 0).value;
 
         const subsequent = args[1];
@@ -113,6 +112,27 @@ export namespace Functions {
         }
 
         const cellValue = value[value.length - 2];
+
+        if (isNaN(parseFloat(cellValue))) {
+            return createString(cellValue);
+        } else {
+            return createNumber(parseFloat(cellValue));
+        }
+    }
+
+    export function history({ args, step, history }: FuncProps): Value {
+        const cell = expectCellLiteral(args, 0).value;
+        const offset = expectNumber(args, 1).value;
+
+        const cellId = Utils.cellCoordsToId({ ri: cell[0], ci: cell[1] });
+
+        const value = history.get(cellId);
+
+        if (!value || step < offset) {
+            return createNumber(0);
+        }
+
+        const cellValue = value[value.length - 1 - offset];
 
         if (isNaN(parseFloat(cellValue))) {
             return createString(cellValue);

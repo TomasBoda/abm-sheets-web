@@ -1,6 +1,6 @@
 
 export enum TokenType {
-    Identifier, Number, Boolean,
+    Identifier, Number, Boolean, String,
     OpenParen, CloseParen,
     BinOp, RelOp,
     Comma, Dot, Colon,
@@ -64,13 +64,18 @@ export class Lexer {
                     break;
                 }
                 default: {
-                    if (this.isAlpha(value) || this.at() === "$") {
+                    if (this.isAlpha(value) || value === "$") {
                         this.tokenizeIdentifier(value);
                         break;
                     }
 
                     if (this.isNumber(value)) {
                         this.tokenizeNumber(value);
+                        break;
+                    }
+
+                    if (this.at() === "\"") {
+                        this.tokenizeString(value);
                         break;
                     }
 
@@ -136,6 +141,20 @@ export class Lexer {
         }
 
         this.token(TokenType.Number, number);
+    }
+
+    private static tokenizeString(value: string): void {
+        this.next();
+
+        let string = "";
+
+        while (this.at() !== "\"") {
+            string += this.next();
+        }
+
+        this.next();
+
+        this.token(TokenType.String, string);
     }
 
     private static token(type: TokenType, value: string): void {
