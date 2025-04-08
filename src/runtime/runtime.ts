@@ -61,9 +61,11 @@ export class Runtime {
         ["sum", Functions.sum],
         ["min", Functions.min],
         ["max", Functions.max],
+        ["abs", Functions.abs],
 
         ["prev", Functions.prev],
         ["history", Functions.history],
+        ["step", Functions.step],
     ]);
 
     public run(expression: Expression, step: number, history: History) {
@@ -147,35 +149,71 @@ export class Runtime {
         const leftValue = this.runExpression(left);
         const rightValue = this.runExpression(right);
 
-        if (leftValue.type !== ValueType.Number) {
-            throw new Error("LHS of relational expression must be a number");
+        if (leftValue.type === ValueType.Number && rightValue.type === ValueType.Number) {
+            const { value: lhs } = leftValue as NumberValue;
+            const { value: rhs } = rightValue as NumberValue;
+    
+            const operators = {
+                "eq": (lhs: number, rhs: number) => lhs === rhs,
+                "neq": (lhs: number, rhs: number) => lhs !== rhs,
+                "gt": (lhs: number, rhs: number) => lhs > rhs,
+                "ge": (lhs: number, rhs: number) => lhs >= rhs,
+                "lt": (lhs: number, rhs: number) => lhs < rhs,
+                "le": (lhs: number, rhs: number) => lhs <= rhs,
+            }
+    
+            const func = operators[operator];
+    
+            if (!func) {
+                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+            }
+    
+            const result: boolean = func(lhs, rhs);
+    
+            return { type: ValueType.Boolean, value: result };
         }
 
-        if (rightValue.type !== ValueType.Number) {
-            throw new Error("RHS of relational expression must be a number");
+        if (leftValue.type === ValueType.Boolean && rightValue.type === ValueType.Boolean) {
+            const { value: lhs } = leftValue as BooleanValue;
+            const { value: rhs } = rightValue as BooleanValue;
+    
+            const operators = {
+                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+            }
+    
+            const func = operators[operator];
+    
+            if (!func) {
+                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+            }
+    
+            const result: boolean = func(lhs, rhs);
+    
+            return { type: ValueType.Boolean, value: result };
         }
 
-        const { value: lhs } = leftValue as NumberValue;
-        const { value: rhs } = rightValue as NumberValue;
-
-        const operators = {
-            "eq": (lhs: number, rhs: number) => lhs === rhs,
-            "neq": (lhs: number, rhs: number) => lhs !== rhs,
-            "gt": (lhs: number, rhs: number) => lhs > rhs,
-            "ge": (lhs: number, rhs: number) => lhs >= rhs,
-            "lt": (lhs: number, rhs: number) => lhs < rhs,
-            "le": (lhs: number, rhs: number) => lhs <= rhs,
+        if (leftValue.type === ValueType.String && rightValue.type === ValueType.String) {
+            const { value: lhs } = leftValue as StringValue;
+            const { value: rhs } = rightValue as StringValue;
+    
+            const operators = {
+                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+            }
+    
+            const func = operators[operator];
+    
+            if (!func) {
+                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+            }
+    
+            const result: boolean = func(lhs, rhs);
+    
+            return { type: ValueType.Boolean, value: result };
         }
 
-        const func = operators[operator];
-
-        if (!func) {
-            throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
-        }
-
-        const result: boolean = func(lhs, rhs);
-
-        return { type: ValueType.Boolean, value: result };
+        throw new Error("LHS and RHS types do not match in relational expression");
     }
 
     private runBinaryExpression(expression: BinaryExpression): NumberValue {
@@ -209,10 +247,11 @@ export class Runtime {
                 break;
             case "/": {
                 if (rhs.value === 0) {
-                    throw new Error("Division by zero");
+                    result = lhs.value / 1;
+                } else {
+                    result = lhs.value / rhs.value;
                 }
 
-                result = lhs.value / rhs.value;
                 break;
             }
             default:

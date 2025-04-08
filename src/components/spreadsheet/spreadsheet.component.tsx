@@ -3,7 +3,7 @@ import { Value } from "@/runtime/runtime";
 import { Constants } from "@/utils/constants";
 import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
-import { ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play, Repeat2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button.component";
@@ -11,8 +11,9 @@ import { TextField } from "../text-field/text-field.component";
 import { SpreadsheetUtil } from "./spreadsheet-util";
 import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetData, SpreadsheetRow } from "./spreadsheet.model";
 import { useSelection } from "./useSelection.hook";
+import { ColorPicker } from "../color-picker/color-picker.component";
 
-export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(26, 26);
+export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(52, 26);
 export let variables: Map<string, Value> = new Map();
 
 export function Spreadsheet() {
@@ -38,6 +39,8 @@ export function Spreadsheet() {
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
     const [referencedCells, setReferencedCells] = useState<Set<CellId>>(new Set<CellId>());
+
+    const [cellColors, setCellColors] = useState<Map<CellId, string>>(new Map());
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
 
@@ -138,6 +141,19 @@ export function Spreadsheet() {
             window.removeEventListener("keydown", handleKey);
         }
     }, [cmdKey]);
+
+    useEffect(function updateCellColors() {
+        for (let ri = 0; ri < data.length; ri++) {
+            for (let ci = 0; ci < data[ri].length; ci++) {
+                delete data[ri][ci].color;
+            }
+        }
+
+        for (const [cellId, color] of cellColors.entries()) {
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
+            data[ri][ci].color = color;
+        }
+    }, [cellColors]);
 
     // formula
 
@@ -445,13 +461,19 @@ export function Spreadsheet() {
 
     const importAndLoad = (importedData: any) => {
         const newUsedCells: CellId[] = [];
+        const newCellColors = new Map<CellId, string>();
 
         for (const [cellId, cellData] of Object.entries(importedData)) {
-            const { formula, value } = cellData as any;
+            const { formula, value, color } = cellData as any;
             const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
 
             data[ri][ci].formula = formula;
             data[ri][ci].value = value;
+            data[ri][ci].color = color;
+
+            if (color) {
+                newCellColors.set(cellId as CellId, color);
+            }
 
             if (formula[0] === "=") {
                 newUsedCells.push(cellId as CellId);
@@ -461,6 +483,7 @@ export function Spreadsheet() {
         }
 
         addUsedCells(newUsedCells);
+        setCellColors(newCellColors);
     }
 
     const exportAndSave = () => {
@@ -469,13 +492,13 @@ export function Spreadsheet() {
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value } = data[ri][ci];
+                const { formula, value, color } = data[ri][ci];
 
                 if (formula.trim() === "" && value.trim() === "") {
                     continue;
                 }
                 
-                object[cellId] = { formula, value };
+                object[cellId] = { formula, value, color };
             }
         }
 
@@ -548,6 +571,20 @@ export function Spreadsheet() {
 
     // other
 
+    const setCellColor = (color: string) => {
+        const newCellColors = new Map(cellColors);
+
+        for (const cellId of Array.from(selectedCells)) {
+            if (color === "") {
+                newCellColors.delete(cellId);
+            } else {
+                newCellColors.set(cellId, color);
+            }
+        }
+
+        setCellColors(newCellColors);
+    }
+
     const selectedRows = useMemo(() => {
         const rows = new Set<number>();
         selectedCells.forEach(cellId => {
@@ -569,42 +606,55 @@ export function Spreadsheet() {
     return (
         <Container id="container">
             <Header>
-                <Logo>
-                    <Grid2x2Plus size={20} color="var(--primary)" />
-                    ABM Sheets
-                </Logo>
+                <TopPanel>
+                    <Logo>
+                        <Grid2x2Plus size={20} color="var(--primary)" />
+                        ABM Sheets
+                    </Logo>
 
-                <TextField
-                    id="formula"
-                    onKeyDown={event => onFormulaKeyDown(event)}
-                    onChange={value => onFormulaInput(value)}
-                    placeholder="Enter formula"
-                />
+                    <div />
 
-                <Stepper>
-                    <Icon onClick={prevStep}>
-                        <ChevronLeft size={16} color="var(--text-1)" />
-                    </Icon>
-                    
+                    <Stepper>
+                        <Icon onClick={prevStep}>
+                            <ChevronLeft size={16} color="var(--text-1)" />
+                        </Icon>
+                        
+                        <TextField
+                            value={(step + 1).toString()}
+                            disabled={true}
+                        />
+                        <Icon onClick={nextStep}>
+                            <ChevronRight size={16} color="var(--text-1)" />
+                        </Icon>
+                    </Stepper>
+
                     <TextField
-                        value={(step + 1).toString()}
-                        disabled={true}
+                        value={steps.toString()}
+                        onChange={value => value === "" ? setSteps(0) : setSteps(parseInt(value))}
+                        placeholder="Steps"
                     />
-                    <Icon onClick={nextStep}>
-                        <ChevronRight size={16} color="var(--text-1)" />
-                    </Icon>
-                </Stepper>
 
-                <TextField
-                    value={steps.toString()}
-                    onChange={value => value === "" ? setSteps(0) : setSteps(parseInt(value))}
-                    placeholder="Steps"
-                />
+                    <Button onClick={() => setStep(0)}>
+                        <Repeat2 size={12} />
+                        Reset
+                    </Button>
 
-                <Button onClick={() => exportAndSave()}>
-                    <Download size={12} />
-                    Export
-                </Button>
+                    <Button onClick={() => exportAndSave()}>
+                        <Download size={12} />
+                        Export
+                    </Button>
+                </TopPanel>
+
+                <BottomPanel>
+                    <TextField
+                        id="formula"
+                        onKeyDown={event => onFormulaKeyDown(event)}
+                        onChange={value => onFormulaInput(value)}
+                        placeholder="Enter formula"
+                    />
+
+                    <ColorPicker onChange={color => setCellColor(color)} />
+                </BottomPanel>
             </Header>
 
             <TableContainer>
@@ -635,7 +685,8 @@ export function Spreadsheet() {
                                     <RowCell
                                         $selected={selectedRows.has(ri)}
                                         $referenced={false}
-                                        $special={true}>
+                                        $special={true}
+                                    >
                                         {ri + 1}
                                     </RowCell>
 
@@ -652,6 +703,7 @@ export function Spreadsheet() {
                                             onMouseUp={() => !cmdKey ? onMouseUp() : {}}
                                             $selected={isCellSelected({ ri, ci })}
                                             $referenced={referencedCells.has(Utils.cellCoordsToId({ ri, ci }))}
+                                            $background={cellColors.get(Utils.cellCoordsToId({ ri, ci }))}
                                         >
                                             <span>{""}</span>
                                             <CellDrag
@@ -683,9 +735,29 @@ const Container = styled.div`
 const Header = styled.div`
     width: 100%;
 
-    display: grid;
-    grid-template-columns: auto 1fr 150px 100px auto;
+    /* display: grid;
+    grid-template-columns: auto 1fr 150px 100px auto auto;
     align-items: center;
+    gap: 15px; */
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+`;
+
+const TopPanel = styled.div`
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: auto 1fr 150px 75px auto auto;
+    gap: 15px;
+`;
+
+const BottomPanel = styled.div`
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
     gap: 15px;
 `;
 
@@ -720,7 +792,7 @@ const Icon = styled.div`
 
     padding: 8px;
 
-    border: 2px solid var(--bg-3);
+    border: 0.1px solid var(--bg-3);
     border-radius: 10px;
     background-color: var(--bg-1);
 
@@ -736,7 +808,7 @@ const TableContainer = styled.div`
     flex: 1;
     display: flex;
 
-    border: 2px solid var(--bg-6);
+    border: 0.1px solid var(--bg-6);
     border-radius: 10px;
 
     overflow: hidden;
@@ -799,13 +871,17 @@ const CellDrag = styled.div`
     opacity: 0;
 `;
 
-const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; }>`
-    width: 100px;
+const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; $background?: string; }>`
+    width: 140px;
     height: 35px;
 
     position: relative;
 
     font-size: 12px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
@@ -818,7 +894,7 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     padding: 10px;
 
     outline: none;
-    border: 1px solid var(--bg-6);
+    border: 0.1px solid rgba(255, 255, 255, 0.08);
 
     border-color: ${({ $referenced }) => $referenced && "var(--primary)"};
 
@@ -827,7 +903,9 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
 
     user-select: none;
 
-    background-color: ${({ $special, $selected }) => $selected ? "var(--bg-3)" : ($special ? "var(--bg-0)" : "var(--bg-1)")};
+    background-color: ${({ $special, $selected }) => $selected ? "var(--bg-2)" : ($special ? "var(--bg-0)" : "var(--bg-1)")};
+
+    background-color: ${({ $background }) => $background ?? ""};
 
     border: ${({ $special }) => $special && "1px solid transparent"};
 `;
@@ -844,6 +922,8 @@ const ColCell = styled(Cell)`
 `;
 
 const RowCell = styled(Cell)`
+    width: 60px;
+
     position: sticky;
     left: 0;
 
@@ -851,6 +931,8 @@ const RowCell = styled(Cell)`
 `;
 
 const TopLeftCell = styled(RowCell)`
+    width: 60px;
+
     position: sticky;
     left: 0;
     top: 0;

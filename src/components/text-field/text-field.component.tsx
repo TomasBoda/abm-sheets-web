@@ -35,7 +35,7 @@ const Input = styled.input`
 
     padding: 8px;
 
-    border: 2px solid var(--bg-3);
+    border: 0.1px solid var(--bg-3);
     border-radius: 7px;
 
     outline: none;
@@ -48,6 +48,6 @@ const Input = styled.input`
     }
 
     &:focus {
-        border: 2px solid var(--bg-5);
+        border-color: var(--bg-5);
     }
 `;

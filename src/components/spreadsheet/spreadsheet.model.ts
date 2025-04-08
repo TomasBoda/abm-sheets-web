@@ -2,6 +2,7 @@
 export type SpreadsheetCell = {
     formula: string;
     value: string;
+    color?: string;
 };
 
 export type SpreadsheetRow = SpreadsheetCell[];

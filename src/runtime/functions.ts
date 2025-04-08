@@ -4,6 +4,10 @@ import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue,
 
 export namespace Functions {
 
+    export function step({ step }: FuncProps): Value {
+        return createNumber(step);
+    }
+
     export function conditional({ args }: FuncProps): Value {
         const condition = expectBoolean(args, 0).value;
 
@@ -35,6 +39,11 @@ export namespace Functions {
         const result = numbers[index];
 
         return createNumber(result);
+    }
+
+    export function abs({ args }: FuncProps): Value {
+        const value = expectNumber(args, 0).value;
+        return createNumber(Math.abs(value));
     }
 
     export function sum({ args, step, history }: FuncProps): Value {
