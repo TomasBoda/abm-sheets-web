@@ -1,0 +1,557 @@
+{
+  "B2": {
+    "formula": "task 1",
+    "value": "task 1",
+    "color": "rgb(52, 45, 45)"
+  },
+  "E2": {
+    "formula": "task 2",
+    "value": "task 2",
+    "color": "rgb(52, 45, 45)"
+  },
+  "H2": {
+    "formula": "task 3",
+    "value": "task 3",
+    "color": "rgb(52, 45, 45)"
+  },
+  "K2": {
+    "formula": "task 4",
+    "value": "task 4",
+    "color": "rgb(52, 45, 45)"
+  },
+  "E4": {
+    "formula": "finish line",
+    "value": "finish line",
+    "color": "rgb(34, 44, 34)"
+  },
+  "F4": {
+    "formula": "= 50",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H4": {
+    "formula": "finish line",
+    "value": "finish line",
+    "color": "rgb(34, 44, 34)"
+  },
+  "I4": {
+    "formula": "= 50",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K4": {
+    "formula": "finish line",
+    "value": "finish line",
+    "color": "rgb(34, 44, 34)"
+  },
+  "L4": {
+    "formula": "= 50",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B6": {
+    "formula": "position",
+    "value": "position",
+    "color": "rgb(42, 42, 54)"
+  },
+  "C6": {
+    "formula": "speed",
+    "value": "speed",
+    "color": "rgb(42, 42, 54)"
+  },
+  "E6": {
+    "formula": "position",
+    "value": "position",
+    "color": "rgb(42, 42, 54)"
+  },
+  "F6": {
+    "formula": "speed",
+    "value": "speed",
+    "color": "rgb(42, 42, 54)"
+  },
+  "H6": {
+    "formula": "position",
+    "value": "position",
+    "color": "rgb(42, 42, 54)"
+  },
+  "I6": {
+    "formula": "speed",
+    "value": "speed",
+    "color": "rgb(42, 42, 54)"
+  },
+  "K6": {
+    "formula": "position",
+    "value": "position",
+    "color": "rgb(42, 42, 54)"
+  },
+  "L6": {
+    "formula": "speed",
+    "value": "speed",
+    "color": "rgb(42, 42, 54)"
+  },
+  "M6": {
+    "formula": "finished",
+    "value": "finished",
+    "color": "rgb(42, 42, 54)"
+  },
+  "N6": {
+    "formula": "any finished",
+    "value": "any finished",
+    "color": "rgb(34, 44, 34)"
+  },
+  "B8": {
+    "formula": "= 0 = B8 + C8",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C8": {
+    "formula": "= randbetween(1,5) = C8",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E8": {
+    "formula": "= 0 = if(or(E8 ge $F$4, E7 ge $F$4, E9 ge $F$4), E8, E8 + F8)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F8": {
+    "formula": "= randbetween(1,5) = F8",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H8": {
+    "formula": "= 0 = if(or(H8 ge $I$4, H7 ge $I$4, H9 ge $I$4), H8, H8 + I8)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I8": {
+    "formula": "= randbetween(1,5) = max(1, I8 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K8": {
+    "formula": "= 0 = if($N$8 gt 0, K8, K8 + L8)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L8": {
+    "formula": "= randbetween(1,5) = max(1, L8 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M8": {
+    "formula": "= if(K8 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "N8": {
+    "formula": "= if(sum(M8:M17) gt 0, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B9": {
+    "formula": "= 0 = B9 + C9",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C9": {
+    "formula": "= randbetween(1,5) = C9",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E9": {
+    "formula": "= 0 = if(or(E9 ge $F$4, E8 ge $F$4, E10 ge $F$4), E9, E9 + F9)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F9": {
+    "formula": "= randbetween(1,5) = F9",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H9": {
+    "formula": "= 0 = if(or(H9 ge $I$4, H8 ge $I$4, H10 ge $I$4), H9, H9 + I9)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I9": {
+    "formula": "= randbetween(1,5) = max(1, I9 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K9": {
+    "formula": "= 0 = if($N$8 gt 0, K9, K9 + L9)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L9": {
+    "formula": "= randbetween(1,5) = max(1, L9 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M9": {
+    "formula": "= if(K9 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B10": {
+    "formula": "= 0 = B10 + C10",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C10": {
+    "formula": "= randbetween(1,5) = C10",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E10": {
+    "formula": "= 0 = if(or(E10 ge $F$4, E9 ge $F$4, E11 ge $F$4), E10, E10 + F10)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F10": {
+    "formula": "= randbetween(1,5) = F10",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H10": {
+    "formula": "= 0 = if(or(H10 ge $I$4, H9 ge $I$4, H11 ge $I$4), H10, H10 + I10)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I10": {
+    "formula": "= randbetween(1,5) = max(1, I10 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K10": {
+    "formula": "= 0 = if($N$8 gt 0, K10, K10 + L10)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L10": {
+    "formula": "= randbetween(1,5) = max(1, L10 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M10": {
+    "formula": "= if(K10 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B11": {
+    "formula": "= 0 = B11 + C11",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C11": {
+    "formula": "= randbetween(1,5) = C11",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E11": {
+    "formula": "= 0 = if(or(E11 ge $F$4, E10 ge $F$4, E12 ge $F$4), E11, E11 + F11)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F11": {
+    "formula": "= randbetween(1,5) = F11",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H11": {
+    "formula": "= 0 = if(or(H11 ge $I$4, H10 ge $I$4, H12 ge $I$4), H11, H11 + I11)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I11": {
+    "formula": "= randbetween(1,5) = max(1, I11 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K11": {
+    "formula": "= 0 = if($N$8 gt 0, K11, K11 + L11)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L11": {
+    "formula": "= randbetween(1,5) = max(1, L11 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M11": {
+    "formula": "= if(K11 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B12": {
+    "formula": "= 0 = B12 + C12",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C12": {
+    "formula": "= randbetween(1,5) = C12",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E12": {
+    "formula": "= 0 = if(or(E12 ge $F$4, E11 ge $F$4, E13 ge $F$4), E12, E12 + F12)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F12": {
+    "formula": "= randbetween(1,5) = F12",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H12": {
+    "formula": "= 0 = if(or(H12 ge $I$4, H11 ge $I$4, H13 ge $I$4), H12, H12 + I12)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I12": {
+    "formula": "= randbetween(1,5) = max(1, I12 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K12": {
+    "formula": "= 0 = if($N$8 gt 0, K12, K12 + L12)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L12": {
+    "formula": "= randbetween(1,5) = max(1, L12 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M12": {
+    "formula": "= if(K12 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B13": {
+    "formula": "= 0 = B13 + C13",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C13": {
+    "formula": "= randbetween(1,5) = C13",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E13": {
+    "formula": "= 0 = if(or(E13 ge $F$4, E12 ge $F$4, E14 ge $F$4), E13, E13 + F13)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F13": {
+    "formula": "= randbetween(1,5) = F13",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H13": {
+    "formula": "= 0 = if(or(H13 ge $I$4, H12 ge $I$4, H14 ge $I$4), H13, H13 + I13)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I13": {
+    "formula": "= randbetween(1,5) = max(1, I13 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K13": {
+    "formula": "= 0 = if($N$8 gt 0, K13, K13 + L13)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L13": {
+    "formula": "= randbetween(1,5) = max(1, L13 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M13": {
+    "formula": "= if(K13 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B14": {
+    "formula": "= 0 = B14 + C14",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C14": {
+    "formula": "= randbetween(1,5) = C14",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E14": {
+    "formula": "= 0 = if(or(E14 ge $F$4, E13 ge $F$4, E15 ge $F$4), E14, E14 + F14)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F14": {
+    "formula": "= randbetween(1,5) = F14",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H14": {
+    "formula": "= 0 = if(or(H14 ge $I$4, H13 ge $I$4, H15 ge $I$4), H14, H14 + I14)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I14": {
+    "formula": "= randbetween(1,5) = max(1, I14 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K14": {
+    "formula": "= 0 = if($N$8 gt 0, K14, K14 + L14)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L14": {
+    "formula": "= randbetween(1,5) = max(1, L14 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M14": {
+    "formula": "= if(K14 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B15": {
+    "formula": "= 0 = B15 + C15",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C15": {
+    "formula": "= randbetween(1,5) = C15",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E15": {
+    "formula": "= 0 = if(or(E15 ge $F$4, E14 ge $F$4, E16 ge $F$4), E15, E15 + F15)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F15": {
+    "formula": "= randbetween(1,5) = F15",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H15": {
+    "formula": "= 0 = if(or(H15 ge $I$4, H14 ge $I$4, H16 ge $I$4), H15, H15 + I15)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I15": {
+    "formula": "= randbetween(1,5) = max(1, I15 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K15": {
+    "formula": "= 0 = if($N$8 gt 0, K15, K15 + L15)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L15": {
+    "formula": "= randbetween(1,5) = max(1, L15 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M15": {
+    "formula": "= if(K15 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B16": {
+    "formula": "= 0 = B16 + C16",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C16": {
+    "formula": "= randbetween(1,5) = C16",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E16": {
+    "formula": "= 0 = if(or(E16 ge $F$4, E15 ge $F$4, E17 ge $F$4), E16, E16 + F16)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F16": {
+    "formula": "= randbetween(1,5) = F16",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H16": {
+    "formula": "= 0 = if(or(H16 ge $I$4, H15 ge $I$4, H17 ge $I$4), H16, H16 + I16)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I16": {
+    "formula": "= randbetween(1,5) = max(1, I16 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K16": {
+    "formula": "= 0 = if($N$8 gt 0, K16, K16 + L16)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L16": {
+    "formula": "= randbetween(1,5) = max(1, L16 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M16": {
+    "formula": "= if(K16 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B17": {
+    "formula": "= 0 = B17 + C17",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "C17": {
+    "formula": "= randbetween(1,5) = C17",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "E17": {
+    "formula": "= 0 = if(or(E17 ge $F$4, E16 ge $F$4, E18 ge $F$4), E17, E17 + F17)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "F17": {
+    "formula": "= randbetween(1,5) = F17",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "H17": {
+    "formula": "= 0 = if(or(H17 ge $I$4, H16 ge $I$4, H18 ge $I$4), H17, H17 + I17)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "I17": {
+    "formula": "= randbetween(1,5) = max(1, I17 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "K17": {
+    "formula": "= 0 = if($N$8 gt 0, K17, K17 + L17)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "L17": {
+    "formula": "= randbetween(1,5) = max(1, L17 + (rand(0,1) - 0.5))",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "M17": {
+    "formula": "= if(K17 ge $L$4, 1, 0)",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  }
+}

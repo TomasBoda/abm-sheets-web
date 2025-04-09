@@ -13,7 +13,7 @@ import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetData, Spreadsh
 import { useSelection } from "./useSelection.hook";
 import { ColorPicker } from "../color-picker/color-picker.component";
 
-export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(52, 26);
+export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(32, 26);
 export let variables: Map<string, Value> = new Map();
 
 export function Spreadsheet() {
