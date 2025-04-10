@@ -3,7 +3,7 @@ import { Value } from "@/runtime/runtime";
 import { Constants } from "@/utils/constants";
 import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
-import { ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play, Repeat2 } from "lucide-react";
+import { ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play, Repeat2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button.component";
@@ -12,6 +12,8 @@ import { SpreadsheetUtil } from "./spreadsheet-util";
 import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetData, SpreadsheetRow } from "./spreadsheet.model";
 import { useSelection } from "./useSelection.hook";
 import { ColorPicker } from "../color-picker/color-picker.component";
+import { useModal } from "@/hooks/useModal";
+import { GraphModal } from "@/modals/graph-modal";
 
 export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(32, 26);
 export let variables: Map<string, Value> = new Map();
@@ -19,6 +21,8 @@ export let variables: Map<string, Value> = new Map();
 export function Spreadsheet() {
 
     // hooks
+
+    const { showModal } = useModal();
 
     const {
         selectedCells,
@@ -43,6 +47,23 @@ export function Spreadsheet() {
     const [cellColors, setCellColors] = useState<Map<CellId, string>>(new Map());
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
+
+    // modals
+
+    const openGraphModal = () => {
+        const cellId: CellId = Array.from(selectedCells)[0];
+        const data = history.get(cellId);
+
+        const values = data
+            ? data
+                .filter(value => !isNaN(parseFloat(value)))
+                .map(value => parseFloat(value))
+            : [];
+
+        showModal(({ hideModal }) => (
+            <GraphModal hideModal={hideModal} values={values} />
+        ))
+    }
 
     // effects
 
@@ -649,6 +670,11 @@ export function Spreadsheet() {
                         Reset
                     </Button>
 
+                    <Button onClick={() => openGraphModal()}>
+                        <ChartLine size={12} />
+                        Graph
+                    </Button>
+
                     <Button onClick={() => exportAndSave()}>
                         <Download size={12} />
                         Export
@@ -759,7 +785,7 @@ const TopPanel = styled.div`
     width: 100%;
 
     display: grid;
-    grid-template-columns: auto 1fr 150px 75px auto auto;
+    grid-template-columns: auto 1fr 150px 75px auto auto auto;
     gap: 15px;
 `;
 
