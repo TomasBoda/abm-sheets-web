@@ -61,6 +61,12 @@ export class Runtime {
         ["sum", Functions.sum],
         ["min", Functions.min],
         ["max", Functions.max],
+        ["average", Functions.average],
+        ["count", Functions.count],
+        ["power", Functions.power],
+        ["ceiling", Functions.ceiling],
+        ["floor", Functions.floor],
+        ["concat", Functions.concat],
         ["abs", Functions.abs],
 
         ["prev", Functions.prev],

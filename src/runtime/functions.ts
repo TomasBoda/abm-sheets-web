@@ -1,6 +1,7 @@
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
 import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue, StringValue, Value, ValueType } from "./runtime";
+import { data } from "@/components/spreadsheet/spreadsheet.component";
 
 export namespace Functions {
 
@@ -68,20 +69,191 @@ export namespace Functions {
         return createNumber(sum);
     }
 
-    export function min({ args }: FuncProps): Value {
-        const lower = expectNumber(args, 0).value;
-        const upper = expectNumber(args, 1).value;
-        const result = Math.min(lower, upper);
+    export function min({ args, step, history }: FuncProps): Value {
+        const range = expectCellRange(args, 0).value;
 
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
+
+        let min: number | undefined = undefined;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const formula = data[ri][ci].formula;
+
+                if (!formula.startsWith("=")) {
+                    continue;
+                }
+
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined || cell[step] === undefined) {
+                    continue;
+                }
+
+                const value = cell[step];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                min = min !== undefined ? Math.min(min, parseFloat(value)) : parseFloat(value);
+            }
+        }
+
+        return createNumber(min);
+    }
+
+    export function max({ args, step, history }: FuncProps): Value {
+        const range = expectCellRange(args, 0).value;
+
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
+
+        let max: number | undefined = undefined;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const formula = data[ri][ci].formula;
+
+                if (!formula.startsWith("=")) {
+                    continue;
+                }
+
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined || cell[step] === undefined) {
+                    continue;
+                }
+
+                const value = cell[step];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                max = max !== undefined ? Math.max(max, parseFloat(value)) : parseFloat(value);
+            }
+        }
+
+        return createNumber(max);
+    }
+
+    export function average({ args, step, history }: FuncProps): Value {
+        const range = expectCellRange(args, 0).value;
+
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
+
+        let sum = 0;
+        let count = 0;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const formula = data[ri][ci].formula;
+
+                if (!formula.startsWith("=")) {
+                    continue;
+                }
+
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined || cell[step] === undefined) {
+                    continue;
+                }
+
+                const value = cell[step];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                sum += parseFloat(value);
+                count += 1;
+            }
+        }
+
+        const average = sum / count;
+
+        return createNumber(average);
+    }
+
+    export function count({ args, step, history }: FuncProps): Value {
+        const range = expectCellRange(args, 0).value;
+
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
+
+        let count = 0;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const formula = data[ri][ci].formula;
+
+                if (!formula.startsWith("=")) {
+                    continue;
+                }
+
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined || cell[step] === undefined) {
+                    continue;
+                }
+
+                const value = cell[step];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                count += 1;
+            }
+        }
+
+        return createNumber(count);
+    }
+
+    export function power({ args }: FuncProps): Value {
+        const value = expectNumber(args, 0).value;
+        const power = expectNumber(args, 1).value;
+
+        const result = Math.pow(value, power);
         return createNumber(result);
     }
 
-    export function max({ args }: FuncProps): Value {
-        const lower = expectNumber(args, 0).value;
-        const upper = expectNumber(args, 1).value;
-        const result = Math.max(lower, upper);
+    export function ceiling({ args }: FuncProps): Value {
+        const value = expectNumber(args, 0).value;
 
+        const result = Math.ceil(value);
         return createNumber(result);
+    }
+
+    export function floor({ args }: FuncProps): Value {
+        const value = expectNumber(args, 0).value;
+
+        const result = Math.floor(value);
+        return createNumber(result);
+    }
+
+    export function concat({ args }: FuncProps): Value {
+        // TODO: fix args and add support for any number of args
+        const value1 = args[0];
+        const value2 = args[1];
+
+        const result = value1.value.toString() + value2.value.toString();
+        return createString(result);
     }
 
     export function and({ args }: FuncProps): Value {
