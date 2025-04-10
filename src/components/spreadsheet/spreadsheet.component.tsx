@@ -455,6 +455,16 @@ export function Spreadsheet() {
         }
 
         setHistory(history);
+
+        const cellsWithoutFormula = cells.filter(cellId => {
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
+            return data[ri][ci].formula[0] !== "=";
+        });
+
+        for (const cellId of cellsWithoutFormula) {
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
+            getCellSpan({ ri, ci }).innerText = data[ri][ci].formula;
+        }
     }
 
     // import and export
@@ -898,7 +908,7 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
 
     border-color: ${({ $referenced }) => $referenced && "var(--primary)"};
 
-    cursor: pointer;
+    //cursor: pointer;
     transition: all 50ms;
 
     user-select: none;
