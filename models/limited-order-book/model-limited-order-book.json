@@ -1,0 +1,157 @@
+{
+  "B2": {
+    "formula": "traders",
+    "value": "traders",
+    "color": "rgb(52, 45, 45)"
+  },
+  "B4": {
+    "formula": "trader",
+    "value": "trader",
+    "color": "rgb(42, 42, 54)"
+  },
+  "C4": {
+    "formula": "stocks",
+    "value": "stocks",
+    "color": "rgb(42, 42, 54)"
+  },
+  "D4": {
+    "formula": "belief",
+    "value": "",
+    "color": "rgb(42, 42, 54)"
+  },
+  "E4": {
+    "formula": "offer",
+    "value": "",
+    "color": "rgb(42, 42, 54)"
+  },
+  "F4": {
+    "formula": "buy/sell",
+    "value": "buy/sell",
+    "color": "rgb(42, 42, 54)"
+  },
+  "B6": {
+    "formula": "1",
+    "value": "1"
+  },
+  "C6": {
+    "formula": "= randbetween(100, 10000) = C6",
+    "value": ""
+  },
+  "D6": {
+    "formula": "= randbetween($C$12 / 2, $C$12) = D6",
+    "value": ""
+  },
+  "E6": {
+    "formula": "= randbetween(-C6, C6 / 2)",
+    "value": ""
+  },
+  "F6": {
+    "formula": "= if(E6 ge 0, \"BUY\", \"SELL\")",
+    "value": ""
+  },
+  "B7": {
+    "formula": "2",
+    "value": "2"
+  },
+  "C7": {
+    "formula": "= randbetween(100, 10000) = C7",
+    "value": ""
+  },
+  "D7": {
+    "formula": "= randbetween($C$12 / 2, $C$12) = D7",
+    "value": ""
+  },
+  "E7": {
+    "formula": "= randbetween(-C7, C7 / 2)",
+    "value": ""
+  },
+  "F7": {
+    "formula": "= if(E7 ge 0, \"BUY\", \"SELL\")",
+    "value": ""
+  },
+  "B8": {
+    "formula": "3",
+    "value": "3"
+  },
+  "C8": {
+    "formula": "= randbetween(100, 10000) = C8",
+    "value": ""
+  },
+  "D8": {
+    "formula": "= randbetween($C$12 / 2, $C$12) = D8",
+    "value": ""
+  },
+  "E8": {
+    "formula": "= randbetween(-C8, C8 / 2)",
+    "value": ""
+  },
+  "F8": {
+    "formula": "= if(E8 ge 0, \"BUY\", \"SELL\")",
+    "value": ""
+  },
+  "B9": {
+    "formula": "4",
+    "value": "4"
+  },
+  "C9": {
+    "formula": "= randbetween(100, 10000) = C9",
+    "value": ""
+  },
+  "D9": {
+    "formula": "= randbetween($C$12 / 2, $C$12) = D9",
+    "value": ""
+  },
+  "E9": {
+    "formula": "= randbetween(-C9, C9 / 2)",
+    "value": ""
+  },
+  "F9": {
+    "formula": "= if(E9 ge 0, \"BUY\", \"SELL\")",
+    "value": ""
+  },
+  "B10": {
+    "formula": "5",
+    "value": "5"
+  },
+  "C10": {
+    "formula": "= randbetween(100, 10000) = C10",
+    "value": ""
+  },
+  "D10": {
+    "formula": "= randbetween($C$12 / 2, $C$12) = D10",
+    "value": ""
+  },
+  "E10": {
+    "formula": "= randbetween(-C10, C10 / 2)",
+    "value": ""
+  },
+  "F10": {
+    "formula": "= if(E10 ge 0, \"BUY\", \"SELL\")",
+    "value": ""
+  },
+  "B12": {
+    "formula": "initial belief",
+    "value": "initial belief",
+    "color": "rgb(52, 45, 45)"
+  },
+  "C12": {
+    "formula": "=100",
+    "value": "",
+    "color": "rgb(30, 30, 30)"
+  },
+  "B14": {
+    "formula": "transactions",
+    "value": "transactions",
+    "color": "rgb(52, 45, 45)"
+  },
+  "B16": {
+    "formula": "buyer",
+    "value": "buyer",
+    "color": "rgb(42, 42, 54)"
+  },
+  "C16": {
+    "formula": "seller",
+    "value": "seller",
+    "color": "rgb(42, 42, 54)"
+  }
+}
