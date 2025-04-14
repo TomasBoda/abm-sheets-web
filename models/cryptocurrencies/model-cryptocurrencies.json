@@ -100,12 +100,12 @@
     "color": "rgb(30, 30, 30)"
   },
   "C12": {
-    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, min(1.0, $H$11 * abs($F$5) / 100)))",
+    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, mmin(1.0, $H$11 * abs($F$5) / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
   "D12": {
-    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, min(1.0, $H$11 * $F$5 / 100)))",
+    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, mmin(1.0, $H$11 * $F$5 / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
@@ -125,12 +125,12 @@
     "color": "rgb(30, 30, 30)"
   },
   "C13": {
-    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, min(1.0, $H$11 * abs($F$5) / 100)))",
+    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, mmin(1.0, $H$11 * abs($F$5) / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
   "D13": {
-    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, min(1.0, $H$11 * $F$5 / 100)))",
+    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, mmin(1.0, $H$11 * $F$5 / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
@@ -150,12 +150,12 @@
     "color": "rgb(30, 30, 30)"
   },
   "C14": {
-    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, min(1.0, $H$11 * abs($F$5) / 100)))",
+    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, mmin(1.0, $H$11 * abs($F$5) / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
   "D14": {
-    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, min(1.0, $H$11 * $F$5 / 100)))",
+    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, mmin(1.0, $H$11 * $F$5 / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
@@ -175,12 +175,12 @@
     "color": "rgb(30, 30, 30)"
   },
   "C15": {
-    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, min(1.0, $H$11 * abs($F$5) / 100)))",
+    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, mmin(1.0, $H$11 * abs($F$5) / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
   "D15": {
-    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, min(1.0, $H$11 * $F$5 / 100)))",
+    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, mmin(1.0, $H$11 * $F$5 / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
@@ -200,12 +200,12 @@
     "color": "rgb(30, 30, 30)"
   },
   "C16": {
-    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, min(1.0, $H$11 * abs($F$5) / 100)))",
+    "formula": "=if($F$5 eq 0, 1, if($F$5 gt 0, 0, mmin(1.0, $H$11 * abs($F$5) / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },
   "D16": {
-    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, min(1.0, $H$11 * $F$5 / 100)))",
+    "formula": "=if($F$5 eq 0, 0, if($F$5 lt 0, 0, mmin(1.0, $H$11 * $F$5 / 100)))",
     "value": "",
     "color": "rgb(30, 30, 30)"
   },

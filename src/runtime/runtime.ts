@@ -69,6 +69,9 @@ export class Runtime {
         ["concat", Functions.concat],
         ["abs", Functions.abs],
 
+        ["mmin", Functions.mmin],
+        ["mmax", Functions.mmax],
+
         ["prev", Functions.prev],
         ["history", Functions.history],
         ["step", Functions.step],

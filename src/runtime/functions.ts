@@ -69,6 +69,22 @@ export namespace Functions {
         return createNumber(sum);
     }
 
+    export function mmin({ args, step, history }: FuncProps): Value {
+        const value1 = expectNumber(args, 0).value;
+        const value2 = expectNumber(args, 1).value;
+
+        const result = Math.min(value1, value2);
+        return createNumber(result);
+    }
+
+    export function mmax({ args, step, history }: FuncProps): Value {
+        const value1 = expectNumber(args, 0).value;
+        const value2 = expectNumber(args, 1).value;
+
+        const result = Math.max(value1, value2);
+        return createNumber(result);
+    }
+
     export function min({ args, step, history }: FuncProps): Value {
         const range = expectCellRange(args, 0).value;
 
