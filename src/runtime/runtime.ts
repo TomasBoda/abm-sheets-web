@@ -75,6 +75,9 @@ export class Runtime {
         ["prev", Functions.prev],
         ["history", Functions.history],
         ["step", Functions.step],
+
+        ["index", Functions.index],
+        ["match", Functions.match],
     ]);
 
     public run(expression: Expression, step: number, history: History) {

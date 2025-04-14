@@ -11,7 +11,7 @@ export const ColorPicker = ({ onChange }: Props) => {
     return (
         <Container>
             {colors.map(color => (
-                <Color $color={color} onClick={() => onChange(color)} />)
+                <Color $color={color} onClick={() => onChange(color)} key={color} />)
             )}
         </Container>
     )

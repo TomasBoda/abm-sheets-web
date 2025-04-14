@@ -5,6 +5,42 @@ import { data } from "@/components/spreadsheet/spreadsheet.component";
 
 export namespace Functions {
 
+    export const index = ({ args, step, history }: FuncProps): Value => {
+        const lookupRange = expectCellRange(args, 0).value;
+        const index = expectNumber(args, 1).value;
+
+        const ci = lookupRange[0];
+        const ri = lookupRange[1] + index;
+
+        const cell = history.get(Utils.cellCoordsToId({ ri, ci }));
+        const value = cell ? cell[cell.length === step + 2 ? step + 1 : step] : "0";
+
+        return createNumber(parseFloat(value));
+    }
+
+    export const match = ({ args, step, history }: FuncProps): Value => {
+        const lookupValue = args[0].value;
+        const lookupRange = expectCellRange(args, 1).value;
+
+        const c1 = lookupRange[0];
+        const r1 = lookupRange[1];
+        const c2 = lookupRange[2];
+        const r2 = lookupRange[3];
+
+        for (let r = r1; r <= r2; r++) {
+            for (let c = c1; c <= c2; c++) {
+                const cell = history.get(Utils.cellCoordsToId({ ri: r, ci: c }));
+                const value = cell ? cell[cell.length === step + 2 ? step + 1 : step] : "0";
+
+                if (value === lookupValue) {
+                    return createNumber(r - 1);
+                }
+            }
+        }
+
+        return createNumber(-1);
+    }
+
     export function step({ step }: FuncProps): Value {
         return createNumber(step);
     }
