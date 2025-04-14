@@ -50,15 +50,6 @@ const getCellFormulaDependencies = (formula: string): CellCoords[] => {
     const dependencies = Array.from(dependencySet);
 
     return dependencies.map(dependency => Utils.cellIdToCoords(dependency));
-
-    /* const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
-    const matches = [...formula.matchAll(regex)].map(match => {
-        return {
-            ri: parseInt(match[2]) - 1,
-            ci: Utils.columnTextToIndex(match[1]) - 1,
-        };
-    });
-    return matches; */
 }
 
 const getPrunedFormula = (formula: string): string => {
@@ -95,6 +86,7 @@ const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
 
         visiting.set(id, true);
         const currentItem = itemsMap.get(id);
+
         if (currentItem) {
             for (const dependency of currentItem.dependencies) {
                 visit(dependency, itemsMap);
@@ -107,6 +99,7 @@ const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
     };
 
     const itemsMap = new Map(cells.map(item => [item.id, item]));
+
     for (const item of cells) {
         if (!visited.get(item.id)) {
             visit(item.id, itemsMap);

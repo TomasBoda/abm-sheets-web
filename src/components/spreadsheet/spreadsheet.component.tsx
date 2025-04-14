@@ -148,10 +148,14 @@ export function Spreadsheet() {
     useEffect(function subscribeToArrowKeys() {
         const handleKey = (event: any) => {
             if (cmdKey && event.key === "ArrowLeft") {
+                event.preventDefault();
+                event.stopPropagation();
                 prevStep();
             }
 
             if (cmdKey && event.key === "ArrowRight") {
+                event.preventDefault();
+                event.stopPropagation();
                 nextStep();
             }
         }
