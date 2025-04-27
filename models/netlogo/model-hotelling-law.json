@@ -161,15 +161,18 @@
   },
   "N6": {
     "formula": "=if(mmax(K6, L6) gt J6, \"YES\", \"NO\")",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "O6": {
     "formula": "=if(N6 eq \"YES\", if(K6 ge L6, \"UP\", \"DOWN\"), \"NONE\")",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "P6": {
     "formula": "=if(O6 eq \"UP\", G6, if(O6 eq \"DOWN\", -H6, 0))",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "C7": {
     "formula": "=C6+1",
@@ -213,15 +216,18 @@
   },
   "N7": {
     "formula": "=if(mmax(K7, L7) gt J7, \"YES\", \"NO\")",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "O7": {
     "formula": "=if(N7 eq \"YES\", if(K7 ge L7, \"UP\", \"DOWN\"), \"NONE\")",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "P7": {
     "formula": "=if(O7 eq \"UP\", G7, if(O7 eq \"DOWN\", -H7, 0))",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "C8": {
     "formula": "=C7+1",
@@ -265,15 +271,18 @@
   },
   "N8": {
     "formula": "=if(mmax(K8, L8) gt J8, \"YES\", \"NO\")",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "O8": {
     "formula": "=if(N8 eq \"YES\", if(K8 ge L8, \"UP\", \"DOWN\"), \"NONE\")",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "P8": {
     "formula": "=if(O8 eq \"UP\", G8, if(O8 eq \"DOWN\", -H8, 0))",
-    "value": ""
+    "value": "",
+    "color": "rgb(230, 230, 230)"
   },
   "C11": {
     "formula": "consumers",
