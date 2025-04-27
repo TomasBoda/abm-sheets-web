@@ -1,85 +1,6 @@
 import { Utils } from "@/utils/utils";
-import { Lexer, Token, TokenType } from "./lexer";
-
-export enum NodeType {
-    NumericLiteral,
-    BooleanLiteral,
-    StringLiteral,
-    Identifier,
-    CellLiteral,
-    CellRangeLiteral,
-    RelationalExpression,
-    BinaryExpression,
-    UnaryExpression,
-    CallExpression,
-}
-
-export interface Expression {
-    type: NodeType;
-}
-
-export interface NumericLiteral extends Expression {
-    type: NodeType.NumericLiteral;
-    value: number;
-}
-
-export interface BooleanLiteral extends Expression {
-    type: NodeType.BooleanLiteral;
-    value: boolean;
-}
-
-export interface StringLiteral extends Expression {
-    type: NodeType.StringLiteral;
-    value: string;
-}
-
-export interface Identifier extends Expression {
-    type: NodeType.Identifier;
-    value: string;
-}
-
-type CellAxis = {
-    index: number;
-    fixed: boolean;
-}
-
-export interface CellLiteral extends Expression {
-    type: NodeType.CellLiteral;
-    row: CellAxis;
-    col: CellAxis;
-}
-
-export interface CellRangeLiteral extends Expression {
-    type: NodeType.CellRangeLiteral;
-    left: CellLiteral;
-    right: CellLiteral;
-}
-
-export interface BinaryExpression extends Expression {
-    type: NodeType.BinaryExpression;
-    left: Expression;
-    right: Expression;
-    operator: string;
-}
-
-export interface UnaryExpression extends Expression {
-    type: NodeType.UnaryExpression;
-    value: Expression;
-    operator: string;
-}
-
-export interface RelationalExpression extends Expression {
-    type: NodeType.RelationalExpression;
-    left: Expression;
-    right: Expression;
-    operator: string;
-}
-
-export interface CallExpression extends Expression {
-    type: NodeType.CallExpression;
-    identifier: string;
-    args: Expression[];
-}
+import { Lexer, Token, TokenType } from "../lexer";
+import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "./model";
 
 export class Parser {
 
@@ -97,7 +18,7 @@ export class Parser {
     private parseRelationalExpression(): Expression {
         let left: Expression = this.parseAdditiveExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.RelOp && (this.at().value === "eq" || this.at().value === "neq" || this.at().value === "gt" || this.at().value === "ge" || this.at().value === "lt" || this.at().value === "le")) {
+        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.RelOp && ["eq", "neq", "gt", "ge", "lt", "le"].includes(this.at().value)) {
             const operator = this.next().value;
             const right = this.parseAdditiveExpression();
 
@@ -115,7 +36,7 @@ export class Parser {
     private parseAdditiveExpression(): Expression {
         let left: Expression = this.parseMultiplicativeExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && (this.at().value === "+" || this.at().value === "-")) {
+        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && ["+", "-"].includes(this.at().value)) {
             const operator = this.next().value;
             const right = this.parseMultiplicativeExpression();
 
@@ -133,7 +54,7 @@ export class Parser {
     private parseMultiplicativeExpression(): Expression {
         let left: Expression = this.parseCallExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && (this.at().value === "*" || this.at().value === "/" || this.at().value === "%")) {
+        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && ["*", "/", "%"].includes(this.at().value)) {
             const operator = this.next().value;
             const right = this.parseCallExpression();
 
@@ -240,7 +161,7 @@ export class Parser {
 
         const [, colFixed, col, rowFixed, row] = match;
 
-        let colIndex = Utils.columnTextToIndex(col) - 1;
+        let colIndex = Utils.columnTextToIndex(col);
         let rowIndex = parseInt(row) - 1;
 
         const cellLiteral = {
@@ -270,8 +191,6 @@ export class Parser {
         this.expect(TokenType.CloseParen);
         return expression;
     }
-
-    // utilities
 
     private at(): Token {
         if (this.tokens.length === 0) {

@@ -14,8 +14,8 @@ import { useSelection } from "./useSelection.hook";
 import { ColorPicker } from "../color-picker/color-picker.component";
 import { useModal } from "@/hooks/useModal";
 import { GraphModal } from "@/modals/graph-modal";
+import { data } from "./data";
 
-export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(32, 26);
 export let variables: Map<string, Value> = new Map();
 
 export function Spreadsheet() {
@@ -476,8 +476,6 @@ export function Spreadsheet() {
             return formula.startsWith("=");
         });
 
-        console.log(sortedCells);
-
         const history = new Evaluator().evaluateCells(sortedCells, steps);
 
         for (const [cellId, values] of history.entries()) {
@@ -854,7 +852,7 @@ const TableContainer = styled.div`
     flex: 1;
     display: flex;
 
-    border: 0.1px solid var(--bg-6);
+    border: 0.1px solid var(--bg-4);
     border-radius: 10px;
 
     overflow: hidden;

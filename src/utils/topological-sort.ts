@@ -16,7 +16,7 @@ const getNormalDependencies = (formula: string): CellId[] => {
     const matches = [...formula.matchAll(regex)].map(match => {
         return {
             ri: parseInt(match[2]) - 1,
-            ci: Utils.columnTextToIndex(match[1]) - 1,
+            ci: Utils.columnTextToIndex(match[1]),
         };
     });
     return matches.map(match => Utils.cellCoordsToId(match));
@@ -75,7 +75,7 @@ const buildCellDependencies = (cells: CellItem[]): CellDependencyItem[] => {
     return dependencyItems;
 }
 
-const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
+export const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
     const sorted: CellId[] = [];
     const visited = new Map<CellId, boolean>();
     const visiting = new Map<CellId, boolean>();

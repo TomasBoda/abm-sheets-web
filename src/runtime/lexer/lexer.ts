@@ -1,16 +1,4 @@
-
-export enum TokenType {
-    Identifier, Number, Boolean, String,
-    OpenParen, CloseParen,
-    BinOp, RelOp,
-    Comma, Dot, Colon,
-    EOF,
-};
-
-export type Token = {
-    type: TokenType;
-    value: string;
-};
+import { Token, TokenType } from "./model";
 
 export class Lexer {
 
@@ -76,7 +64,7 @@ export class Lexer {
                     }
 
                     if (this.at() === "\"") {
-                        this.tokenizeString(value);
+                        this.tokenizeString();
                         break;
                     }
 
@@ -144,7 +132,7 @@ export class Lexer {
         this.token(TokenType.Number, number);
     }
 
-    private static tokenizeString(value: string): void {
+    private static tokenizeString(): void {
         this.next();
 
         let string = "";

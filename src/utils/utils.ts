@@ -3,26 +3,11 @@ import { CellRangeValue } from "@/runtime/runtime";
 
 export namespace Utils {
 
-    export const getCellRangeCells = (cellRange: CellRangeValue): CellId[] => {
-        const [c1, r1, c2, r2] = cellRange.value;
-
-        const cellIds: CellId[] = [];
-
-        for (let ri = r1; ri <= r2; ri++) {
-            for (let ci = c1; ci <= c2; ci++) {
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                cellIds.push(cellId);
-            }
-        }
-    
-        return cellIds;
-    }
-
     export const getCellIdsFromFormula = (formula: string): CellId[] => {
         const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
         const cellIds = [...formula.matchAll(regex)].map(match => {
             const ri = parseInt(match[2]) - 1;
-            const ci = Utils.columnTextToIndex(match[1]) - 1;
+            const ci = Utils.columnTextToIndex(match[1]);
             return Utils.cellCoordsToId({ ri, ci });
         });
         return cellIds;
@@ -44,7 +29,7 @@ export namespace Utils {
         const colPart = match[1];
         const rowPart = match[2];
 
-        const ci = columnTextToIndex(colPart) - 1;
+        const ci = columnTextToIndex(colPart);
         const ri = parseInt(rowPart) - 1;
 
         return { ri, ci };
@@ -70,7 +55,7 @@ export namespace Utils {
             index = index * 26 + (text.charCodeAt(i) - "A".charCodeAt(0) + 1);
         }
         
-        return index;
+        return index - 1;
     }
 
     export const getFormula = (formula: string): { defaultFormula?: string; primaryFormula?: string; }  => {

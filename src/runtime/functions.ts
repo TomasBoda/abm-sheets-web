@@ -1,50 +1,42 @@
-import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
 import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue, StringValue, Value, ValueType } from "./runtime";
-import { data } from "@/components/spreadsheet/spreadsheet.component";
 
 export namespace Functions {
 
-    export const concat = ({ args }: FuncProps): Value => {
-        let result = "";
+    export const conditional = ({ args }: FuncProps): Value => {
+        const condition = expectBoolean(args, 0).value;
 
+        const subsequent = args[1];
+        const alternate = args[2];
+
+        return condition ? subsequent : alternate;
+    }
+
+    export const and = ({ args }: FuncProps): Value => {
         for (let i = 0; i < args.length; i++) {
-            switch (args[i].type) {
-                case ValueType.Number:
-                    result += (args[i] as NumberValue).value;
-                    break;
-                case ValueType.Boolean:
-                    result += (args[i] as BooleanValue).value ? "TRUE" : "FALSE";
-                    break;
-                case ValueType.String:
-                    result += (args[i] as StringValue).value;
-                    break;
+            const value = expectBoolean(args, i);
+            
+            if (!value.value) {
+                return createBoolean(false);
             }
         }
 
-        return createString(result);
+        return createBoolean(true);
     }
 
-    export const sumhistory = ({ args, history }: FuncProps): Value => {
-        const cell = expectCellLiteral(args, 0);
-        const cellId = Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] });
-        
-        const value = history.get(cellId);
-
-        if (value === undefined) {
-            return createNumber(0);
-        }
-
-        let sum = 0;
-        
-        for (let i = 0; i < value.length; i++) {
-            if (!isNaN(parseFloat(value[i]))) {
-                sum += parseFloat(value[i]);
+    export const or = ({ args }: FuncProps): Value => {
+        for (let i = 0; i < args.length; i++) {
+            const value = expectBoolean(args, i);
+            
+            if (value.value) {
+                return createBoolean(true);
             }
         }
 
-        return createNumber(sum);
+        return createBoolean(false);
     }
+
+    // ------------------------------
 
     export const index = ({ args, history }: FuncProps): Value => {
         const lookupRange = expectCellRange(args, 0).value;
@@ -115,6 +107,7 @@ export namespace Functions {
                         }
                         break;
                     }
+                    // TODO: add boolean matching
                     case ValueType.String: {
                         if (value === lookupValue) {
                             return scaleType === "row" ? createNumber(r - r1) : createNumber(c - c1);
@@ -128,46 +121,71 @@ export namespace Functions {
         return createNumber(-1);
     }
 
-    export function step({ step }: FuncProps): Value {
-        return createNumber(step);
+    export const min = ({ args, history }: FuncProps): Value => {
+        const range = expectCellRange(args, 0).value;
+
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
+
+        let min: number | undefined = undefined;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined) {
+                    continue;
+                }
+
+                const value = cell[cell.length - 1];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                min = min !== undefined ? Math.min(min, parseFloat(value)) : parseFloat(value);
+            }
+        }
+
+        return createNumber(min);
     }
 
-    export function conditional({ args }: FuncProps): Value {
-        const condition = expectBoolean(args, 0).value;
+    export const max = ({ args, history }: FuncProps): Value => {
+        const range = expectCellRange(args, 0).value;
 
-        const subsequent = args[1];
-        const alternate = args[2];
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
 
-        return condition ? subsequent : alternate;
+        let max: number | undefined = undefined;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined) {
+                    continue;
+                }
+
+                const value = cell[cell.length - 1];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                max = max !== undefined ? Math.max(max, parseFloat(value)) : parseFloat(value);
+            }
+        }
+
+        return createNumber(max);
     }
 
-    export function rand({}: FuncProps): Value {
-        const result = Math.random();
-        return createNumber(result);
-    }
-
-    export function randbetween({ args }: FuncProps): Value {
-        const min = expectNumber(args, 0).value;
-        const max = expectNumber(args, 1).value;
-
-        const result = Math.floor(Math.random() * (max - min + 1)) + min;
-
-        return createNumber(result);
-    }
-
-    export function choice({ args }: FuncProps): Value {
-        const index = Math.floor(Math.random() * args.length);
-        const result = args[index];
-
-        return result;
-    }
-
-    export function abs({ args }: FuncProps): Value {
-        const value = expectNumber(args, 0).value;
-        return createNumber(Math.abs(value));
-    }
-
-    export function sum({ args, history }: FuncProps): Value {
+    export const sum = ({ args, history }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -189,99 +207,7 @@ export namespace Functions {
         return createNumber(sum);
     }
 
-    export function mmin({ args }: FuncProps): Value {
-        const value1 = expectNumber(args, 0).value;
-        const value2 = expectNumber(args, 1).value;
-
-        const result = Math.min(value1, value2);
-        return createNumber(result);
-    }
-
-    export function mmax({ args }: FuncProps): Value {
-        const value1 = expectNumber(args, 0).value;
-        const value2 = expectNumber(args, 1).value;
-
-        const result = Math.max(value1, value2);
-        return createNumber(result);
-    }
-
-    export function min({ args, history }: FuncProps): Value {
-        const range = expectCellRange(args, 0).value;
-
-        const c1 = range[0];
-        const r1 = range[1];
-        const c2 = range[2];
-        const r2 = range[3];
-
-        let min: number | undefined = undefined;
-
-        for (let ri = r1; ri <= r2; ri++) {
-            for (let ci = c1; ci <= c2; ci++) {
-                const { formula } = data[ri][ci];
-
-                if (!formula.startsWith("=")) {
-                    continue;
-                }
-
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
-                
-                if (cell === undefined) {
-                    continue;
-                }
-
-                const value = cell[cell.length - 1];
-
-                if (isNaN(parseFloat(value))) {
-                    continue;
-                }
-
-                min = min !== undefined ? Math.min(min, parseFloat(value)) : parseFloat(value);
-            }
-        }
-
-        return createNumber(min);
-    }
-
-    export function max({ args, history }: FuncProps): Value {
-        const range = expectCellRange(args, 0).value;
-
-        const c1 = range[0];
-        const r1 = range[1];
-        const c2 = range[2];
-        const r2 = range[3];
-
-        let max: number | undefined = undefined;
-
-        for (let ri = r1; ri <= r2; ri++) {
-            for (let ci = c1; ci <= c2; ci++) {
-                const formula = data[ri][ci].formula;
-
-                if (!formula.startsWith("=")) {
-                    continue;
-                }
-
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
-                
-                if (cell === undefined) {
-                    continue;
-                }
-
-                const value = cell[cell.length - 1];
-
-                if (isNaN(parseFloat(value))) {
-                    continue;
-                }
-
-                max = max !== undefined ? Math.max(max, parseFloat(value)) : parseFloat(value);
-            }
-        }
-
-        return createNumber(max);
-    }
-
-    export function average({ args, history }: FuncProps): Value {
+    export const average = ({ args, history }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -294,12 +220,6 @@ export namespace Functions {
 
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
-                const formula = data[ri][ci].formula;
-
-                if (!formula.startsWith("=")) {
-                    continue;
-                }
-
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const cell = history.get(cellId);
                 
@@ -323,7 +243,39 @@ export namespace Functions {
         return createNumber(average);
     }
 
-    export function countif({ args, history }: FuncProps): Value {
+    export const count = ({ args, history }: FuncProps): Value => {
+        const range = expectCellRange(args, 0).value;
+
+        const c1 = range[0];
+        const r1 = range[1];
+        const c2 = range[2];
+        const r2 = range[3];
+
+        let count = 0;
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const cell = history.get(cellId);
+                
+                if (cell === undefined) {
+                    continue;
+                }
+
+                const value = cell[cell.length - 1];
+
+                if (isNaN(parseFloat(value))) {
+                    continue;
+                }
+
+                count += 1;
+            }
+        }
+
+        return createNumber(count);
+    }
+
+    export const countif = ({ args, history }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
         const matcher = args[1];
 
@@ -336,12 +288,6 @@ export namespace Functions {
 
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
-                const formula = data[ri][ci].formula;
-
-                if (!formula.startsWith("=")) {
-                    continue;
-                }
-
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const cell = history.get(cellId);
                 
@@ -375,47 +321,51 @@ export namespace Functions {
         }
 
         return createNumber(count);
-    } 
+    }
 
-    export function count({ args, history }: FuncProps): Value {
-        const range = expectCellRange(args, 0).value;
+    export const sumhistory = ({ args, history }: FuncProps): Value => {
+        const cell = expectCellLiteral(args, 0);
+        const cellId = Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] });
+        
+        const value = history.get(cellId);
 
-        const c1 = range[0];
-        const r1 = range[1];
-        const c2 = range[2];
-        const r2 = range[3];
+        if (value === undefined) {
+            return createNumber(0);
+        }
 
-        let count = 0;
-
-        for (let ri = r1; ri <= r2; ri++) {
-            for (let ci = c1; ci <= c2; ci++) {
-                const formula = data[ri][ci].formula;
-
-                if (!formula.startsWith("=")) {
-                    continue;
-                }
-
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
-                
-                if (cell === undefined) {
-                    continue;
-                }
-
-                const value = cell[cell.length - 1];
-
-                if (isNaN(parseFloat(value))) {
-                    continue;
-                }
-
-                count += 1;
+        let sum = 0;
+        
+        for (let i = 0; i < value.length; i++) {
+            if (!isNaN(parseFloat(value[i]))) {
+                sum += parseFloat(value[i]);
             }
         }
 
-        return createNumber(count);
+        return createNumber(sum);
     }
 
-    export function power({ args }: FuncProps): Value {
+    // ------------------------------
+
+    export const abs = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0).value;
+        return createNumber(Math.abs(value));
+    }
+
+    export const floor = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0).value;
+
+        const result = Math.floor(value);
+        return createNumber(result);
+    }
+
+    export const ceiling = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0).value;
+
+        const result = Math.ceil(value);
+        return createNumber(result);
+    }
+
+    export const power = ({ args }: FuncProps): Value => {
         const value = expectNumber(args, 0).value;
         const power = expectNumber(args, 1).value;
 
@@ -423,47 +373,68 @@ export namespace Functions {
         return createNumber(result);
     }
 
-    export function ceiling({ args }: FuncProps): Value {
-        const value = expectNumber(args, 0).value;
+    export const mmin = ({ args }: FuncProps): Value => {
+        const value1 = expectNumber(args, 0).value;
+        const value2 = expectNumber(args, 1).value;
 
-        const result = Math.ceil(value);
+        const result = Math.min(value1, value2);
         return createNumber(result);
     }
 
-    export function floor({ args }: FuncProps): Value {
-        const value = expectNumber(args, 0).value;
+    export const mmax = ({ args }: FuncProps): Value => {
+        const value1 = expectNumber(args, 0).value;
+        const value2 = expectNumber(args, 1).value;
 
-        const result = Math.floor(value);
+        const result = Math.max(value1, value2);
         return createNumber(result);
     }
 
-    export function and({ args }: FuncProps): Value {
+    // ------------------------------
+
+    export const rand = ({}: FuncProps): Value => {
+        const result = Math.random();
+        return createNumber(result);
+    }
+
+    export const randbetween = ({ args }: FuncProps): Value => {
+        const min = expectNumber(args, 0).value;
+        const max = expectNumber(args, 1).value;
+
+        const result = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        return createNumber(result);
+    }
+
+    export const choice = ({ args }: FuncProps): Value => {
+        const index = Math.floor(Math.random() * args.length);
+        const result = args[index];
+
+        return result;
+    }
+
+    export const concat = ({ args }: FuncProps): Value => {
+        let result = "";
+
         for (let i = 0; i < args.length; i++) {
-            const value = expectBoolean(args, i);
-            
-            if (!value.value) {
-                return createBoolean(false);
+            switch (args[i].type) {
+                case ValueType.Number:
+                    result += (args[i] as NumberValue).value;
+                    break;
+                case ValueType.Boolean:
+                    result += (args[i] as BooleanValue).value ? "TRUE" : "FALSE";
+                    break;
+                case ValueType.String:
+                    result += (args[i] as StringValue).value;
+                    break;
             }
         }
 
-        return createBoolean(true);
+        return createString(result);
     }
 
-    export function or({ args }: FuncProps): Value {
-        for (let i = 0; i < args.length; i++) {
-            const value = expectBoolean(args, i);
-            
-            if (value.value) {
-                return createBoolean(true);
-            }
-        }
+    // ------------------------------
 
-        return createBoolean(false);
-    }
-
-    // cell utilities
-
-    export function prev({ args, history }: FuncProps): Value {
+    export const prev = ({ args, history }: FuncProps): Value => {
         const cell = expectCellLiteral(args, 0);
         const cellId = Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] });
 
@@ -486,7 +457,7 @@ export namespace Functions {
         }
     }
 
-    export function history({ args, step, history }: FuncProps): Value {
+    export const history = ({ args, history }: FuncProps): Value => {
         const cell = expectCellLiteral(args, 0).value;
         const offset = expectNumber(args, 1).value;
 
@@ -494,7 +465,7 @@ export namespace Functions {
 
         const value = history.get(cellId);
 
-        if (!value || step < offset) {
+        if (!value) {
             return createNumber(0);
         }
 
@@ -506,33 +477,42 @@ export namespace Functions {
             return createNumber(parseFloat(cellValue));
         }
     }
+
+    export const step = ({ step }: FuncProps): Value => {
+        return createNumber(step);
+    }
 }
 
 // utils
 
-const createNumber = (value: number): NumberValue => ({ type: ValueType.Number, value });
-const createBoolean = (value: boolean): BooleanValue => ({ type: ValueType.Boolean, value });
-const createString = (value: string): StringValue => ({ type: ValueType.String, value });
+const createNumber = (value: number): NumberValue =>
+    ({ type: ValueType.Number, value });
+
+const createBoolean = (value: boolean): BooleanValue =>
+    ({ type: ValueType.Boolean, value });
+
+const createString = (value: string): StringValue =>
+    ({ type: ValueType.String, value });
 
 // expect
 
-function expectNumber(args: Value[], index: number): NumberValue {
+const expectNumber = (args: Value[], index: number): NumberValue => {
     return expectArg(args, index, ValueType.Number) as NumberValue;
 }
 
-function expectBoolean(args: Value[], index: number): BooleanValue {
+const expectBoolean = (args: Value[], index: number): BooleanValue => {
     return expectArg(args, index, ValueType.Boolean) as BooleanValue;
 }
 
-function expectCellLiteral(args: Value[], index: number): CellLiteralValue {
+const expectCellLiteral = (args: Value[], index: number): CellLiteralValue => {
     return expectArg(args, index, ValueType.CellLiteral) as CellLiteralValue;
 }
 
-function expectCellRange(args: Value[], index: number): CellRangeValue {
+const expectCellRange = (args: Value[], index: number): CellRangeValue => {
     return expectArg(args, index, ValueType.CellRange) as CellRangeValue;
 }
 
-function expectArg(args: Value[], index: number, type: ValueType): Value {
+const expectArg = (args: Value[], index: number, type: ValueType): Value => {
     if (args.length - 1 < index) {
         throw new Error("Not enough function arguments");
     }

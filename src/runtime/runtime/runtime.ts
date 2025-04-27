@@ -1,48 +1,8 @@
-import { variables } from "@/components/spreadsheet/spreadsheet.component";
 import { History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
-import { Functions } from "./functions";
-import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "./parser";
-
-export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
-
-export interface Value {
-    type: ValueType;
-    value: number | boolean | string | number[];
-}
-
-export interface NumberValue {
-    type: ValueType.Number;
-    value: number;
-}
-
-export interface BooleanValue {
-    type: ValueType.Boolean;
-    value: boolean;
-}
-
-export interface StringValue {
-    type: ValueType.String;
-    value: string;
-}
-
-export interface CellLiteralValue {
-    type: ValueType.CellLiteral;
-    value: number[];
-}
-
-export interface CellRangeValue {
-    type: ValueType.CellRange;
-    value: number[];
-}
-
-export type FuncProps = {
-    args: Value[];
-    step: number;
-    history: History;
-}
-
-export type FuncCall = (props: FuncProps) => Value;
+import { Functions } from "../functions";
+import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "../parser";
+import { BooleanValue, CellLiteralValue, CellRangeValue, FuncCall, NumberValue, StringValue, Value, ValueType } from "./model";
 
 export class Runtime {
 
@@ -55,37 +15,38 @@ export class Runtime {
         ["if", Functions.conditional],
         ["and", Functions.and],
         ["or", Functions.or],
-        ["rand", Functions.rand],
-        ["randbetween", Functions.randbetween],
-        ["choice", Functions.choice],
-        ["sum", Functions.sum],
+
+        ["index", Functions.index],
+        ["match", Functions.match],
         ["min", Functions.min],
         ["max", Functions.max],
+        ["sum", Functions.sum],
         ["average", Functions.average],
         ["count", Functions.count],
         ["countif", Functions.countif],
-        ["power", Functions.power],
-        ["ceiling", Functions.ceiling],
-        ["floor", Functions.floor],
-        ["concat", Functions.concat],
-        ["abs", Functions.abs],
+        ["sumhistory", Functions.sumhistory],
 
+        ["abs", Functions.abs],
+        ["floor", Functions.floor],
+        ["ceiling", Functions.ceiling],
+        ["power", Functions.power],
         ["mmin", Functions.mmin],
         ["mmax", Functions.mmax],
+
+        ["rand", Functions.rand],
+        ["randbetween", Functions.randbetween],
+        ["choice", Functions.choice],
+        ["concat", Functions.concat],
 
         ["prev", Functions.prev],
         ["history", Functions.history],
         ["step", Functions.step],
-
-        ["index", Functions.index],
-        ["match", Functions.match],
-
-        ["sumhistory", Functions.sumhistory],
     ]);
 
     public run(expression: Expression, step: number, history: History) {
         this.step = step;
         this.history = history;
+        
         return this.runFormula(expression);
     }
 
@@ -364,15 +325,7 @@ export class Runtime {
     }
 
     private runIdentifier(expression: Identifier): Value {
-        const { value } = expression;
-        
-        const result = variables.get(value);
-
-        if (result === undefined) {
-            throw new Error("Variable does not exist");
-        }
-
-        return result;
+        throw new Error("Variable does not exist");
     }
 
     private runCellLiteral(expression: CellLiteral): Value {

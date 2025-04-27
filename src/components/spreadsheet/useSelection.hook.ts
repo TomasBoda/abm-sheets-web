@@ -1,6 +1,6 @@
 import { Utils } from "@/utils/utils";
 import { useState } from "react";
-import { data } from "./spreadsheet.component";
+import { data } from "./data";
 import { CellCoords, CellId } from "./spreadsheet.model";
 
 export const useSelection = () => {
