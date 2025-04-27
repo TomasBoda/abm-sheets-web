@@ -10,7 +10,9 @@ export class Evaluator {
         const { ri, ci } = Utils.cellIdToCoords(cellId);
         const cell = data[ri][ci];
 
-        const { defaultFormula, primaryFormula } = Utils.getFormula(cell.formula);
+        const formulaWithoutFixes = cell.formula.replaceAll("$", "");
+        
+        const { defaultFormula, primaryFormula } = Utils.getFormula(formulaWithoutFixes);
     
         if (!defaultFormula && !primaryFormula) {
             return undefined;

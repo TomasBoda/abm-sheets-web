@@ -133,7 +133,7 @@ export class Parser {
     private parseMultiplicativeExpression(): Expression {
         let left: Expression = this.parseCallExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && (this.at().value === "*" || this.at().value === "/")) {
+        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && (this.at().value === "*" || this.at().value === "/" || this.at().value === "%")) {
             const operator = this.next().value;
             const right = this.parseCallExpression();
 

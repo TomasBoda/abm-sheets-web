@@ -45,12 +45,12 @@ const Container = styled.div`
 `;
 
 const Heading = styled.div`
-    color: white;
+    color: var(--text-1);
     font-size: 20px;
 `;
 
 const Text = styled.div`
-    color: white;
+    color: var(--text-1);
     font-size: 13px;
     line-height: 150%;
 

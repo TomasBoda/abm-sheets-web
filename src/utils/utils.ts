@@ -1,6 +1,22 @@
 import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.model";
+import { CellRangeValue } from "@/runtime/runtime";
 
 export namespace Utils {
+
+    export const getCellRangeCells = (cellRange: CellRangeValue): CellId[] => {
+        const [c1, r1, c2, r2] = cellRange.value;
+
+        const cellIds: CellId[] = [];
+
+        for (let ri = r1; ri <= r2; ri++) {
+            for (let ci = c1; ci <= c2; ci++) {
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                cellIds.push(cellId);
+            }
+        }
+    
+        return cellIds;
+    }
 
     export const getCellIdsFromFormula = (formula: string): CellId[] => {
         const regex = /\$?([A-Z]+)\$?([0-9]+)/g;

@@ -58,7 +58,8 @@ export class Lexer {
                 case "+":
                 case "-":
                 case "*":
-                case "/": {
+                case "/":
+                case "%": {
                     this.token(TokenType.BinOp, value);
                     this.next();
                     break;

@@ -470,7 +470,13 @@ export function Spreadsheet() {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             const formula = data[ri][ci].formula;
             return { id: cellId, formula };
-        }));
+        })).filter(cellId => {
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
+            const formula = data[ri][ci].formula;
+            return formula.startsWith("=");
+        });
+
+        console.log(sortedCells);
 
         const history = new Evaluator().evaluateCells(sortedCells, steps);
 
@@ -934,7 +940,7 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     padding: 10px;
 
     outline: none;
-    border: 0.1px solid rgba(255, 255, 255, 0.08);
+    border: 0.1px solid var(--bg-3);
 
     border-color: ${({ $referenced }) => $referenced && "var(--primary)"};
 

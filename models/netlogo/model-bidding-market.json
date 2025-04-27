@@ -1,0 +1,292 @@
+{
+  "B2": {
+    "formula": "buyers",
+    "value": "buyers",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B3": {
+    "formula": "ID",
+    "value": "ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C3": {
+    "formula": "ask price",
+    "value": "ask price",
+    "color": "rgb(201, 201, 240)"
+  },
+  "D3": {
+    "formula": "seller ID",
+    "value": "seller ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "E3": {
+    "formula": "seller price",
+    "value": "seller price",
+    "color": "rgb(201, 201, 240)"
+  },
+  "F3": {
+    "formula": "bought",
+    "value": "bought",
+    "color": "rgb(201, 201, 240)"
+  },
+  "G3": {
+    "formula": "change",
+    "value": "change",
+    "color": "rgb(201, 201, 240)"
+  },
+  "H3": {
+    "formula": "seller items",
+    "value": "seller items",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B4": {
+    "formula": "=1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C4": {
+    "formula": "=10=C4+G4",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D4": {
+    "formula": "=(step() + 0) % 3 + 1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E4": {
+    "formula": "=index(C10:C12, match(D4, B10:B12))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "F4": {
+    "formula": "=if(and(H4 gt 0, C4 ge E4), \"BUY\", \"PASS\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G4": {
+    "formula": "=(E4-C4) / 3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H4": {
+    "formula": "=index(H10:H12, match(D4, B10:B12))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B5": {
+    "formula": "=2",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C5": {
+    "formula": "=20=C5+G5",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D5": {
+    "formula": "=(step() + 1) % 3 + 1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E5": {
+    "formula": "=index(C10:C12, match(D5, B10:B12))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "F5": {
+    "formula": "=if(and(H5 gt 0, E5 le C5), \"BUY\", \"PASS\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G5": {
+    "formula": "=(E5-C5) / 3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H5": {
+    "formula": "=index(H10:H12, match(D5, B10:B12))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B6": {
+    "formula": "=3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C6": {
+    "formula": "=30=C6+G6",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D6": {
+    "formula": "=(step() + 2) % 3 + 1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E6": {
+    "formula": "=index(C10:C12, match(D6, B10:B12))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "F6": {
+    "formula": "=if(and(H6 gt 0, E6 le C6), \"BUY\", \"PASS\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G6": {
+    "formula": "=(E6-C6) / 3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H6": {
+    "formula": "=index(H10:H12, match(D6, B10:B12))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B8": {
+    "formula": "sellers",
+    "value": "sellers",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B9": {
+    "formula": "ID",
+    "value": "ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C9": {
+    "formula": "ask price",
+    "value": "ask price",
+    "color": "rgb(201, 201, 240)"
+  },
+  "D9": {
+    "formula": "buyer ID",
+    "value": "buyer ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "E9": {
+    "formula": "buyer price",
+    "value": "buyer price",
+    "color": "rgb(201, 201, 240)"
+  },
+  "F9": {
+    "formula": "sold",
+    "value": "sold",
+    "color": "rgb(201, 201, 240)"
+  },
+  "G9": {
+    "formula": "change",
+    "value": "change",
+    "color": "rgb(201, 201, 240)"
+  },
+  "H9": {
+    "formula": "items",
+    "value": "items",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B10": {
+    "formula": "=1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C10": {
+    "formula": "=30=C10+G10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D10": {
+    "formula": "=match(1, $D$4:$D$6) + 1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E10": {
+    "formula": "=index(C4:C6, match(D10, B4:B6))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "F10": {
+    "formula": "=if(and(H10 gt 0, C10 le E10), \"SELL\", \"PASS\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G10": {
+    "formula": "=(E10 - C10) / 3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H10": {
+    "formula": "=10=if(F10 eq \"SELL\", mmax(0, H10 - 1), H10)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B11": {
+    "formula": "=2",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C11": {
+    "formula": "=20=C11+G11",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D11": {
+    "formula": "=match(2, $D$4:$D$6) + 1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E11": {
+    "formula": "=index(C4:C6, match(D11, B4:B6))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "F11": {
+    "formula": "=if(and(H11 gt 0, C11 le E11), \"SELL\", \"PASS\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G11": {
+    "formula": "=(E11 - C11) / 3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H11": {
+    "formula": "=20=if(F11 eq \"SELL\", mmax(0, H11 - 1), H11)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B12": {
+    "formula": "=3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C12": {
+    "formula": "=10=C12+G12",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D12": {
+    "formula": "=match(3, $D$4:$D$6) + 1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E12": {
+    "formula": "=index(C4:C6, match(D12, B4:B6))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "F12": {
+    "formula": "=if(and(H12 gt 0, C12 le E12), \"SELL\", \"PASS\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G12": {
+    "formula": "=(E12 - C12) / 3",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H12": {
+    "formula": "=30=if(F12 eq \"SELL\", mmax(0, H12 - 1), H12)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  }
+}

@@ -63,6 +63,7 @@ export class Runtime {
         ["max", Functions.max],
         ["average", Functions.average],
         ["count", Functions.count],
+        ["countif", Functions.countif],
         ["power", Functions.power],
         ["ceiling", Functions.ceiling],
         ["floor", Functions.floor],
@@ -78,6 +79,8 @@ export class Runtime {
 
         ["index", Functions.index],
         ["match", Functions.match],
+
+        ["sumhistory", Functions.sumhistory],
     ]);
 
     public run(expression: Expression, step: number, history: History) {
@@ -92,7 +95,18 @@ export class Runtime {
         switch (result.type) {
             case ValueType.Number: {
                 const { value } = result as NumberValue;
-                return value.toFixed(2).toString();
+
+                if (Math.round(value) === value) {
+                    return Math.round(value).toString();
+                }
+
+                for (let i = 1; i <= 3; i++) {
+                    if (parseFloat(value.toFixed(i)) === value) {
+                        return value.toFixed(i).toString();
+                    }
+                }
+
+                return value.toFixed(3).toString();
             }
             case ValueType.Boolean: {
                 const { value } = result as BooleanValue;
@@ -141,7 +155,7 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        if (identifier === "prev" || identifier === "history") {
+        if (identifier === "prev" || identifier === "history" || identifier === "sumhistory") {
             this.inCallExpression = true;
         }
 
@@ -225,6 +239,46 @@ export class Runtime {
             return { type: ValueType.Boolean, value: result };
         }
 
+        if (rightValue.type === ValueType.String) {
+            const lhs = leftValue.value.toString();
+            const rhs = (rightValue as StringValue).value;
+
+            const operators = {
+                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+            }
+    
+            const func = operators[operator];
+    
+            if (!func) {
+                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+            }
+    
+            const result: boolean = func(lhs, rhs);
+    
+            return { type: ValueType.Boolean, value: result };
+        }
+
+        if (leftValue.type === ValueType.String) {
+            const lhs = (rightValue as StringValue).value;
+            const rhs = rightValue.value.toString();
+
+            const operators = {
+                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+            }
+    
+            const func = operators[operator];
+    
+            if (!func) {
+                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+            }
+    
+            const result: boolean = func(lhs, rhs);
+    
+            return { type: ValueType.Boolean, value: result };
+        }
+
         throw new Error("LHS and RHS types do not match in relational expression");
     }
 
@@ -262,6 +316,15 @@ export class Runtime {
                     result = lhs.value / 1;
                 } else {
                     result = lhs.value / rhs.value;
+                }
+
+                break;
+            }
+            case "%": {
+                if (rhs.value === 0) {
+                    result = lhs.value % 1;
+                } else {
+                    result = lhs.value % rhs.value;
                 }
 
                 break;

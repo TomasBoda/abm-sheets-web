@@ -1,0 +1,257 @@
+{
+  "B2": {
+    "formula": "city",
+    "value": "city",
+    "color": "rgb(194, 234, 194)"
+  },
+  "C2": {
+    "formula": "x",
+    "value": "x",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B3": {
+    "formula": "y",
+    "value": "y",
+    "color": "rgb(240, 198, 198)"
+  },
+  "C3": {
+    "formula": "=B3+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "D3": {
+    "formula": "=C3+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B4": {
+    "formula": "=B3+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C4": {
+    "formula": "=concat(C$3, $B4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D4": {
+    "formula": "=concat(D$3, $B4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B5": {
+    "formula": "=B4+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C5": {
+    "formula": "=concat(C$3, $B5)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D5": {
+    "formula": "=concat(D$3, $B5)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B8": {
+    "formula": "houses",
+    "value": "houses",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B9": {
+    "formula": "ID",
+    "value": "ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C9": {
+    "formula": "occupied by",
+    "value": "occupied by",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B10": {
+    "formula": "=\"11\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C10": {
+    "formula": "=index(B17:B22, match(B10, C17:C22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B11": {
+    "formula": "=\"21\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C11": {
+    "formula": "=index(B17:B22, match(B11, C17:C22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B12": {
+    "formula": "=\"12\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C12": {
+    "formula": "=index(B17:B22, match(B12, C17:C22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B13": {
+    "formula": "=\"22\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C13": {
+    "formula": "=index(B17:B22, match(B13, C17:C22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B15": {
+    "formula": "people",
+    "value": "people",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B16": {
+    "formula": "ID",
+    "value": "ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C16": {
+    "formula": "household",
+    "value": "household",
+    "color": "rgb(201, 201, 240)"
+  },
+  "D16": {
+    "formula": "type",
+    "value": "type",
+    "color": "rgb(201, 201, 240)"
+  },
+  "E16": {
+    "formula": "sell price",
+    "value": "sell price",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B17": {
+    "formula": "=B16+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C17": {
+    "formula": "=\"11\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D17": {
+    "formula": "=if(C17 eq \"NONE\", \"BUYER\", \"SELLER\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E17": {
+    "formula": "=if(D17 eq \"SELLER\", randbetween(100, 500), \"NONE\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B18": {
+    "formula": "=B17+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C18": {
+    "formula": "=\"21\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D18": {
+    "formula": "=if(C18 eq \"NONE\", \"BUYER\", \"SELLER\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E18": {
+    "formula": "=if(D18 eq \"SELLER\", randbetween(100, 500), \"NONE\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B19": {
+    "formula": "=B18+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C19": {
+    "formula": "=\"12\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D19": {
+    "formula": "=if(C19 eq \"NONE\", \"BUYER\", \"SELLER\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E19": {
+    "formula": "=if(D19 eq \"SELLER\", randbetween(100, 500), \"NONE\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B20": {
+    "formula": "=B19+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C20": {
+    "formula": "=\"22\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D20": {
+    "formula": "=if(C20 eq \"NONE\", \"BUYER\", \"SELLER\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E20": {
+    "formula": "=if(D20 eq \"SELLER\", randbetween(100, 500), \"NONE\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B21": {
+    "formula": "=B20+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C21": {
+    "formula": "=\"NONE\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D21": {
+    "formula": "=if(C21 eq \"NONE\", \"BUYER\", \"SELLER\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E21": {
+    "formula": "=if(D21 eq \"SELLER\", randbetween(100, 500), \"NONE\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B22": {
+    "formula": "=B21+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C22": {
+    "formula": "=\"NONE\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D22": {
+    "formula": "=if(C22 eq \"NONE\", \"BUYER\", \"SELLER\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "E22": {
+    "formula": "=if(D22 eq \"SELLER\", randbetween(100, 500), \"NONE\")",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  }
+}

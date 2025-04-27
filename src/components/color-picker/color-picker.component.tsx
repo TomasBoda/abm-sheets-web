@@ -6,7 +6,8 @@ interface Props {
 
 export const ColorPicker = ({ onChange }: Props) => {
 
-    const colors = ["", "rgb(30, 30, 30)", "rgb(52, 45, 45)", "rgb(42, 42, 54)", "rgb(34, 44, 34)"];
+    //const colors = ["", "rgb(30, 30, 30)", "rgb(52, 45, 45)", "rgb(42, 42, 54)", "rgb(34, 44, 34)"];
+    const colors = ["", "rgb(230, 230, 230)", "rgb(240, 198, 198)", "rgb(201, 201, 240)", "rgb(194, 234, 194)"];
 
     return (
         <Container>

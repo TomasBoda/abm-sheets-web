@@ -112,5 +112,6 @@ const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
 export const getSortedCells = (cells: CellItem[]) => {
     const dependencies = buildCellDependencies(cells);
     const sortedCells = topologicalSort(dependencies);
+    console.log(sortedCells);
     return sortedCells;
 }
