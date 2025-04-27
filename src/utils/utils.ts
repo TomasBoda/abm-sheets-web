@@ -1,4 +1,4 @@
-import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.model";
+import { CellCoords, CellId, SpreadsheetData } from "@/components/spreadsheet/spreadsheet.model";
 import { CellRangeValue } from "@/runtime/runtime";
 
 export namespace Utils {
@@ -79,6 +79,22 @@ export namespace Utils {
             defaultFormula: parts[1],
             primaryFormula: parts[2],
         };
+    }
+
+    export const createEmptySpreadsheet = (rowCount: number, colCount: number): SpreadsheetData => {
+        const data = [];
+    
+        for (let i = 0; i < rowCount; i++) {
+            const row = [];
+    
+            for (let i = 0; i < colCount; i++) {
+                row.push({ formula: "", value: "" });
+            }
+    
+            data.push(row);
+        }
+    
+        return data;
     }
 
     export const download = (data: any): void => {

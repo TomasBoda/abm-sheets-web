@@ -1,22 +1,18 @@
+import { useModal } from "@/hooks/useModal";
+import { GraphModal } from "@/modals/graph-modal";
 import { Evaluator } from "@/runtime/evaluator";
-import { Value } from "@/runtime/runtime";
 import { Constants } from "@/utils/constants";
 import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
-import { ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Play, Repeat2 } from "lucide-react";
+import { ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Repeat2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../button/button.component";
-import { TextField } from "../text-field/text-field.component";
-import { SpreadsheetUtil } from "./spreadsheet-util";
-import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetData, SpreadsheetRow } from "./spreadsheet.model";
-import { useSelection } from "./useSelection.hook";
 import { ColorPicker } from "../color-picker/color-picker.component";
-import { useModal } from "@/hooks/useModal";
-import { GraphModal } from "@/modals/graph-modal";
+import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
-
-export let variables: Map<string, Value> = new Map();
+import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
+import { useSelection } from "./useSelection.hook";
 
 export function Spreadsheet() {
 
@@ -771,22 +767,16 @@ const Container = styled.div`
 
     display: flex;
     flex-direction: column;
-    gap: 20px;
-
-    padding: 20px;
 `;
 
 const Header = styled.div`
     width: 100%;
 
-    /* display: grid;
-    grid-template-columns: auto 1fr 150px 100px auto auto;
-    align-items: center;
-    gap: 15px; */
-
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
+
+    padding: 15px;
 `;
 
 const TopPanel = styled.div`
@@ -815,8 +805,6 @@ const Logo = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 10px;
-
-    margin: 0px 20px;
 
     cursor: pointer;
 `;
@@ -853,7 +841,7 @@ const TableContainer = styled.div`
     display: flex;
 
     border: 0.1px solid var(--bg-4);
-    border-radius: 10px;
+    //border-radius: 10px;
 
     overflow: hidden;
 
@@ -940,7 +928,7 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     outline: none;
     border: 0.1px solid var(--bg-3);
 
-    border-color: ${({ $referenced }) => $referenced && "var(--primary)"};
+    border-color: ${({ $referenced }) => $referenced && "var(--text-1)"};
 
     //cursor: pointer;
     transition: all 50ms;

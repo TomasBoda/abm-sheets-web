@@ -6,14 +6,15 @@ interface Props {
 
 export const ColorPicker = ({ onChange }: Props) => {
 
-    //const colors = ["", "rgb(30, 30, 30)", "rgb(52, 45, 45)", "rgb(42, 42, 54)", "rgb(34, 44, 34)"];
     const colors = ["", "rgb(230, 230, 230)", "rgb(240, 198, 198)", "rgb(201, 201, 240)", "rgb(194, 234, 194)"];
 
     return (
         <Container>
             {colors.map(color => (
-                <Color $color={color} onClick={() => onChange(color)} key={color} />)
-            )}
+                <ColorItem>
+                    <Color $color={color} onClick={() => onChange(color)} key={color} />
+                </ColorItem>
+            ))}
         </Container>
     )
 }
@@ -27,6 +28,17 @@ const Container = styled.div`
     justify-content: flex-end;
 `;
 
+const ColorItem = styled.div`
+    cursor: pointer;
+    transition: all 150ms;
+
+    border-radius: 3px;
+
+    &:hover {
+        background-color: var(--bg-2);
+    }
+`;
+
 const Color = styled.div<{ $color: string; }>`
     width: 15px;
     height: 15px;
@@ -36,6 +48,4 @@ const Color = styled.div<{ $color: string; }>`
     border-radius: 100%;
 
     background-color: ${({ $color }) => $color === "" ? "var(--bg-3)" : $color};
-
-    cursor: pointer;
 `;

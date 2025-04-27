@@ -1,4 +1,4 @@
-import { SpreadsheetUtil } from "./spreadsheet-util";
+import { Utils } from "@/utils/utils";
 import { SpreadsheetData } from "./spreadsheet.model";
 
-export let data: SpreadsheetData = SpreadsheetUtil.createEmptySpreadsheet(32, 26);
+export let data: SpreadsheetData = Utils.createEmptySpreadsheet(32, 26);
