@@ -1,0 +1,1042 @@
+{
+  "B2": {
+    "formula": "sugarscape 2",
+    "value": "sugarscape 2",
+    "color": "rgb(194, 234, 194)"
+  },
+  "B5": {
+    "formula": "area",
+    "value": "area",
+    "color": "rgb(240, 198, 198)"
+  },
+  "G5": {
+    "formula": "agents",
+    "value": "agents",
+    "color": "rgb(240, 198, 198)"
+  },
+  "O5": {
+    "formula": "area",
+    "value": "area",
+    "color": "rgb(194, 234, 194)"
+  },
+  "P5": {
+    "formula": "x",
+    "value": "x",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B6": {
+    "formula": "position",
+    "value": "position",
+    "color": "rgb(201, 201, 240)"
+  },
+  "C6": {
+    "formula": "sugar",
+    "value": "sugar",
+    "color": "rgb(201, 201, 240)"
+  },
+  "D6": {
+    "formula": "growback",
+    "value": "growback",
+    "color": "rgb(201, 201, 240)"
+  },
+  "G6": {
+    "formula": "ID",
+    "value": "ID",
+    "color": "rgb(201, 201, 240)"
+  },
+  "H6": {
+    "formula": "x",
+    "value": "x",
+    "color": "rgb(201, 201, 240)"
+  },
+  "I6": {
+    "formula": "y",
+    "value": "y",
+    "color": "rgb(201, 201, 240)"
+  },
+  "J6": {
+    "formula": "position",
+    "value": "position",
+    "color": "rgb(201, 201, 240)"
+  },
+  "K6": {
+    "formula": "sugar",
+    "value": "sugar",
+    "color": "rgb(201, 201, 240)"
+  },
+  "L6": {
+    "formula": "metabolism",
+    "value": "metabolism",
+    "color": "rgb(201, 201, 240)"
+  },
+  "O6": {
+    "formula": "y",
+    "value": "y",
+    "color": "rgb(240, 198, 198)"
+  },
+  "P6": {
+    "formula": "=O6 + 1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "Q6": {
+    "formula": "=P6 + 1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "R6": {
+    "formula": "=Q6 + 1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "S6": {
+    "formula": "=R6 + 1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B7": {
+    "formula": "=\"11\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C7": {
+    "formula": "=randbetween(10, 30)=if(match(B7, $I$25:$I$28) gt -1, 0, C7) + D7",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D7": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G7": {
+    "formula": "=G6+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H7": {
+    "formula": "=randbetween(1,4)=J25",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I7": {
+    "formula": "=randbetween(1,4)=K25",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J7": {
+    "formula": "=concat(H7, I7)=I25",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K7": {
+    "formula": "=10=K7 + H25 - L7",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L7": {
+    "formula": "=2",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O7": {
+    "formula": "=O6+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P7": {
+    "formula": "=if(index($G$7:$G$10, match(concat(P$6, $O7), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(P$6, $O7), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q7": {
+    "formula": "=if(index($G$7:$G$10, match(concat(Q$6, $O7), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(Q$6, $O7), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R7": {
+    "formula": "=if(index($G$7:$G$10, match(concat(R$6, $O7), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(R$6, $O7), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S7": {
+    "formula": "=if(index($G$7:$G$10, match(concat(S$6, $O7), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(S$6, $O7), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B8": {
+    "formula": "=\"12\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C8": {
+    "formula": "=randbetween(10, 30)=if(match(B8, $I$25:$I$28) gt -1, 0, C8) + D8",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D8": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G8": {
+    "formula": "=G7+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H8": {
+    "formula": "=randbetween(1,4)=J26",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I8": {
+    "formula": "=randbetween(1,4)=K26",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J8": {
+    "formula": "=concat(H8, I8)=I26",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K8": {
+    "formula": "=10=K8 + H26 - L8",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L8": {
+    "formula": "=2",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O8": {
+    "formula": "=O7+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P8": {
+    "formula": "=if(index($G$7:$G$10, match(concat(P$6, $O8), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(P$6, $O8), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q8": {
+    "formula": "=if(index($G$7:$G$10, match(concat(Q$6, $O8), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(Q$6, $O8), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R8": {
+    "formula": "=if(index($G$7:$G$10, match(concat(R$6, $O8), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(R$6, $O8), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S8": {
+    "formula": "=if(index($G$7:$G$10, match(concat(S$6, $O8), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(S$6, $O8), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B9": {
+    "formula": "=\"13\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C9": {
+    "formula": "=randbetween(10, 30)=if(match(B9, $I$25:$I$28) gt -1, 0, C9) + D9",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D9": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G9": {
+    "formula": "=G8+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H9": {
+    "formula": "=randbetween(1,4)=J27",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I9": {
+    "formula": "=randbetween(1,4)=K27",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J9": {
+    "formula": "=concat(H9, I9)=I27",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K9": {
+    "formula": "=10=K9 + H27 - L9",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L9": {
+    "formula": "=2",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O9": {
+    "formula": "=O8+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P9": {
+    "formula": "=if(index($G$7:$G$10, match(concat(P$6, $O9), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(P$6, $O9), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q9": {
+    "formula": "=if(index($G$7:$G$10, match(concat(Q$6, $O9), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(Q$6, $O9), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R9": {
+    "formula": "=if(index($G$7:$G$10, match(concat(R$6, $O9), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(R$6, $O9), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S9": {
+    "formula": "=if(index($G$7:$G$10, match(concat(S$6, $O9), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(S$6, $O9), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B10": {
+    "formula": "=\"14\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C10": {
+    "formula": "=randbetween(10, 30)=if(match(B10, $I$25:$I$28) gt -1, 0, C10) + D10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D10": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "G10": {
+    "formula": "=G9+1",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H10": {
+    "formula": "=randbetween(1,4)=J28",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I10": {
+    "formula": "=randbetween(1,4)=K28",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J10": {
+    "formula": "=concat(H10, I10)=I28",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K10": {
+    "formula": "=10=K10 + H28 - L10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L10": {
+    "formula": "=2",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O10": {
+    "formula": "=O9+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P10": {
+    "formula": "=if(index($G$7:$G$10, match(concat(P$6, $O10), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(P$6, $O10), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q10": {
+    "formula": "=if(index($G$7:$G$10, match(concat(Q$6, $O10), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(Q$6, $O10), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R10": {
+    "formula": "=if(index($G$7:$G$10, match(concat(R$6, $O10), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(R$6, $O10), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S10": {
+    "formula": "=if(index($G$7:$G$10, match(concat(S$6, $O10), $J$7:$J$10)) eq 0, \" \", index($G$7:$G$10, match(concat(S$6, $O10), $J$7:$J$10)))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B11": {
+    "formula": "=\"21\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C11": {
+    "formula": "=randbetween(10, 30)=if(match(B11, $I$25:$I$28) gt -1, 0, C11) + D11",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D11": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B12": {
+    "formula": "=\"22\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C12": {
+    "formula": "=randbetween(10, 30)=if(match(B12, $I$25:$I$28) gt -1, 0, C12) + D12",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D12": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H12": {
+    "formula": "pos. top",
+    "value": "pos. top",
+    "color": "rgb(201, 201, 240)"
+  },
+  "I12": {
+    "formula": "pos. bottom",
+    "value": "pos. bottom",
+    "color": "rgb(201, 201, 240)"
+  },
+  "J12": {
+    "formula": "pos. right",
+    "value": "pos. right",
+    "color": "rgb(201, 201, 240)"
+  },
+  "K12": {
+    "formula": "pos. left",
+    "value": "pos. left",
+    "color": "rgb(201, 201, 240)"
+  },
+  "L12": {
+    "formula": "pos. current",
+    "value": "pos. current",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B13": {
+    "formula": "=\"23\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C13": {
+    "formula": "=randbetween(10, 30)=if(match(B13, $I$25:$I$28) gt -1, 0, C13) + D13",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D13": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H13": {
+    "formula": "=concat(H7, mmax(I7 - 1, 1))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I13": {
+    "formula": "=concat(H7, mmin(I7 + 1, 4))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J13": {
+    "formula": "=concat(mmin(H7 + 1, 4), I7)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K13": {
+    "formula": "=concat(mmax(H7 - 1, 1), I7)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L13": {
+    "formula": "=J7",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O13": {
+    "formula": "sugar",
+    "value": "sugar",
+    "color": "rgb(194, 234, 194)"
+  },
+  "P13": {
+    "formula": "x",
+    "value": "x",
+    "color": "rgb(240, 198, 198)"
+  },
+  "B14": {
+    "formula": "=\"24\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C14": {
+    "formula": "=randbetween(10, 30)=if(match(B14, $I$25:$I$28) gt -1, 0, C14) + D14",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D14": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H14": {
+    "formula": "=concat(H8, mmax(I8 - 1, 1))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I14": {
+    "formula": "=concat(H8, mmin(I8 + 1, 4))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J14": {
+    "formula": "=concat(mmin(H8 + 1, 4), I8)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K14": {
+    "formula": "=concat(mmax(H8 - 1, 1), I8)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L14": {
+    "formula": "=J8",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O14": {
+    "formula": "y",
+    "value": "y",
+    "color": "rgb(240, 198, 198)"
+  },
+  "P14": {
+    "formula": "=O14+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "Q14": {
+    "formula": "=P14+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "R14": {
+    "formula": "=Q14+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "S14": {
+    "formula": "=R14+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "B15": {
+    "formula": "=\"31\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C15": {
+    "formula": "=randbetween(10, 30)=if(match(B15, $I$25:$I$28) gt -1, 0, C15) + D15",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D15": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H15": {
+    "formula": "=concat(H9, mmax(I9 - 1, 1))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I15": {
+    "formula": "=concat(H9, mmin(I9 + 1, 4))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J15": {
+    "formula": "=concat(mmin(H9 + 1, 4), I9)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K15": {
+    "formula": "=concat(mmax(H9 - 1, 1), I9)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L15": {
+    "formula": "=J9",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O15": {
+    "formula": "=O14+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P15": {
+    "formula": "=index($C$7:$C$22, match(concat(P$14, $O15), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q15": {
+    "formula": "=index($C$7:$C$22, match(concat(Q$14, $O15), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R15": {
+    "formula": "=index($C$7:$C$22, match(concat(R$14, $O15), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S15": {
+    "formula": "=index($C$7:$C$22, match(concat(S$14, $O15), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B16": {
+    "formula": "=\"32\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C16": {
+    "formula": "=randbetween(10, 30)=if(match(B16, $I$25:$I$28) gt -1, 0, C16) + D16",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D16": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H16": {
+    "formula": "=concat(H10, mmax(I10 - 1, 1))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I16": {
+    "formula": "=concat(H10, mmin(I10 + 1, 4))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J16": {
+    "formula": "=concat(mmin(H10 + 1, 4), I10)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K16": {
+    "formula": "=concat(mmax(H10 - 1, 1), I10)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L16": {
+    "formula": "=J10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O16": {
+    "formula": "=O15+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P16": {
+    "formula": "=index($C$7:$C$22, match(concat(P$14, $O16), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q16": {
+    "formula": "=index($C$7:$C$22, match(concat(Q$14, $O16), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R16": {
+    "formula": "=index($C$7:$C$22, match(concat(R$14, $O16), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S16": {
+    "formula": "=index($C$7:$C$22, match(concat(S$14, $O16), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B17": {
+    "formula": "=\"33\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C17": {
+    "formula": "=randbetween(10, 30)=if(match(B17, $I$25:$I$28) gt -1, 0, C17) + D17",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D17": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "O17": {
+    "formula": "=O16+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P17": {
+    "formula": "=index($C$7:$C$22, match(concat(P$14, $O17), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q17": {
+    "formula": "=index($C$7:$C$22, match(concat(Q$14, $O17), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R17": {
+    "formula": "=index($C$7:$C$22, match(concat(R$14, $O17), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S17": {
+    "formula": "=index($C$7:$C$22, match(concat(S$14, $O17), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B18": {
+    "formula": "=\"34\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C18": {
+    "formula": "=randbetween(10, 30)=if(match(B18, $I$25:$I$28) gt -1, 0, C18) + D18",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D18": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H18": {
+    "formula": "sugar top",
+    "value": "sugar top",
+    "color": "rgb(201, 201, 240)"
+  },
+  "I18": {
+    "formula": "sugar bottom",
+    "value": "sugar bottom",
+    "color": "rgb(201, 201, 240)"
+  },
+  "J18": {
+    "formula": "sugar right",
+    "value": "sugar right",
+    "color": "rgb(201, 201, 240)"
+  },
+  "K18": {
+    "formula": "sugar left",
+    "value": "sugar left",
+    "color": "rgb(201, 201, 240)"
+  },
+  "L18": {
+    "formula": "sugar current",
+    "value": "sugar current",
+    "color": "rgb(201, 201, 240)"
+  },
+  "O18": {
+    "formula": "=O17+1",
+    "value": "",
+    "color": "rgb(201, 201, 240)"
+  },
+  "P18": {
+    "formula": "=index($C$7:$C$22, match(concat(P$14, $O18), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "Q18": {
+    "formula": "=index($C$7:$C$22, match(concat(Q$14, $O18), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "R18": {
+    "formula": "=index($C$7:$C$22, match(concat(R$14, $O18), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "S18": {
+    "formula": "=index($C$7:$C$22, match(concat(S$14, $O18), $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B19": {
+    "formula": "=\"41\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C19": {
+    "formula": "=randbetween(10, 30)=if(match(B19, $I$25:$I$28) gt -1, 0, C19) + D19",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D19": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H19": {
+    "formula": "=index($C$7:$C$22, match(H13, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I19": {
+    "formula": "=index($C$7:$C$22, match(I13, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J19": {
+    "formula": "=index($C$7:$C$22, match(J13, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K19": {
+    "formula": "=index($C$7:$C$22, match(K13, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L19": {
+    "formula": "=index($C$7:$C$22, match(L13, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B20": {
+    "formula": "=\"42\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C20": {
+    "formula": "=randbetween(10, 30)=if(match(B20, $I$25:$I$28) gt -1, 0, C20) + D20",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D20": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H20": {
+    "formula": "=index($C$7:$C$22, match(H14, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I20": {
+    "formula": "=index($C$7:$C$22, match(I14, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J20": {
+    "formula": "=index($C$7:$C$22, match(J14, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K20": {
+    "formula": "=index($C$7:$C$22, match(K14, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L20": {
+    "formula": "=index($C$7:$C$22, match(L14, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B21": {
+    "formula": "=\"43\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C21": {
+    "formula": "=randbetween(10, 30)=if(match(B21, $I$25:$I$28) gt -1, 0, C21) + D21",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D21": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H21": {
+    "formula": "=index($C$7:$C$22, match(H15, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I21": {
+    "formula": "=index($C$7:$C$22, match(I15, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J21": {
+    "formula": "=index($C$7:$C$22, match(J15, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K21": {
+    "formula": "=index($C$7:$C$22, match(K15, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L21": {
+    "formula": "=index($C$7:$C$22, match(L15, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "B22": {
+    "formula": "=\"44\"",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "C22": {
+    "formula": "=randbetween(10, 30)=if(match(B22, $I$25:$I$28) gt -1, 0, C22) + D22",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "D22": {
+    "formula": "=randbetween(1,4)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H22": {
+    "formula": "=index($C$7:$C$22, match(H16, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I22": {
+    "formula": "=index($C$7:$C$22, match(I16, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J22": {
+    "formula": "=index($C$7:$C$22, match(J16, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K22": {
+    "formula": "=index($C$7:$C$22, match(K16, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "L22": {
+    "formula": "=index($C$7:$C$22, match(L16, $B$7:$B$22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H24": {
+    "formula": "max. sugar",
+    "value": "max. sugar",
+    "color": "rgb(201, 201, 240)"
+  },
+  "I24": {
+    "formula": "max. position",
+    "value": "max. position",
+    "color": "rgb(201, 201, 240)"
+  },
+  "J24": {
+    "formula": "max. x",
+    "value": "max. x",
+    "color": "rgb(201, 201, 240)"
+  },
+  "K24": {
+    "formula": "max. y",
+    "value": "max. y",
+    "color": "rgb(201, 201, 240)"
+  },
+  "H25": {
+    "formula": "=max(H19:L19)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I25": {
+    "formula": "=index(H13:L13, match(H25, H19:L19))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J25": {
+    "formula": "=(I25 - K25) / 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K25": {
+    "formula": "=I25 % 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H26": {
+    "formula": "=max(H20:L20)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I26": {
+    "formula": "=index(H14:L14, match(H26, H20:L20))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J26": {
+    "formula": "=(I26 - K26) / 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K26": {
+    "formula": "=I26 % 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H27": {
+    "formula": "=max(H21:L21)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I27": {
+    "formula": "=index(H15:L15, match(H27, H21:L21))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J27": {
+    "formula": "=(I27 - K27) / 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K27": {
+    "formula": "=I27 % 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "H28": {
+    "formula": "=max(H22:L22)",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "I28": {
+    "formula": "=index(H16:L16, match(H28, H22:L22))",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "J28": {
+    "formula": "=(I28 - K28) / 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  },
+  "K28": {
+    "formula": "=I28 % 10",
+    "value": "",
+    "color": "rgb(230, 230, 230)"
+  }
+}

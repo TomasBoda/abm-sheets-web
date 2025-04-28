@@ -25,11 +25,11 @@
 
 - [link](https://ccl.northwestern.edu/netlogo/models/OilCartelHubNet) to the model
 
-# 7. ❌ Sugarscape 1 Immediate Growback
+# 7. ❔ Sugarscape 1 Immediate Growback
 
 - [link](https://ccl.northwestern.edu/netlogo/models/Sugarscape1ImmediateGrowback) to the model
 
-# 8. ❌ Sugarscape 2 Constant Growback
+# 8. ✅ Sugarscape 2 Constant Growback
 
 - [link](https://ccl.northwestern.edu/netlogo/models/Sugarscape2ConstantGrowback) to the model
 

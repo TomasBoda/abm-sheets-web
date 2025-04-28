@@ -21,7 +21,7 @@ export const GraphModal = ({ hideModal, values }: Props) => {
             <Graph>
                 <LineGraph
                     data={values}
-                    accent="white"
+                    accent="black"
                     fillBelow="none"
                     fillAbove="none"
                 />

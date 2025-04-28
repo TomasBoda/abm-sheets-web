@@ -13,6 +13,7 @@ import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
 import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
 import { useSelection } from "./useSelection.hook";
+import { DebugModal } from "@/modals/debug-modal";
 
 export function Spreadsheet() {
 
@@ -58,7 +59,16 @@ export function Spreadsheet() {
 
         showModal(({ hideModal }) => (
             <GraphModal hideModal={hideModal} values={values} />
-        ))
+        ));
+    }
+
+    const openDebugModal = () => {
+        const cellId: CellId = Array.from(selectedCells)[0];
+        const values: string[] = history.get(cellId) ?? [];
+
+        showModal(({ hideModal }) => (
+            <DebugModal hideModal={hideModal} values={values} />
+        ));
     }
 
     // effects
@@ -679,6 +689,10 @@ export function Spreadsheet() {
                         Graph
                     </Button>
 
+                    <Button onClick={() => openDebugModal()}>
+                        Debug
+                    </Button>
+
                     <Button onClick={() => exportAndSave()}>
                         <Download size={12} />
                         Export
@@ -783,7 +797,7 @@ const TopPanel = styled.div`
     width: 100%;
 
     display: grid;
-    grid-template-columns: auto 1fr 150px 75px auto auto auto;
+    grid-template-columns: auto 1fr 150px 75px auto auto auto auto;
     gap: 15px;
 `;
 
