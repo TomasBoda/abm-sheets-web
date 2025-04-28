@@ -12,8 +12,11 @@ import { ColorPicker } from "../color-picker/color-picker.component";
 import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
 import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
-import { useSelection } from "./useSelection.hook";
 import { DebugModal } from "@/modals/debug-modal";
+import { useStepper } from "@/hooks/useStepper";
+import { useCellStyle } from "@/hooks/useCellStyle";
+import { useSelection } from "@/hooks/useSelection.hook";
+import { useCellInfo } from "@/hooks/useCells";
 
 export function Spreadsheet() {
 
@@ -31,17 +34,15 @@ export function Spreadsheet() {
 
     // state
 
-    const [step, setStep] = useState<number>(Constants.DEFAULT_STEP);
-    const [steps, setSteps] = useState<number>(Constants.DEFAULT_STEPS);
+    const { step, setStep, steps } = useStepper();
+    const { cellColors, setCellColors, cellBolds } = useCellStyle();
+    const { usedCells, setUsedCells } = useCellInfo();
 
     const [history, setHistory] = useState<History>(new Map());
 
-    const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set<CellId>());
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
     const [referencedCells, setReferencedCells] = useState<Set<CellId>>(new Set<CellId>());
-
-    const [cellColors, setCellColors] = useState<Map<CellId, string>>(new Map());
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
 
@@ -531,25 +532,6 @@ export function Spreadsheet() {
         setCellColors(newCellColors);
     }
 
-    const exportAndSave = () => {
-        const object = {};
-
-        for (let ri = 0; ri < data.length; ri++) {
-            for (let ci = 0; ci < data[ri].length; ci++) {
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value, color } = data[ri][ci];
-
-                if (formula.trim() === "" && value.trim() === "") {
-                    continue;
-                }
-                
-                object[cellId] = { formula, value, color };
-            }
-        }
-
-        Utils.download(object);
-    }
-
     // utilities
 
     const getCellSpan = (coords: CellCoords): HTMLSpanElement => {
@@ -616,20 +598,6 @@ export function Spreadsheet() {
 
     // other
 
-    const setCellColor = (color: string) => {
-        const newCellColors = new Map(cellColors);
-
-        for (const cellId of Array.from(selectedCells)) {
-            if (color === "") {
-                newCellColors.delete(cellId);
-            } else {
-                newCellColors.set(cellId, color);
-            }
-        }
-
-        setCellColors(newCellColors);
-    }
-
     const selectedRows = useMemo(() => {
         const rows = new Set<number>();
         selectedCells.forEach(cellId => {
@@ -651,64 +619,12 @@ export function Spreadsheet() {
     return (
         <Container id="container">
             <Header>
-                <TopPanel>
-                    <Logo>
-                        <Grid2x2Plus size={20} color="var(--primary)" />
-                        ABM Sheets
-                    </Logo>
-
-                    <div />
-
-                    <Stepper>
-                        <Icon onClick={prevStep}>
-                            <ChevronLeft size={16} color="var(--text-1)" />
-                        </Icon>
-                        
-                        <TextField
-                            value={(step + 1).toString()}
-                            disabled={true}
-                        />
-                        <Icon onClick={nextStep}>
-                            <ChevronRight size={16} color="var(--text-1)" />
-                        </Icon>
-                    </Stepper>
-
-                    <TextField
-                        value={steps.toString()}
-                        onChange={value => value === "" ? setSteps(0) : setSteps(parseInt(value))}
-                        placeholder="Steps"
-                    />
-
-                    <Button onClick={() => setStep(0)}>
-                        <Repeat2 size={12} />
-                        Reset
-                    </Button>
-
-                    <Button onClick={() => openGraphModal()}>
-                        <ChartLine size={12} />
-                        Graph
-                    </Button>
-
-                    <Button onClick={() => openDebugModal()}>
-                        Debug
-                    </Button>
-
-                    <Button onClick={() => exportAndSave()}>
-                        <Download size={12} />
-                        Export
-                    </Button>
-                </TopPanel>
-
-                <BottomPanel>
-                    <TextField
-                        id="formula"
-                        onKeyDown={event => onFormulaKeyDown(event)}
-                        onChange={value => onFormulaInput(value)}
-                        placeholder="Enter formula"
-                    />
-
-                    <ColorPicker onChange={color => setCellColor(color)} />
-                </BottomPanel>
+                <TextField
+                    id="formula"
+                    onKeyDown={event => onFormulaKeyDown(event)}
+                    onChange={value => onFormulaInput(value)}
+                    placeholder="Enter formula"
+                />
             </Header>
 
             <TableContainer>
@@ -758,6 +674,7 @@ export function Spreadsheet() {
                                             $selected={isCellSelected({ ri, ci })}
                                             $referenced={referencedCells.has(Utils.cellCoordsToId({ ri, ci }))}
                                             $background={cellColors.get(Utils.cellCoordsToId({ ri, ci }))}
+                                            $isBold={cellBolds.get(Utils.cellCoordsToId({ ri, ci })) !== undefined}
                                         >
                                             <span>{""}</span>
                                             <CellDrag
@@ -791,63 +708,6 @@ const Header = styled.div`
     gap: 15px;
 
     padding: 15px;
-`;
-
-const TopPanel = styled.div`
-    width: 100%;
-
-    display: grid;
-    grid-template-columns: auto 1fr 150px 75px auto auto auto auto;
-    gap: 15px;
-`;
-
-const BottomPanel = styled.div`
-    width: 100%;
-
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 15px;
-`;
-
-const Logo = styled.div`
-    color: var(--text-1);
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 100%;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-
-    cursor: pointer;
-`;
-
-const Stepper = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 15px;
-`;
-
-const Icon = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    padding: 8px;
-
-    border: 0.1px solid var(--bg-3);
-    border-radius: 10px;
-    background-color: var(--bg-1);
-
-    cursor: pointer;
-    transition: all 100ms;
-
-    &:hover {
-        background-color: var(--bg-2);
-    }
 `;
 
 const TableContainer = styled.div`
@@ -905,25 +765,28 @@ const CellDrag = styled.div`
     bottom: 0px;
     width: 15px;
     height: 10px;
-    border-top-left-radius: 10px;
 
     background-color: var(--bg-3);
     border-left: 2px solid var(--bg-6);
     border-top: 2px solid var(--bg-6);
 
-    cursor: grab;
+    cursor: cell;
 
     transition: all 150ms;
     opacity: 0;
 `;
 
-const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; $background?: string; }>`
+const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; $background?: string; $isBold?: boolean; }>`
     width: 140px;
     height: 35px;
 
     position: relative;
 
     font-size: 12px;
+
+    font-weight: ${({ $isBold }) => $isBold && "700"};
+
+    font-style: italic;
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -936,13 +799,15 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     justify-content: center;
 
     color: var(--text-1);
+    color: ${({ $special, $selected }) => $special && $selected && "white"};
 
     padding: 10px;
 
     outline: none;
     border: 0.1px solid var(--bg-3);
 
-    border-color: ${({ $referenced }) => $referenced && "var(--text-1)"};
+    border-color: ${({ $referenced }) => $referenced && "var(--color-2)"};
+    border-width: ${({ $referenced }) => $referenced && "1.5px"};
 
     //cursor: pointer;
     transition: all 50ms;
@@ -950,8 +815,8 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     user-select: none;
 
     background-color: ${({ $special, $selected }) => $selected ? "var(--bg-2)" : ($special ? "var(--bg-0)" : "var(--bg-1)")};
-
     background-color: ${({ $background }) => $background ?? ""};
+    background-color: ${({ $special, $selected }) => $special && $selected && "var(--color-1)"};
 
     border: ${({ $special }) => $special && "1px solid transparent"};
 `;

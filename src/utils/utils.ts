@@ -97,19 +97,26 @@ export namespace Utils {
         return data;
     }
 
-    export const download = (data: any): void => {
+    export const download = (data: any, filename?: string): void => {
         const jsonString = JSON.stringify(data, null, 2);
         const blob = new Blob([jsonString], { type: "application/json" });
         const url = URL.createObjectURL(blob);
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "export.json";
+        a.download = filename + ".json";
 
         document.body.appendChild(a); 
         a.click();
         document.body.removeChild(a);
         
         URL.revokeObjectURL(url);
+    }
+
+    export const getCellSpan = (coords: CellCoords): HTMLSpanElement => {
+        const cellId = Utils.cellCoordsToId(coords);
+        const cellElement = document.getElementById(cellId) as HTMLDivElement;
+        const spanElement = cellElement.children[0] as HTMLSpanElement;
+        return spanElement;
     }
 }

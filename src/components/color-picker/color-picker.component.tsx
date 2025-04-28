@@ -20,8 +20,6 @@ export const ColorPicker = ({ onChange }: Props) => {
 }
 
 const Container = styled.div`
-    width: 100%;
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -32,10 +30,10 @@ const ColorItem = styled.div`
     cursor: pointer;
     transition: all 150ms;
 
-    border-radius: 3px;
+    border-radius: 5px;
 
     &:hover {
-        background-color: var(--bg-2);
+        background-color: var(--color-1);
     }
 `;
 

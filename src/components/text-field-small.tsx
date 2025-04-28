@@ -9,7 +9,7 @@ interface Props {
     disabled?: boolean;
 }
 
-export const TextField = ({ id, value, onChange, onKeyDown, placeholder = "Enter text", disabled = false }: Props) => {
+export const TextFieldSmall = ({ id, value, onChange, onKeyDown, placeholder = "Enter text", disabled = false }: Props) => {
 
     return (
         <Input
@@ -26,29 +26,20 @@ export const TextField = ({ id, value, onChange, onKeyDown, placeholder = "Enter
 }
 
 const Input = styled.input`
-    width: 100%;
-
-    color: var(--text-1);
-    font-size: 12px;
+    color: white;
+    font-size: 11px;
     font-weight: 400;
-    line-height: 100%;
-    letter-spacing: 1px;
 
-    padding: 8px;
-
-    border: 1px solid var(--bg-3);
-    border-radius: 7px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
 
     outline: none;
-    transition: all 100ms;
+    border: 1px solid var(--color-2);
 
-    background-color: var(--bg-1);
+    padding: 5px 12px;
+    border-radius: 5px;
 
-    &:disabled {
-        cursor: not-allowed;
-    }
-
-    &:focus {
-        border-color: var(--bg-5);
-    }
+    background-color: var(--color-1);
 `;
