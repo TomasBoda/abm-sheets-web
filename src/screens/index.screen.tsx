@@ -123,6 +123,12 @@ const HomeTab = () => {
             newCellBolds.delete(cellId);
         }
         setCellBolds(newCellBolds);
+
+        const newCellItalics = new Map(cellItalics);
+        for (const cellId of Array.from(selectedCells)) {
+            newCellItalics.delete(cellId);
+        }
+        setCellItalics(newCellItalics);
     }
 
     return (

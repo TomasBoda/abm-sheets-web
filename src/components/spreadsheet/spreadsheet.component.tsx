@@ -35,7 +35,7 @@ export function Spreadsheet() {
     // state
 
     const { step, setStep, steps } = useStepper();
-    const { cellColors, setCellColors, cellBolds } = useCellStyle();
+    const { cellColors, setCellColors, cellBolds, cellItalics } = useCellStyle();
     const { usedCells, setUsedCells } = useCellInfo();
 
     const [history, setHistory] = useState<History>(new Map());
@@ -675,6 +675,7 @@ export function Spreadsheet() {
                                             $referenced={referencedCells.has(Utils.cellCoordsToId({ ri, ci }))}
                                             $background={cellColors.get(Utils.cellCoordsToId({ ri, ci }))}
                                             $isBold={cellBolds.get(Utils.cellCoordsToId({ ri, ci })) !== undefined}
+                                            $isItalic={cellItalics.get(Utils.cellCoordsToId({ ri, ci })) !== undefined}
                                         >
                                             <span>{""}</span>
                                             <CellDrag
@@ -776,7 +777,7 @@ const CellDrag = styled.div`
     opacity: 0;
 `;
 
-const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; $background?: string; $isBold?: boolean; }>`
+const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: boolean; $background?: string; $isBold?: boolean; $isItalic?: boolean; }>`
     width: 140px;
     height: 35px;
 
@@ -785,8 +786,6 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     font-size: 12px;
 
     font-weight: ${({ $isBold }) => $isBold && "700"};
-
-    font-style: italic;
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -809,7 +808,6 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     border-color: ${({ $referenced }) => $referenced && "var(--color-2)"};
     border-width: ${({ $referenced }) => $referenced && "1.5px"};
 
-    //cursor: pointer;
     transition: all 50ms;
 
     user-select: none;
@@ -819,6 +817,10 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
     background-color: ${({ $special, $selected }) => $special && $selected && "var(--color-1)"};
 
     border: ${({ $special }) => $special && "1px solid transparent"};
+
+    & span {
+        font-style: ${({ $isItalic }) => $isItalic && "italic"};
+    }
 `;
 
 const ColumnRow = styled(Row)`
