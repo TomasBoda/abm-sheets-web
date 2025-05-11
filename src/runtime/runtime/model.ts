@@ -36,6 +36,7 @@ export type FuncProps = {
     args: Value[];
     step: number;
     history: History;
+    dataHistory: History;
 }
 
 export type FuncCall = (props: FuncProps) => Value;

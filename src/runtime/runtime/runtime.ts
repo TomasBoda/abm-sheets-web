@@ -1,4 +1,4 @@
-import { History } from "@/components/spreadsheet/spreadsheet.model";
+import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
 import { Functions } from "../functions";
 import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "../parser";
@@ -8,6 +8,7 @@ export class Runtime {
 
     private step: number;
     private history: History;
+    private dataHistory: History;
 
     private inCallExpression: boolean = false;
 
@@ -43,9 +44,10 @@ export class Runtime {
         ["step", Functions.step],
     ]);
 
-    public run(expression: Expression, step: number, history: History) {
+    public run(expression: Expression, step: number, history: History, dataHistory: History) {
         this.step = step;
         this.history = history;
+        this.dataHistory = dataHistory;
         
         return this.runFormula(expression);
     }
@@ -126,7 +128,8 @@ export class Runtime {
         return func({
             args: evaluatedArgs,
             step: this.step,
-            history: this.history
+            history: this.history,
+            dataHistory: this.dataHistory,
         });
     }
 
@@ -336,14 +339,12 @@ export class Runtime {
         if (this.inCallExpression) {
             return { type: ValueType.CellLiteral, value: [ri, ci] } as CellLiteralValue;
         }
+    
+        const cellValue = this.getHistoryValue(cellId);
 
-        const cellHistory = this.history.get(cellId);
-
-        if (!cellHistory) {
+        if (cellValue === undefined) {
             return { type: ValueType.Number, value: 0 };
         }
-
-        const cellValue = cellHistory[cellHistory.length - 1];
 
         if (isNaN(parseFloat(cellValue))) {
             if (["TRUE", "FALSE"].includes(cellValue)) {
@@ -362,5 +363,22 @@ export class Runtime {
         const value = [left.col.index, left.row.index, right.col.index, right.row.index];
 
         return { type: ValueType.CellRange, value } as CellRangeValue;
+    }
+
+    // utilities
+
+    private getHistoryValue(cellId: CellId) {
+        const historyValue = this.history.get(cellId);
+        const dataHistoryValue = this.dataHistory.get(cellId);
+
+        if (historyValue !== undefined) {
+            return historyValue[historyValue.length - 1];
+        }
+
+        if (dataHistoryValue !== undefined) {
+            return dataHistoryValue[this.step];
+        }
+
+        return undefined;
     }
 }

@@ -6,7 +6,7 @@ import { data } from "@/components/spreadsheet/data";
 
 export class Evaluator {
 
-    private evaluateCell(cellId: CellId, step: number, history: History): string | undefined {
+    private evaluateCell(cellId: CellId, step: number, history: History, dataHistory: History): string | undefined {
         const { ri, ci } = Utils.cellIdToCoords(cellId);
         const cell = data[ri][ci];
 
@@ -20,25 +20,25 @@ export class Evaluator {
 
         const formula = step === 0 ? (defaultFormula ?? primaryFormula) : primaryFormula;
 
-        return this.evaluateFormula(formula, step, history);
+        return this.evaluateFormula(formula, step, history, dataHistory);
     }
 
-    private evaluateFormula(formula: string, step: number, history: History): string {
+    private evaluateFormula(formula: string, step: number, history: History, dataHistory: History): string {
         try {
             const expression = new Parser().parse(formula);
-            const result = new Runtime().run(expression, step, history);
+            const result = new Runtime().run(expression, step, history, dataHistory);
             return result;
         } catch (e) {
             return "ERROR";
         }
     }
 
-    public evaluateCells(cells: CellId[], steps: number) {
+    public evaluateCells(cells: CellId[], steps: number, dataHistory: History) {
         const history: History = new Map();
 
         for (let step = 0; step < steps; step++) {
             for (const cellId of cells) {
-                const result = this.evaluateCell(cellId, step, history);
+                const result = this.evaluateCell(cellId, step, history, dataHistory);
 
                 if (!result) {
                     continue;

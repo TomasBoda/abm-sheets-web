@@ -1,18 +1,20 @@
-import styled from "styled-components";
-import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
-import { Tab, Tabs } from "@/components/tabs/tabs.component";
-import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Italic, RotateCcw, Upload } from "lucide-react";
 import { ColorPicker } from "@/components/color-picker/color-picker.component";
-import { TextFieldSmall } from "@/components/text-field-small";
-import { useEffect, useState } from "react";
-import { useStepper } from "@/hooks/useStepper";
-import { useSelection } from "@/hooks/useSelection.hook";
-import { useCellStyle } from "@/hooks/useCellStyle";
-import { Utils } from "@/utils/utils";
 import { data } from "@/components/spreadsheet/data";
+import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
+import { Tab, Tabs } from "@/components/tabs/tabs.component";
+import { TextFieldSmall } from "@/components/text-field-small";
 import { useCellInfo } from "@/hooks/useCells";
-import githubLogo from "../../public/logo-github.svg";
+import { useCellStyle } from "@/hooks/useCellStyle";
+import { useHistory } from "@/hooks/useHistory";
+import { useModal } from "@/hooks/useModal";
+import { useSelection } from "@/hooks/useSelection.hook";
+import { useStepper } from "@/hooks/useStepper";
+import { GraphModal } from "@/modals/graph-modal";
+import { Utils } from "@/utils/utils";
+import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Italic, RotateCcw, Upload } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 
 export function IndexScreen() {
     
@@ -28,6 +30,10 @@ export function IndexScreen() {
         {
             label: "Import & Export",
             component: <ExportTab />
+        },
+        {
+            label: "Advanced",
+            component: <AdvancedTab />
         }
     ]
 
@@ -182,6 +188,9 @@ const HomeTab = () => {
 const SimulationTab = () => {
 
     const { step, setStep, steps, setSteps, reset } = useStepper();
+    const { selectedCells } = useSelection();
+    const { history, dataHistory } = useHistory();
+    const { showModal } = useModal();
 
     const prevStep = () => {
         setStep(prev => Math.max(0, prev - 1));
@@ -189,6 +198,40 @@ const SimulationTab = () => {
 
     const nextStep = () => {
         setStep(prev => Math.min(prev + 1, steps - 1));
+    }
+
+    const openGraphModal = () => {
+        const cellId: CellId = Array.from(selectedCells)[0];
+        const historyData = history.get(cellId);
+        const dataHistoryData = dataHistory.get(cellId);
+
+        if (historyData) {
+            const data = historyData;
+
+            const values = data
+                ? data
+                    .filter(value => !isNaN(parseFloat(value)))
+                    .map(value => parseFloat(value))
+                : [];
+
+            return showModal(({ hideModal }) => (
+                <GraphModal hideModal={hideModal} values={values} />
+            ));
+        }
+
+        if (dataHistoryData) {
+            const data = dataHistoryData;
+
+            const values = data
+                ? data
+                    .filter(value => !isNaN(parseFloat(value)))
+                    .map(value => parseFloat(value))
+                : [];
+
+            return showModal(({ hideModal }) => (
+                <GraphModal hideModal={hideModal} values={values} />
+            ));
+        }
     }
 
     return (
@@ -225,7 +268,7 @@ const SimulationTab = () => {
 
             <Divider />
 
-            <Button>
+            <Button onClick={openGraphModal}>
                 <ChartLine size={10} />
                 Graph
             </Button>
@@ -237,6 +280,7 @@ const ExportTab = () => {
 
     const { setCellColors } = useCellStyle();
     const { usedCells, setUsedCells } = useCellInfo();
+    const { dataHistory, setDataHistory } = useHistory();
 
     const [filename, setFilename] = useState<string>("");
 
@@ -252,8 +296,20 @@ const ExportTab = () => {
                     continue;
                 }
                 
-                object[cellId] = { formula, value, color };
+                object[cellId] = { formula, value, color, history };
             }
+        }
+
+        for (const [cellId, values] of dataHistory.entries()) {
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
+
+            object[cellId] = {
+                formula: "",
+                value: "",
+                color: data[ri][ci].color,
+                ...object[cellId],
+                dataHistory: values,
+            };
         }
 
         Utils.download(object, filename);
@@ -277,6 +333,7 @@ const ExportTab = () => {
     const importAndLoad = (importedData: any) => {
         const newUsedCells: CellId[] = [];
         const newCellColors = new Map<CellId, string>();
+        const newDataHistory = new Map(dataHistory);
 
         for (const [cellId, cellData] of Object.entries(importedData)) {
             const { formula, value, color } = cellData as any;
@@ -295,10 +352,15 @@ const ExportTab = () => {
             } else {
                 Utils.getCellSpan({ ri, ci }).innerText = formula;
             }
+
+            if ((cellData as any).dataHistory) {
+                newDataHistory.set(cellId as CellId, (cellData as any).dataHistory);
+            }
         }
 
         addUsedCells(newUsedCells);
         setCellColors(newCellColors);
+        setDataHistory(newDataHistory);
     }
 
     useEffect(() => {
@@ -341,6 +403,82 @@ const ExportTab = () => {
                 <Download size={10} />
                 Export
             </Button>
+        </TabContainer>
+    )
+}
+
+const AdvancedTab = () => {
+
+    const { selectedCells } = useSelection();
+    const { dataHistory, setDataHistory } = useHistory();
+
+    const [column, setColumn] = useState<string>("");
+
+    const selectedCell = useMemo(() => Array.from(selectedCells)[0], [selectedCells]);
+
+    const onFileInputClick = () => {
+        document.getElementById("fileInput").click();
+    }
+
+    const importAndLoad = (content: string) => {
+        const header = content.split("\n")[0];
+        const columns = header.split(",");
+
+        const index = columns.findIndex(value => value === column);
+
+        const rows = content.split("\n").slice(1);
+        const data: string[] = [];
+
+        for (const row of rows) {
+            const values = row.split(",");
+            data.push(values[index]);
+        }
+
+        const newHistory = new Map<CellId, string[]>(dataHistory);
+        newHistory.set(selectedCell, data);
+        setDataHistory(newHistory);
+    }
+
+    const onFileInput = useCallback(() => {
+        const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+        const file = fileInput.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const csvContent = e.target.result as string;
+            importAndLoad(csvContent);
+            fileInput.value = "";
+        };
+        reader.readAsText(file);
+    }, [column]);
+
+    useEffect(() => {
+        const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+
+        fileInput.addEventListener("change", onFileInput);
+
+        return () => {
+            fileInput.removeEventListener("change", onFileInput);
+        }
+    }, [column]);
+
+    return (
+        <TabContainer>
+            <TextFieldSmall
+                value={column}
+                onChange={setColumn}
+                placeholder="Enter column name"
+            />
+
+            <Button onClick={onFileInputClick}>
+                Add data to {selectedCell}
+            </Button>
+
+            <input type="file" id="fileInput" name="input-file" accept=".csv" style={{ display: "none" }} />
         </TabContainer>
     )
 }

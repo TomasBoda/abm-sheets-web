@@ -1,5 +1,6 @@
 import { Utils } from "@/utils/utils";
 import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue, StringValue, Value, ValueType } from "./runtime";
+import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 
 export namespace Functions {
 
@@ -38,7 +39,7 @@ export namespace Functions {
 
     // ------------------------------
 
-    export const index = ({ args, history }: FuncProps): Value => {
+    export const index = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const lookupRange = expectCellRange(args, 0).value;
         const index = expectNumber(args, 1).value;
 
@@ -66,8 +67,8 @@ export namespace Functions {
             }
         }
 
-        const cell = history.get(Utils.cellCoordsToId({ ri, ci }));
-        const value = cell !== undefined ? cell[cell.length - 1] : "0";
+        const cellId = Utils.cellCoordsToId({ ri, ci });
+        const value = getHistoryValue(cellId, step, history, dataHistory) ?? "0";
 
         if (isNaN(parseFloat(value))) {
             if (["TRUE", "FALSE"].includes(value)) {
@@ -80,7 +81,7 @@ export namespace Functions {
         return createNumber(parseFloat(value));
     }
 
-    export const match = ({ args, history }: FuncProps): Value => {
+    export const match = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const lookupValue = args[0].value;
         const lookupRange = expectCellRange(args, 1).value;
 
@@ -97,8 +98,8 @@ export namespace Functions {
 
         for (let r = r1; r <= r2; r++) {
             for (let c = c1; c <= c2; c++) {
-                const cell = history.get(Utils.cellCoordsToId({ ri: r, ci: c }));
-                const value = cell ? cell[cell.length - 1] : "0";
+                const cellId = Utils.cellCoordsToId({ ri: r, ci: c });
+                const value = getHistoryValue(cellId, step, history, dataHistory) ?? "0";
 
                 switch (args[0].type) {
                     case ValueType.Number: {
@@ -121,7 +122,7 @@ export namespace Functions {
         return createNumber(-1);
     }
 
-    export const min = ({ args, history }: FuncProps): Value => {
+    export const min = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -134,13 +135,11 @@ export namespace Functions {
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
+                const value = getHistoryValue(cellId, step, history, dataHistory);
                 
-                if (cell === undefined) {
+                if (value === undefined) {
                     continue;
                 }
-
-                const value = cell[cell.length - 1];
 
                 if (isNaN(parseFloat(value))) {
                     continue;
@@ -153,7 +152,7 @@ export namespace Functions {
         return createNumber(min);
     }
 
-    export const max = ({ args, history }: FuncProps): Value => {
+    export const max = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -166,13 +165,11 @@ export namespace Functions {
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
+                const value = getHistoryValue(cellId, step, history, dataHistory);
                 
-                if (cell === undefined) {
+                if (value === undefined) {
                     continue;
                 }
-
-                const value = cell[cell.length - 1];
 
                 if (isNaN(parseFloat(value))) {
                     continue;
@@ -185,7 +182,7 @@ export namespace Functions {
         return createNumber(max);
     }
 
-    export const sum = ({ args, history }: FuncProps): Value => {
+    export const sum = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -197,8 +194,8 @@ export namespace Functions {
 
         for (let r = r1; r <= r2; r++) {
             for (let c = c1; c <= c2; c++) {
-                const cell = history.get(Utils.cellCoordsToId({ ri: r, ci: c }));
-                const value = cell ? cell[cell.length - 1] : "0";
+                const cellId = Utils.cellCoordsToId({ ri: r, ci: c });
+                const value = getHistoryValue(cellId, step, history, dataHistory) ?? "0";
 
                 sum += isNaN(parseFloat(value)) ? 0 : parseFloat(value);
             }
@@ -207,7 +204,7 @@ export namespace Functions {
         return createNumber(sum);
     }
 
-    export const average = ({ args, history }: FuncProps): Value => {
+    export const average = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -221,13 +218,11 @@ export namespace Functions {
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
+                const value = getHistoryValue(cellId, step, history, dataHistory);
                 
-                if (cell === undefined) {
+                if (value === undefined) {
                     continue;
                 }
-
-                const value = cell[cell.length - 1];
 
                 if (isNaN(parseFloat(value))) {
                     continue;
@@ -243,7 +238,7 @@ export namespace Functions {
         return createNumber(average);
     }
 
-    export const count = ({ args, history }: FuncProps): Value => {
+    export const count = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
 
         const c1 = range[0];
@@ -256,13 +251,11 @@ export namespace Functions {
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
+                const value = getHistoryValue(cellId, step, history, dataHistory);
                 
-                if (cell === undefined) {
+                if (value === undefined) {
                     continue;
                 }
-
-                const value = cell[cell.length - 1];
 
                 if (isNaN(parseFloat(value))) {
                     continue;
@@ -275,7 +268,7 @@ export namespace Functions {
         return createNumber(count);
     }
 
-    export const countif = ({ args, history }: FuncProps): Value => {
+    export const countif = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
         const matcher = args[1];
 
@@ -289,13 +282,11 @@ export namespace Functions {
         for (let ri = r1; ri <= r2; ri++) {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const cell = history.get(cellId);
+                const value = getHistoryValue(cellId, step, history, dataHistory);
                 
-                if (cell === undefined) {
+                if (value === undefined) {
                     continue;
                 }
-
-                const value = cell[cell.length - 1];
 
                 switch (matcher.type) {
                     case ValueType.Number: {
@@ -323,11 +314,11 @@ export namespace Functions {
         return createNumber(count);
     }
 
-    export const sumhistory = ({ args, history }: FuncProps): Value => {
+    export const sumhistory = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const cell = expectCellLiteral(args, 0);
         const cellId = Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] });
-        
-        const value = history.get(cellId);
+
+        const value = getHistoryValue(cellId, step, history, dataHistory);
 
         if (value === undefined) {
             return createNumber(0);
@@ -434,47 +425,43 @@ export namespace Functions {
 
     // ------------------------------
 
-    export const prev = ({ args, history }: FuncProps): Value => {
+    export const prev = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const cell = expectCellLiteral(args, 0);
         const cellId = Utils.cellCoordsToId({ ri: cell.value[0], ci: cell.value[1] });
 
-        const value = history.get(cellId);
+        const value = getHistoryValue(cellId, step - 1, history, dataHistory);
 
-        if (!value || value.length < 2) {
+        if (value === undefined) {
             return createNumber(0);
         }
 
-        const cellValue = value[value.length - 2];
-
-        if (isNaN(parseFloat(cellValue))) {
-            if (["TRUE", "FALSE"].includes(cellValue)) {
-                return createBoolean(cellValue === "TRUE");
+        if (isNaN(parseFloat(value))) {
+            if (["TRUE", "FALSE"].includes(value)) {
+                return createBoolean(value === "TRUE");
             }
 
-            return createString(cellValue);
+            return createString(value);
         } else {
-            return createNumber(parseFloat(cellValue));
+            return createNumber(parseFloat(value));
         }
     }
 
-    export const history = ({ args, history }: FuncProps): Value => {
+    export const history = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const cell = expectCellLiteral(args, 0).value;
         const offset = expectNumber(args, 1).value;
 
         const cellId = Utils.cellCoordsToId({ ri: cell[0], ci: cell[1] });
 
-        const value = history.get(cellId);
+        const value = getHistoryValue(cellId, step - offset, history, dataHistory);
 
-        if (!value) {
+        if (value === undefined) {
             return createNumber(0);
         }
 
-        const cellValue = value[value.length - 1 - offset];
-
-        if (isNaN(parseFloat(cellValue))) {
-            return createString(cellValue);
+        if (isNaN(parseFloat(value))) {
+            return createString(value);
         } else {
-            return createNumber(parseFloat(cellValue));
+            return createNumber(parseFloat(value));
         }
     }
 
@@ -522,4 +509,19 @@ const expectArg = (args: Value[], index: number, type: ValueType): Value => {
     }
 
     return args[index];
+}
+
+const getHistoryValue = (cellId: CellId, step: number, history: History, dataHistory: History) => {
+    const historyValue = history.get(cellId);
+    const dataHistoryValue = dataHistory.get(cellId);
+
+    if (historyValue !== undefined) {
+        return historyValue[historyValue.length - 1];
+    }
+
+    if (dataHistoryValue !== undefined) {
+        return dataHistoryValue[step];
+    }
+
+    return undefined;
 }

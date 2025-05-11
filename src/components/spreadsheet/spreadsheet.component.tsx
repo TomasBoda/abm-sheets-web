@@ -17,6 +17,7 @@ import { useStepper } from "@/hooks/useStepper";
 import { useCellStyle } from "@/hooks/useCellStyle";
 import { useSelection } from "@/hooks/useSelection.hook";
 import { useCellInfo } from "@/hooks/useCells";
+import { useHistory } from "@/hooks/useHistory";
 
 export function Spreadsheet() {
 
@@ -38,7 +39,7 @@ export function Spreadsheet() {
     const { cellColors, setCellColors, cellBolds, cellItalics } = useCellStyle();
     const { usedCells, setUsedCells } = useCellInfo();
 
-    const [history, setHistory] = useState<History>(new Map());
+    const { history, setHistory, dataHistory, setDataHistory } = useHistory();
 
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
@@ -79,6 +80,13 @@ export function Spreadsheet() {
         onCellClick(coords);
     }, []);
 
+    useEffect(function updateHistoryCells() {
+        for (const [cellId, values] of dataHistory.entries()) {
+            const coords = Utils.cellIdToCoords(cellId);
+            getCellSpan(coords).innerText = values[step];
+        }
+    }, [dataHistory, step]);
+
     useEffect(function updateCellValuesEachStep() {
         for (const [cellId, values] of history.entries()) {
             const coords = Utils.cellIdToCoords(cellId);
@@ -108,7 +116,7 @@ export function Spreadsheet() {
         }
     }, []);
 
-    useEffect(function subscribeToDragAndDrop() {
+    /* useEffect(function subscribeToDragAndDrop() {
         const handleDragOver = (event: any) => {
             event.preventDefault();
         };
@@ -150,7 +158,7 @@ export function Spreadsheet() {
             window.removeEventListener("dragover", handleDragOver);
             window.removeEventListener("drop", handleDrop);
         };
-    }, []);
+    }, []); */
 
     useEffect(function subscribeToArrowKeys() {
         const handleKey = (event: any) => {
@@ -483,7 +491,7 @@ export function Spreadsheet() {
             return formula.startsWith("=");
         });
 
-        const history = new Evaluator().evaluateCells(sortedCells, steps);
+        const history = new Evaluator().evaluateCells(sortedCells, steps, dataHistory);
 
         for (const [cellId, values] of history.entries()) {
             const coords = Utils.cellIdToCoords(cellId);
