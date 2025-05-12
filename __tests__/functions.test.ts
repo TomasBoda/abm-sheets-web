@@ -14,6 +14,7 @@ describe("Functions", () => {
             args: [],
             step: 0,
             history: new Map<CellId, string[]>(),
+            dataHistory: new Map<CellId, string[]>(),
         };
     });
 
@@ -413,8 +414,12 @@ describe("Functions", () => {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             props.args = [createCellLiteral([ci, ri])];
 
+            props.step = 1;
+
             props.history.set(cellId, ["1", "2"]);
             expect(Functions.prev(props)).toEqual(createNumber(1));
+
+            props.step = 2;
 
             props.history.set(cellId, ["1", "2", "3"]);
             expect(Functions.prev(props)).toEqual(createNumber(2));
@@ -443,6 +448,8 @@ describe("Functions", () => {
             ];
 
             props.history.set(cellId, ["1", "2", "3", "4", "5"]);
+
+            props.step = 4;
 
             props.args[1].value = 1;
             expect(Functions.history(props)).toEqual(createNumber(4));

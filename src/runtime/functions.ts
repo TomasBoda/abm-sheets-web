@@ -516,7 +516,7 @@ const getHistoryValue = (cellId: CellId, step: number, history: History, dataHis
     const dataHistoryValue = dataHistory.get(cellId);
 
     if (historyValue !== undefined) {
-        return historyValue[historyValue.length - 1];
+        return historyValue[step];
     }
 
     if (dataHistoryValue !== undefined) {
