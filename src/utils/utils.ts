@@ -1,5 +1,4 @@
 import { CellCoords, CellId, SpreadsheetData } from "@/components/spreadsheet/spreadsheet.model";
-import { CellRangeValue } from "@/runtime/runtime";
 
 export namespace Utils {
 
