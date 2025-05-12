@@ -383,3 +383,19 @@ The user can use several keystrokes to control the spreadsheet interface.
 ### Formula
 
 - `Ctrl + Left Mouse Click` - adds the clicked cell ID to the current formula
+
+## Limitations
+
+ABM Sheets has several issues and bugs.
+
+### Evaluation
+
+At the current state of development, the evaluation engine evaluates the entire simulation and all steps at once, which on one hand makes stepping through the simulation steps very fast, however, with a large number of steps introduces slower response times of the user interaction events, such as clicks. The solution would be to evaluate each step only after the user requests it, which would slow down the stepping process, but would make the system more usable.
+
+### Formula Styling
+
+ABM Sheets does not provide formula syntax highlighting or code suggestions. It is a raw input field that provides no visual or suggestive help to the user.
+
+### Error Reporting
+
+The system does not report errors to the user thoroughly. If a formula cannot be evaluated either due to user error or system error, it displays `ERROR` inside the cell. Clear and vocal error messages would be very beneficial to the user to notify them about their mistakes.
