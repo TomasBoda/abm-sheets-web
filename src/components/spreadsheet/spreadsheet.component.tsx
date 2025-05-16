@@ -474,6 +474,10 @@ export function Spreadsheet() {
     // evaluation
     
     const evaluateUsedCells = () => {
+        if (usedCells.size === 0) {
+            return;
+        }
+
         const cells = Array.from(usedCells);
 
         const cellsWithFormula = cells.filter(cellId => {
@@ -815,8 +819,6 @@ const Cell = styled.div<{ $selected: boolean; $referenced: boolean; $special?: b
 
     border-color: ${({ $referenced }) => $referenced && "var(--color-2)"};
     border-width: ${({ $referenced }) => $referenced && "1.5px"};
-
-    transition: all 50ms;
 
     user-select: none;
 
