@@ -5,10 +5,13 @@ import { Href } from "@/components/href";
 import { Logo } from "@/components/logo";
 import { createClientClient } from "@/utils/supabase/client";
 import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import styled from "styled-components";
 
 export const SignInScreen = () => {
+
+    const router = useRouter();
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -33,8 +36,7 @@ export const SignInScreen = () => {
         }
 
         await supabase.auth.setSession(response.data.session);
-
-        redirect("/spreadsheet");
+        router.push("/spreadsheet");
     }
 
     return (
