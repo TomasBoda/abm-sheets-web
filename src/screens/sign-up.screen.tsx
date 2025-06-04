@@ -17,8 +17,6 @@ export const SignUpScreen = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const signUp = async () => {
-        const supabase = createClientClient();
-
         if (email.trim() === "" || password.trim() === "") {
             alert("Fields cannot be empty");
             return;
@@ -26,15 +24,19 @@ export const SignUpScreen = () => {
 
         setLoading(true);
 
-        const response = await supabase.auth.signUp({ email, password });
+        const request = await fetch("/api/auth/sign-up", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+        });
 
-        if (response.error) {
+        const response = await request.json();
+
+        if (response.status !== 200) {
             setLoading(false);
             alert("ERROR: " + response.error.message);
             return;
         }
 
-        await supabase.auth.setSession(response.data.session);
         router.push("/spreadsheet");
     }
 

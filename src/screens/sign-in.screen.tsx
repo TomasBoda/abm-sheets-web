@@ -17,24 +17,26 @@ export const SignInScreen = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const signIn = async () => {
-        const supabase = createClientClient();
-
         if (email.trim() === "" || password.trim() === "") {
             alert("Fields cannot be empty");
             return;
         }
 
         setLoading(true);
-        
-        const response = await supabase.auth.signInWithPassword({ email, password });
 
-        if (response.error) {
+        const request = await fetch("/api/auth/sign-in", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+        });
+
+        const response = await request.json();
+
+        if (response.status !== 200) {
             setLoading(false);
             alert("ERROR: " + response.error.message);
             return;
         }
-
-        await supabase.auth.setSession(response.data.session);
+        
         router.push("/spreadsheet");
     }
 

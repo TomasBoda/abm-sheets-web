@@ -45,11 +45,13 @@ export function SpreadsheetScreen() {
     ];
 
     const signOut = async () => {
-        const supabase = createClientClient();
+        const request = await fetch("/api/auth/sign-out", {
+            method: "POST"
+        });
 
-        const response = await supabase.auth.signOut();
+        const response = await request.json();
 
-        if (response.error) {
+        if (response.status !== 200) {
             alert("ERROR: " + response.error.message);
             return;
         }
