@@ -36,9 +36,4 @@ const Container = styled.div<{ $variant: LogoVariant; }>`
     gap: 10px;
 
     cursor: pointer;
-
-    & * {
-        font-family: "Poppins", sans-serif;
-        font-style: normal;
-    }
 `;

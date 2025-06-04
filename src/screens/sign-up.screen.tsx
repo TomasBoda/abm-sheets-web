@@ -102,11 +102,6 @@ const Container = styled.div`
 
     padding: 50px;
 
-    & * {
-        font-family: "Poppins", sans-serif;
-        font-style: normal;
-    }
-
     background-color: rgba(0, 0, 0, 0.05);
 `;
 
@@ -128,7 +123,7 @@ const Card = styled.div`
 const H1 = styled.h1`
     color: var(--text-1);
     font-size: 26px;
-    font-weight: 900;
+    font-weight: 700;
     line-height: 120%;
 `;
 
@@ -159,6 +154,10 @@ const TextField = styled.input`
     padding: 10px;
 
     background-color: rgba(0, 0, 0, 0.05);
+
+    &::placeholder {
+        font-weight: 400;
+    }
 `;
 
 const Link = styled.span`
