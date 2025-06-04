@@ -3,7 +3,6 @@
 import { Button } from "@/components/button/button.component";
 import { Href } from "@/components/href";
 import { Logo } from "@/components/logo";
-import { createClientClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";

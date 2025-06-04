@@ -14,7 +14,6 @@ import { useSelection } from "@/hooks/useSelection.hook";
 import { useStepper } from "@/hooks/useStepper";
 import { GraphModal } from "@/modals/graph-modal";
 import { Logger } from "@/utils/logger";
-import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
 import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, RotateCcw, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";

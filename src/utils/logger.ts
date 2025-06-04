@@ -1,5 +1,3 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { createClientClient } from "./supabase/client";
 
 export type LogType =
     | "click-tab"
@@ -10,23 +8,12 @@ export type LogType =
 
 export class Logger {
 
-    private static supabase: SupabaseClient | undefined = undefined;
-
     public static async log(type: LogType, value: string): Promise<void> {
-        const supabase = this.getSupabaseInstance();
+        const request = await fetch("/api/log", {
+            method: "POST",
+            body: JSON.stringify({ type, value })
+        });
 
-        const response = await supabase
-            .from("logs")
-            .insert([{ type, value }]);
-
-        console.log(response);
-    }
-
-    private static getSupabaseInstance() {
-        if (!this.supabase) {
-            this.supabase = createClientClient();
-        }
-
-        return this.supabase;
+        await request.json();
     }
 }
