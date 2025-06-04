@@ -17,11 +17,13 @@ import { Logger } from "@/utils/logger";
 import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
 import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, RotateCcw, Upload } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 export function SpreadsheetScreen() {
+
+    const router = useRouter();
     
     const tabs: Tab[] = [
         {
@@ -52,7 +54,7 @@ export function SpreadsheetScreen() {
             return;
         }
 
-        redirect("/auth/sign-in");
+        router.push("/auth/sign-in");
     }
 
     return (
