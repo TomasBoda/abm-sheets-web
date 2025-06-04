@@ -32,6 +32,8 @@ export const SignUpScreen = () => {
             return;
         }
 
+        await supabase.auth.setSession(response.data.session);
+
         redirect("/spreadsheet");
     }
 
