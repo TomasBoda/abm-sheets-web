@@ -25,12 +25,12 @@ const getNormalDependencies = (formula: string): CellId[] => {
 export const getRangeDependencies = (formula: string): CellId[] => {
     const rangeRegex = /([A-Z]+)(\d+):([A-Z]+)(\d+)/g;
     let matches: any;
-    let cells: CellId[] = [];
+    const cells: CellId[] = [];
 
     while ((matches = rangeRegex.exec(formula)) !== null) {
-        let [, startCol, startRow, endCol, endRow] = matches;
-        let startRowNum = parseInt(startRow, 10);
-        let endRowNum = parseInt(endRow, 10);
+        const [, startCol, startRow, endCol, endRow] = matches;
+        const startRowNum = parseInt(startRow, 10);
+        const endRowNum = parseInt(endRow, 10);
 
         if (startCol === endCol && startRowNum <= endRowNum) {
             for (let i = startRowNum; i <= endRowNum; i++) {

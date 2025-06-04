@@ -1,8 +1,8 @@
+import { data } from "@/components/spreadsheet/data";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
-import { Expression, Parser } from "./parser";
+import { Parser } from "./parser";
 import { Runtime } from "./runtime";
-import { data } from "@/components/spreadsheet/data";
 
 export class Evaluator {
 
@@ -29,7 +29,7 @@ export class Evaluator {
             const result = new Runtime().run(expression, step, history, dataHistory);
             return result;
         } catch (e) {
-            return "ERROR";
+            return "ERROR " + e;
         }
     }
 

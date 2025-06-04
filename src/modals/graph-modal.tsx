@@ -1,12 +1,12 @@
-import styled from "styled-components";
 import LineGraph from "react-line-graph";
+import styled from "styled-components";
 
 interface Props {
     hideModal: () => void;
     values: number[];
 }
 
-export const GraphModal = ({ hideModal, values }: Props) => {
+export const GraphModal = ({ values }: Props) => {
 
     return (
         <Container>

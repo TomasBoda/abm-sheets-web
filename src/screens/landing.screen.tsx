@@ -1,0 +1,134 @@
+"use client"
+
+import { Button } from "@/components/button/button.component"
+import { Logo } from "@/components/logo"
+import styled from "styled-components"
+
+export const LandingScreen = () => {
+
+    return (
+        <Container>
+            <Content>
+                <View>
+                    <Logo variant="light" />
+
+                    <Spacing />
+                    <Spacing />
+                    <Spacing />
+                    <Spacing />
+
+                    <H1>
+                        Spreadsheet, <Green>supercharged</Green>
+                        <br />
+                        with built-in discrete time<Green>.</Green>
+                    </H1>
+                    
+                    <Spacing />
+                    <Spacing />
+
+                    <P1>
+                        A powerful spreadsheet interface with built-in discrete time
+                        <br />
+                        for modeling complex, multi-dimensional simulations.
+                    </P1>
+
+                    <Spacing />
+                    <Spacing />
+                    <Spacing />
+
+                    <Button href="/spreadsheet">
+                        Get started
+                    </Button>
+
+                    <Image src="/preview.png" alt="preview" />
+                </View>
+            </Content>
+        </Container>
+    )
+}
+
+const Container = styled.div`
+    width: 100vw;
+
+    & * {
+        font-family: "Poppins", sans-serif;
+        font-style: normal;
+    }
+
+    background-color: rgba(0, 0, 0, 0.05);
+`;
+
+const Content = styled.div`
+    width: 100%;
+    max-width: 1600px;
+
+    display: flex;
+    flex-direction: column;
+`;
+
+const View = styled.div`
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 100px;
+`;
+
+const H1 = styled.h1`
+    color: var(--text-1);
+    font-size: 50px;
+    font-weight: 900;
+    line-height: 120%;
+    text-align: center;
+`;
+
+const P1 = styled.p`
+    color: var(--text-1);
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 150%;
+    text-align: center;
+    opacity: 0.5;
+`;
+
+const Spacing = styled.div`
+    height: 10px;
+`;
+
+/* const Button = styled.div`
+    color: white;
+    font-size: 12px;
+    font-weight: 400;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+
+    cursor: pointer;
+
+    padding: 10px 20px;
+    border-radius: 100px;
+
+    border: 1px solid var(--color-2);
+
+    background-color: var(--color-1);
+
+    transition: all 100ms;
+
+    &:hover {
+        background-color: var(--color-2);
+    }
+`; */
+
+const Green = styled.span`
+    color: var(--color-2);
+`;
+
+const Image = styled.img`
+    width: 100%;
+    margin-top: 75px;
+    border-radius: 10px;
+`;

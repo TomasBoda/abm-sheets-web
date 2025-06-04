@@ -1,5 +1,7 @@
+import { Logger } from "@/utils/logger";
 import { ReactNode, useEffect, useState } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
+import { Logo } from "../logo";
 
 export interface Tab {
     label: string;
@@ -8,11 +10,10 @@ export interface Tab {
 
 interface Props {
     tabs?: Tab[];
-    logo?: ReactNode;
     rightContent?: ReactNode;
 }
 
-export const Tabs = ({ tabs = [], logo, rightContent }: Props) => {
+export const Tabs = ({ tabs = [], rightContent }: Props) => {
 
     const [current, setCurrent] = useState<number>(0);
 
@@ -30,17 +31,20 @@ export const Tabs = ({ tabs = [], logo, rightContent }: Props) => {
         backgroundElement.style.height = tabElement.clientHeight + "px";
     }, [current]);
 
+    const onTabClick = (index: number) => {
+        setCurrent(index);
+        Logger.log("click-tab", tabs[index].label);
+    }
+
     return (
         <Container>
             <Header>
-                {logo && (
-                    <Logo>
-                        {logo}
-                    </Logo>
-                )}
+                <LogoContainer>
+                    <Logo variant="dark" />
+                </LogoContainer>
 
                 {tabs.map((tab, index) => (
-                    <Tab onClick={() => setCurrent(index)}>
+                    <Tab onClick={() => onTabClick(index)} key={index}>
                         <TabLabel id={`tab-${index}`}>
                             {tab.label}
                         </TabLabel>
@@ -82,7 +86,7 @@ const Header = styled.div`
     border-bottom: 1.3px solid var(--color-1);
 `;
 
-const Logo = styled.div`
+const LogoContainer = styled.div`
     margin-left: 10px;
     margin-right: 30px;
 `;

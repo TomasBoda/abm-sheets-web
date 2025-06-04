@@ -161,8 +161,8 @@ export class Parser {
 
         const [, colFixed, col, rowFixed, row] = match;
 
-        let colIndex = Utils.columnTextToIndex(col);
-        let rowIndex = parseInt(row) - 1;
+        const colIndex = Utils.columnTextToIndex(col);
+        const rowIndex = parseInt(row) - 1;
 
         const cellLiteral = {
             type: NodeType.CellLiteral,

@@ -5,7 +5,7 @@ interface Props {
     values: string[];
 }
 
-export const DebugModal = ({ hideModal, values }: Props) => {
+export const DebugModal = ({ values }: Props) => {
 
     return (
         <Container>
@@ -26,7 +26,7 @@ export const DebugModal = ({ hideModal, values }: Props) => {
 
                     <TableBody>
                         {values.map((value, index) => (
-                            <TableRow>
+                            <TableRow key={index}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{value}</TableCell>
                             </TableRow>

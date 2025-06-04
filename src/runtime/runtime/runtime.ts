@@ -301,7 +301,7 @@ export class Runtime {
     }
 
     private runUnaryExpression(expression: UnaryExpression): NumberValue {
-        const { value, operator } = expression;
+        const { value } = expression;
 
         const result = this.runExpression(value);
 
@@ -328,7 +328,7 @@ export class Runtime {
     }
 
     private runIdentifier(expression: Identifier): Value {
-        throw new Error("Variable does not exist");
+        throw new Error(`Variable ${expression.value} does not exist`);
     }
 
     private runCellLiteral(expression: CellLiteral): Value {

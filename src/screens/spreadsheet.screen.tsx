@@ -1,3 +1,5 @@
+"use client"
+
 import { ColorPicker } from "@/components/color-picker/color-picker.component";
 import { data } from "@/components/spreadsheet/data";
 import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
@@ -11,12 +13,15 @@ import { useModal } from "@/hooks/useModal";
 import { useSelection } from "@/hooks/useSelection.hook";
 import { useStepper } from "@/hooks/useStepper";
 import { GraphModal } from "@/modals/graph-modal";
+import { Logger } from "@/utils/logger";
+import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
-import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Italic, RotateCcw, Upload } from "lucide-react";
+import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, RotateCcw, Upload } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
-export function IndexScreen() {
+export function SpreadsheetScreen() {
     
     const tabs: Tab[] = [
         {
@@ -35,23 +40,36 @@ export function IndexScreen() {
             label: "Advanced",
             component: <AdvancedTab />
         }
-    ]
+    ];
+
+    const signOut = async () => {
+        const supabase = createClientClient();
+
+        const response = await supabase.auth.signOut();
+
+        if (response.error) {
+            alert("ERROR: " + response.error.message);
+            return;
+        }
+
+        redirect("/auth/sign-in");
+    }
 
     return (
         <Page>
             <TabsContainer>
                 <Tabs
                     tabs={tabs}
-                    logo={(
-                        <Logo>
-                            <Grid2x2Plus size={20} color="var(--color-2)" style={{ transform: "translateY(-1px)" }} />
-                            ABM Sheets
-                        </Logo>
-                    )}
                     rightContent={
-                        <GithubLogoHref href="https://github.com/tomasBoda/abm-sheets-web" target="_blank">
-                            <GithubLogo src="/logo-github.svg" />
-                        </GithubLogoHref>
+                        <RightContent>
+                            <Button onClick={signOut}>
+                                Sign out
+                            </Button>
+
+                            <GithubLogoHref href="https://github.com/tomasBoda/abm-sheets-web" target="_blank">
+                                <GithubLogo src="/logo-github.svg" />
+                            </GithubLogoHref>
+                        </RightContent>
                     }
                 />
             </TabsContainer>
@@ -194,10 +212,17 @@ const SimulationTab = () => {
 
     const prevStep = () => {
         setStep(prev => Math.max(0, prev - 1));
+        Logger.log("click-step", "prev");
     }
 
     const nextStep = () => {
         setStep(prev => Math.min(prev + 1, steps - 1));
+        Logger.log("click-step", "next");
+    }
+
+    const onResetClick = () => {
+        reset();
+        Logger.log("click-reset", "");
     }
 
     const openGraphModal = () => {
@@ -261,7 +286,7 @@ const SimulationTab = () => {
 
             <Divider />
 
-            <Button onClick={reset}>
+            <Button onClick={onResetClick}>
                 <RotateCcw size={10} />
                 Reset
             </Button>
@@ -464,7 +489,7 @@ const AdvancedTab = () => {
         return () => {
             fileInput.removeEventListener("change", onFileInput);
         }
-    }, [column]);
+    }, [column, onFileInput]);
 
     return (
         <TabContainer>
@@ -486,11 +511,17 @@ const AdvancedTab = () => {
 const Page = styled.div`
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
 
     background-color: var(--bg-0);
 `;
 
 const TabsContainer = styled.div`
+    width: 100%;
+
     background-color: rgb(28, 39, 35);
 `;
 
@@ -544,19 +575,6 @@ const Stepper = styled.div`
     gap: 10px;
 `;
 
-const Logo = styled.div`
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 100%;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-
-    cursor: pointer;
-`;
-
 const GithubLogoHref = styled.a`
 
 `;
@@ -564,4 +582,11 @@ const GithubLogoHref = styled.a`
 const GithubLogo = styled.img`
     width: 22px;
     color: white;
+`;
+
+const RightContent = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
 `;

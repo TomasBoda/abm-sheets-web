@@ -1,7 +1,6 @@
 "use client"
 
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
-import { Constants } from "@/utils/constants";
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
 
 type CellStyleMap = Map<CellId, string>;

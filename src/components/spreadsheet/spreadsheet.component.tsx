@@ -1,29 +1,22 @@
-import { useModal } from "@/hooks/useModal";
-import { GraphModal } from "@/modals/graph-modal";
+import { useCellInfo } from "@/hooks/useCells";
+import { useCellStyle } from "@/hooks/useCellStyle";
+import { useHistory } from "@/hooks/useHistory";
+import { useSelection } from "@/hooks/useSelection.hook";
+import { useStepper } from "@/hooks/useStepper";
 import { Evaluator } from "@/runtime/evaluator";
 import { Constants } from "@/utils/constants";
+import { Logger } from "@/utils/logger";
 import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
-import { ChartLine, ChevronLeft, ChevronRight, Download, Grid2x2Plus, Repeat2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { Button } from "../button/button.component";
-import { ColorPicker } from "../color-picker/color-picker.component";
 import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
-import { CellCoords, CellId, History, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
-import { DebugModal } from "@/modals/debug-modal";
-import { useStepper } from "@/hooks/useStepper";
-import { useCellStyle } from "@/hooks/useCellStyle";
-import { useSelection } from "@/hooks/useSelection.hook";
-import { useCellInfo } from "@/hooks/useCells";
-import { useHistory } from "@/hooks/useHistory";
+import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
 
 export function Spreadsheet() {
 
     // hooks
-
-    const { showModal } = useModal();
 
     const {
         selectedCells,
@@ -36,42 +29,16 @@ export function Spreadsheet() {
     // state
 
     const { step, setStep, steps } = useStepper();
-    const { cellColors, setCellColors, cellBolds, cellItalics } = useCellStyle();
+    const { cellColors, cellBolds, cellItalics } = useCellStyle();
     const { usedCells, setUsedCells } = useCellInfo();
 
-    const { history, setHistory, dataHistory, setDataHistory } = useHistory();
+    const { history, setHistory, dataHistory } = useHistory();
 
     const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
 
     const [referencedCells, setReferencedCells] = useState<Set<CellId>>(new Set<CellId>());
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
-
-    // modals
-
-    const openGraphModal = () => {
-        const cellId: CellId = Array.from(selectedCells)[0];
-        const data = history.get(cellId);
-
-        const values = data
-            ? data
-                .filter(value => !isNaN(parseFloat(value)))
-                .map(value => parseFloat(value))
-            : [];
-
-        showModal(({ hideModal }) => (
-            <GraphModal hideModal={hideModal} values={values} />
-        ));
-    }
-
-    const openDebugModal = () => {
-        const cellId: CellId = Array.from(selectedCells)[0];
-        const values: string[] = history.get(cellId) ?? [];
-
-        showModal(({ hideModal }) => (
-            <DebugModal hideModal={hideModal} values={values} />
-        ));
-    }
 
     // effects
 
@@ -241,6 +208,8 @@ export function Spreadsheet() {
         }
 
         selectReferencedCells(value);
+
+        Logger.log("input", Utils.cellCoordsToId({ ri, ci }) + " | " + value);
     }
 
     // cell key handlers
@@ -347,7 +316,7 @@ export function Spreadsheet() {
             const cellRow = Utils.cellIdToCoords(copiedCell).ri + rowOffset;
             const cellCol = Utils.cellIdToCoords(copiedCell).ci + colOffset;
     
-            let copiedCellFormula = data[Utils.cellIdToCoords(copiedCell).ri][Utils.cellIdToCoords(copiedCell).ci].formula;
+            const copiedCellFormula = data[Utils.cellIdToCoords(copiedCell).ri][Utils.cellIdToCoords(copiedCell).ci].formula;
     
             const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
     
@@ -399,6 +368,8 @@ export function Spreadsheet() {
         setCellIndicatorText({ ri, ci });
         selectReferencedCells(formula);
         evaluateUsedCells();
+
+        Logger.log("click-cell", Utils.cellCoordsToId({ ri, ci }));
     }
 
     const onCellDoubleClick = ({ ri, ci }: CellCoords) => {
@@ -459,7 +430,7 @@ export function Spreadsheet() {
                 return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
             }
 
-            let copiedCellFormula = data[baseCellCoors.ri][baseCellCoors.ci].formula;
+            const copiedCellFormula = data[baseCellCoors.ri][baseCellCoors.ci].formula;
 
             const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
 
@@ -513,35 +484,6 @@ export function Spreadsheet() {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             getCellSpan({ ri, ci }).innerText = data[ri][ci].formula;
         }
-    }
-
-    // import and export
-
-    const importAndLoad = (importedData: any) => {
-        const newUsedCells: CellId[] = [];
-        const newCellColors = new Map<CellId, string>();
-
-        for (const [cellId, cellData] of Object.entries(importedData)) {
-            const { formula, value, color } = cellData as any;
-            const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
-
-            data[ri][ci].formula = formula;
-            data[ri][ci].value = value;
-            data[ri][ci].color = color;
-
-            if (color) {
-                newCellColors.set(cellId as CellId, color);
-            }
-
-            if (formula[0] === "=") {
-                newUsedCells.push(cellId as CellId);
-            } else {
-                getCellSpan({ ri, ci }).innerText = formula;
-            }
-        }
-
-        addUsedCells(newUsedCells);
-        setCellColors(newCellColors);
     }
 
     // utilities
@@ -707,7 +649,7 @@ export function Spreadsheet() {
 
 const Container = styled.div`
     width: 100vw;
-    height: 100vh;
+    height: 100%;
 
     display: flex;
     flex-direction: column;

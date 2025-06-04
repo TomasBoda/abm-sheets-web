@@ -1,3 +1,5 @@
+"use client"
+
 import { Utils } from "@/utils/utils";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { data } from "../components/spreadsheet/data";

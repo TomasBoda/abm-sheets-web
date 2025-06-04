@@ -11,10 +11,12 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.4",
     "lucide-react": "^0.475.0",
-    "next": "15.0.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-line-graph": "^1.0.6",
     "styled-components": "^6.1.13"
   },
@@ -26,8 +28,11 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "9.28.0",
+    "eslint-config-next": "15.3.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "supabase": "^2.12.1",
     "ts-node": "^10.9.2",
     "typescript": "^5"
   }
