@@ -1,8 +1,10 @@
 import { SpreadsheetScreen } from "@/screens/spreadsheet.screen";
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
-    title: "ABM Sheets"
+    title: "Spreadsheet"
 }
 
 export default function SpreadsheetPage() {
