@@ -1,6 +1,6 @@
 "use client"
 
-import { Atom, Grid2x2Plus } from "lucide-react";
+import { Atom } from "lucide-react";
 import styled from "styled-components";
 import { Href } from "./href";
 
