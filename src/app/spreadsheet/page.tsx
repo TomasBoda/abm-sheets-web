@@ -8,6 +8,7 @@ import { HistoryProvider } from "@/hooks/useHistory";
 import { ModalProvider } from "@/hooks/useModal";
 import { SelectionProvider } from "@/hooks/useSelection.hook";
 import { StepperProvider } from "@/hooks/useStepper";
+import { ProjectsProvider } from "@/hooks/useProjects";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,9 @@ export default async function SpreadsheetPage() {
                     <SelectionProvider>
                         <StepperProvider>
                             <CellStyleProvider>
-                                <SpreadsheetScreen />
+                                <ProjectsProvider>
+                                    <SpreadsheetScreen />
+                                </ProjectsProvider>
                             </CellStyleProvider>
                         </StepperProvider>
                     </SelectionProvider>

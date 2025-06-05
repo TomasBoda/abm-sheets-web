@@ -10,6 +10,7 @@ import { useCellInfo } from "@/hooks/useCells";
 import { useCellStyle } from "@/hooks/useCellStyle";
 import { useHistory } from "@/hooks/useHistory";
 import { useModal } from "@/hooks/useModal";
+import { Project, useProjects } from "@/hooks/useProjects";
 import { useSelection } from "@/hooks/useSelection.hook";
 import { useStepper } from "@/hooks/useStepper";
 import { GraphModal } from "@/modals/graph-modal";
@@ -38,6 +39,10 @@ export function SpreadsheetScreen() {
             label: "Import & Export",
             component: <ExportTab />
         },
+        /* {
+            label: "Projects",
+            component: <ProjectsTab />
+        }, */
         {
             label: "Advanced",
             component: <AdvancedTab />
@@ -423,6 +428,134 @@ const ExportTab = () => {
                 <Download size={10} />
                 Export
             </Button>
+        </TabContainer>
+    )
+}
+
+const ProjectsTab = () => {
+
+    const { setCellColors } = useCellStyle();
+    const { usedCells, setUsedCells } = useCellInfo();
+    const { dataHistory, setDataHistory } = useHistory();
+    const { projects, refresh } = useProjects();
+
+    const [title, setTitle] = useState<string>("");
+
+    const getProjectData = () => {
+        const object = {};
+
+        for (let ri = 0; ri < data.length; ri++) {
+            for (let ci = 0; ci < data[ri].length; ci++) {
+                const cellId = Utils.cellCoordsToId({ ri, ci });
+                const { formula, value, color } = data[ri][ci];
+
+                if (formula.trim() === "" && value.trim() === "") {
+                    continue;
+                }
+                
+                object[cellId] = { formula, value, color, history };
+            }
+        }
+
+        for (const [cellId, values] of dataHistory.entries()) {
+            const { ri, ci } = Utils.cellIdToCoords(cellId);
+
+            object[cellId] = {
+                formula: "",
+                value: "",
+                color: data[ri][ci].color,
+                ...object[cellId],
+                dataHistory: values,
+            };
+        }
+
+        return object;
+    }
+
+    const saveProject = async () => {
+        const data = getProjectData();
+
+        const supabase = createClientClient();
+
+        const user = await supabase.auth.getUser();
+
+        const response = await supabase
+            .from("projects")
+            .insert([{
+                user_id: user.data.user.id,
+                title,
+                data
+            }]);
+
+        await refresh();
+        setTitle("");
+    }
+
+    const addUsedCells = (cellIds: CellId[]) => {
+        const newUsedCells = new Set<CellId>(usedCells);
+
+        for (const cellId of cellIds) {
+            newUsedCells.add(cellId);
+        }
+
+        setUsedCells(newUsedCells);
+    }
+
+    const loadProject = async (project: Project) => {
+        const importedData = project.data;
+
+        const newUsedCells: CellId[] = [];
+        const newCellColors = new Map<CellId, string>();
+        const newDataHistory = new Map(dataHistory);
+
+        for (const [cellId, cellData] of Object.entries(importedData)) {
+            const { formula, value, color } = cellData as any;
+            const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
+
+            data[ri][ci].formula = formula;
+            data[ri][ci].value = value;
+            data[ri][ci].color = color;
+
+            if (color) {
+                newCellColors.set(cellId as CellId, color);
+            }
+
+            if (formula[0] === "=") {
+                newUsedCells.push(cellId as CellId);
+            } else {
+                Utils.getCellSpan({ ri, ci }).innerText = formula;
+            }
+
+            if ((cellData as any).dataHistory) {
+                newDataHistory.set(cellId as CellId, (cellData as any).dataHistory);
+            }
+        }
+
+        addUsedCells(newUsedCells);
+        setCellColors(newCellColors);
+        setDataHistory(newDataHistory);
+    }
+
+    return (
+        <TabContainer>
+            <TextFieldSmall
+                value={title}
+                onChange={setTitle}
+                placeholder="Enter title"
+            />
+
+            <Button onClick={saveProject}>
+                <Download size={10} />
+                Save
+            </Button>
+
+            <Divider />
+
+            {projects.map(project => (
+                <Button onClick={() => loadProject(project)} key={project.id}>
+                    {project.title}
+                </Button>
+            ))}
         </TabContainer>
     )
 }
