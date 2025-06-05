@@ -1,5 +1,13 @@
 import { SpreadsheetScreen } from "@/screens/spreadsheet.screen";
+import { createServerClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { CellInfoProvider } from "@/hooks/useCells";
+import { CellStyleProvider } from "@/hooks/useCellStyle";
+import { HistoryProvider } from "@/hooks/useHistory";
+import { ModalProvider } from "@/hooks/useModal";
+import { SelectionProvider } from "@/hooks/useSelection.hook";
+import { StepperProvider } from "@/hooks/useStepper";
 
 export const dynamic = "force-dynamic";
 
@@ -7,9 +15,28 @@ export const metadata: Metadata = {
     title: "Spreadsheet"
 }
 
-export default function SpreadsheetPage() {
+export default async function SpreadsheetPage() {
+
+    const supabase = await createServerClient();
+    const response = await supabase.auth.getUser();
+
+    if (response.error) {
+        redirect("/auth/sign-in");
+    }
  
     return (
-        <SpreadsheetScreen />
+        <HistoryProvider>
+            <ModalProvider>
+                <CellInfoProvider>
+                    <SelectionProvider>
+                        <StepperProvider>
+                            <CellStyleProvider>
+                                <SpreadsheetScreen />
+                            </CellStyleProvider>
+                        </StepperProvider>
+                    </SelectionProvider>
+                </CellInfoProvider>
+            </ModalProvider>
+        </HistoryProvider>
     )
 }

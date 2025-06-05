@@ -3,6 +3,7 @@
 import { Button } from "@/components/button/button.component";
 import { Href } from "@/components/href";
 import { Logo } from "@/components/logo";
+import { createClientClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styled from "styled-components";
@@ -23,14 +24,11 @@ export const SignInScreen = () => {
 
         setLoading(true);
 
-        const request = await fetch("/api/auth/sign-in", {
-            method: "POST",
-            body: JSON.stringify({ email, password })
-        });
+        const supabase = createClientClient();
 
-        const response = await request.json();
+        const response = await supabase.auth.signInWithPassword({ email, password });
 
-        if (response.status !== 200) {
+        if (response.error) {
             setLoading(false);
             alert("ERROR: " + response.error.message);
             return;

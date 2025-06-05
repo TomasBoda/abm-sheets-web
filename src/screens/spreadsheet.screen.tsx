@@ -14,6 +14,7 @@ import { useSelection } from "@/hooks/useSelection.hook";
 import { useStepper } from "@/hooks/useStepper";
 import { GraphModal } from "@/modals/graph-modal";
 import { Logger } from "@/utils/logger";
+import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
 import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, RotateCcw, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -44,17 +45,8 @@ export function SpreadsheetScreen() {
     ];
 
     const signOut = async () => {
-        const request = await fetch("/api/auth/sign-out", {
-            method: "POST"
-        });
-
-        const response = await request.json();
-
-        if (response.status !== 200) {
-            alert("ERROR: " + response.error.message);
-            return;
-        }
-
+        const supabase = createClientClient();
+        await supabase.auth.signOut();
         router.push("/auth/sign-in");
     }
 
