@@ -1,8 +1,7 @@
 "use client"
 
-import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 import { createClientClient } from "@/utils/supabase/client";
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export interface Project {
     id: string;

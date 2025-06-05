@@ -479,7 +479,7 @@ const ProjectsTab = () => {
 
         const user = await supabase.auth.getUser();
 
-        const response = await supabase
+        await supabase
             .from("projects")
             .insert([{
                 user_id: user.data.user.id,
