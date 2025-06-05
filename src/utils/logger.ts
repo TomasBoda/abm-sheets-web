@@ -1,3 +1,4 @@
+import { createClientClient } from "./supabase/client";
 
 export type LogType =
     | "click-tab"
@@ -9,11 +10,10 @@ export type LogType =
 export class Logger {
 
     public static async log(type: LogType, value: string): Promise<void> {
-        const request = await fetch("/api/log", {
-            method: "POST",
-            body: JSON.stringify({ type, value })
-        });
-
-        await request.json();
+        const supabase = createClientClient();
+    
+        await supabase
+            .from("logs")
+            .insert([{ type, value }] as any);
     }
 }

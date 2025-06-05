@@ -51,6 +51,12 @@ const Container = styled.div`
     width: 100vw;
 
     background-color: rgba(0, 0, 0, 0.05);
+
+    * {
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
 `;
 
 const Content = styled.div`
@@ -74,7 +80,7 @@ const View = styled.div`
 const H1 = styled.h1`
     color: var(--text-1);
     font-size: 50px;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 120%;
     text-align: center;
 `;
@@ -82,7 +88,7 @@ const H1 = styled.h1`
 const P1 = styled.p`
     color: var(--text-1);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: 300;
     line-height: 150%;
     text-align: center;
     opacity: 0.6;
@@ -120,6 +126,7 @@ const Spacing = styled.div`
 
 const Green = styled.span`
     color: var(--color-2);
+    font: inherit;
 `;
 
 const Image = styled.img`

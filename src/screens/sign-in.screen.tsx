@@ -105,6 +105,12 @@ const Container = styled.div`
     padding: 50px;
 
     background-color: rgba(0, 0, 0, 0.05);
+
+    * {
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
 `;
 
 const Card = styled.div`
@@ -116,7 +122,7 @@ const Card = styled.div`
     align-items: flex-start;
 
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 15px;
 
     padding: 30px;
     background-color: white;
@@ -125,7 +131,7 @@ const Card = styled.div`
 const H1 = styled.h1`
     color: var(--text-1);
     font-size: 26px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 120%;
 `;
 
@@ -134,7 +140,7 @@ const P1 = styled.p`
     font-size: 13px;
     font-weight: 400;
     line-height: 150%;
-    opacity: 0.5;
+    opacity: 0.6;
 `;
 
 const Spacing = styled.div`
@@ -144,7 +150,7 @@ const Spacing = styled.div`
 const TextField = styled.input`
     color: var(--text-1);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 400;
 
     width: 100%;
 

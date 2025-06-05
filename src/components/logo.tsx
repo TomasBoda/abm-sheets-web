@@ -1,6 +1,6 @@
 "use client"
 
-import { Grid2x2Plus } from "lucide-react";
+import { Atom, Grid2x2Plus } from "lucide-react";
 import styled from "styled-components";
 import { Href } from "./href";
 
@@ -15,7 +15,7 @@ export const Logo = ({ variant }: Props) => {
     return (
         <Href href="/">
             <Container $variant={variant}>
-                <Grid2x2Plus size={20} color="var(--color-2)" style={{ transform: "translateY(-1px)" }} />
+                <Atom size={20} color="var(--color-2)" />
                 ABM Sheets
             </Container>
         </Href>
@@ -23,8 +23,10 @@ export const Logo = ({ variant }: Props) => {
 }
 
 const Container = styled.div<{ $variant: LogoVariant; }>`
+    font-family: "Poppins", sans-serif;
+    
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 500 !important;
     line-height: 100%;
 
     color: ${({ $variant }) => $variant === "light" && "var(--text-1)"};
