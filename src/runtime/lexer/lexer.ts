@@ -52,6 +52,49 @@ export class Lexer {
                     this.next();
                     break;
                 }
+                case "=": {
+                    this.next();
+
+                    if (this.at() === "=") {
+                        this.token(TokenType.RelOp, "==");
+                        console.log("HERE");
+                        this.next();
+                        break;
+                    }
+
+                    throw new Error("Expected = sign after = sign.");
+                }
+                case "!": {
+                    this.next();
+
+                    if (this.at() === "=") {
+                        this.token(TokenType.RelOp, "!=");
+                        this.next();
+                        break;
+                    }
+
+                    throw new Error("Expected = sign after = sign.");
+                }
+                case ">": {
+                    let operator = this.next();
+
+                    if (this.at() === "=") {
+                        operator += this.next();
+                    }
+
+                    this.token(TokenType.RelOp, operator);
+                    break;
+                }
+                case "<": {
+                    let operator = this.next();
+
+                    if (this.at() === "=") {
+                        operator += this.next();
+                    }
+
+                    this.token(TokenType.RelOp, operator);
+                    break;
+                }
                 default: {
                     if (this.isAlpha(value) || value === "$") {
                         this.tokenizeIdentifier(value);
@@ -88,15 +131,6 @@ export class Lexer {
         }
 
         switch (identifier) {
-            case "eq":
-            case "neq":
-            case "gt":
-            case "ge":
-            case "lt":
-            case "le": {
-                this.token(TokenType.RelOp, identifier);
-                break;
-            }
             case "true":
             case "false": {
                 this.token(TokenType.Boolean, identifier);

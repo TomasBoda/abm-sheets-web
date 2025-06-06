@@ -18,7 +18,7 @@ export class Parser {
     private parseRelationalExpression(): Expression {
         let left: Expression = this.parseAdditiveExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.RelOp && ["eq", "neq", "gt", "ge", "lt", "le"].includes(this.at().value)) {
+        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.RelOp && ["==", "!=", ">", ">=", "<", "<="].includes(this.at().value)) {
             const operator = this.next().value;
             const right = this.parseAdditiveExpression();
 

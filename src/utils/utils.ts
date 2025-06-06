@@ -58,7 +58,7 @@ export namespace Utils {
     }
 
     export const getFormula = (formula: string): { defaultFormula?: string; primaryFormula?: string; }  => {
-        const parts = formula.split("=");
+        const parts = formula.split(/(?<![!<>=])=(?![=])/);
 
         if (parts.length === 0) {
             return {

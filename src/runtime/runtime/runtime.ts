@@ -144,12 +144,12 @@ export class Runtime {
             const { value: rhs } = rightValue as NumberValue;
     
             const operators = {
-                "eq": (lhs: number, rhs: number) => lhs === rhs,
-                "neq": (lhs: number, rhs: number) => lhs !== rhs,
-                "gt": (lhs: number, rhs: number) => lhs > rhs,
-                "ge": (lhs: number, rhs: number) => lhs >= rhs,
-                "lt": (lhs: number, rhs: number) => lhs < rhs,
-                "le": (lhs: number, rhs: number) => lhs <= rhs,
+                "==": (lhs: number, rhs: number) => lhs === rhs,
+                "!=": (lhs: number, rhs: number) => lhs !== rhs,
+                ">": (lhs: number, rhs: number) => lhs > rhs,
+                ">=": (lhs: number, rhs: number) => lhs >= rhs,
+                "<": (lhs: number, rhs: number) => lhs < rhs,
+                "<=": (lhs: number, rhs: number) => lhs <= rhs,
             }
     
             const func = operators[operator];
@@ -168,8 +168,8 @@ export class Runtime {
             const { value: rhs } = rightValue as BooleanValue;
     
             const operators = {
-                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
-                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+                "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
     
             const func = operators[operator];
@@ -188,8 +188,8 @@ export class Runtime {
             const { value: rhs } = rightValue as StringValue;
     
             const operators = {
-                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
-                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+                "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
     
             const func = operators[operator];
@@ -208,8 +208,8 @@ export class Runtime {
             const rhs = (rightValue as StringValue).value;
 
             const operators = {
-                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
-                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+                "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
     
             const func = operators[operator];
@@ -228,8 +228,8 @@ export class Runtime {
             const rhs = rightValue.value.toString();
 
             const operators = {
-                "eq": (lhs: boolean, rhs: boolean) => lhs === rhs,
-                "neq": (lhs: boolean, rhs: boolean) => lhs !== rhs,
+                "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
+                "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
     
             const func = operators[operator];
