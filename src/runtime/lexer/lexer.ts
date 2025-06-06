@@ -130,6 +130,8 @@ export class Lexer {
             identifier += this.next()!;
         }
 
+        identifier = identifier.toLowerCase();
+
         switch (identifier) {
             case "true":
             case "false": {
