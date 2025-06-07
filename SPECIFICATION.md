@@ -425,7 +425,7 @@ The system will feature logging functionality used for evaluating user behaviour
 
 For both the authentication and the database for logs, [Supabase](https://supabase.com/) will be used, since it offers a JavaScript API library which can be easily integrated to a Next.js project.
 
-### Authentication
+### Authentication
 
 Authentication will be possible using an e-mail address and a password. After the user created an account, the account will be stored in the database including the login credentials as well as the user ID. The user IDs will be used to map logs to sessions.
 
