@@ -1,6 +1,7 @@
 "use client"
 
 import { ColorPicker } from "@/components/color-picker/color-picker.component";
+import { openProjectsSidebar } from "@/components/projects-sidebar";
 import { data } from "@/components/spreadsheet/data";
 import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
@@ -35,14 +36,14 @@ export function SpreadsheetScreen() {
             label: "Simulation",
             component: <SimulationTab />
         },
+        /* {
+            label: "Projects",
+            onClick: openProjectsSidebar,
+        }, */
         {
             label: "Import & Export",
             component: <ExportTab />
         },
-        /* {
-            label: "Projects",
-            component: <ProjectsTab />
-        }, */
         {
             label: "Advanced",
             component: <AdvancedTab />

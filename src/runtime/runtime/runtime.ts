@@ -13,35 +13,35 @@ export class Runtime {
     private inCallExpression: boolean = false;
 
     private functions: Map<string, FuncCall> = new Map([
-        ["if", Functions.conditional],
-        ["and", Functions.and],
-        ["or", Functions.or],
+        ["IF", Functions.conditional],
+        ["AND", Functions.and],
+        ["OR", Functions.or],
 
-        ["index", Functions.index],
-        ["match", Functions.match],
-        ["min", Functions.min],
-        ["max", Functions.max],
-        ["sum", Functions.sum],
-        ["average", Functions.average],
-        ["count", Functions.count],
-        ["countif", Functions.countif],
-        ["sumhistory", Functions.sumhistory],
+        ["INDEX", Functions.index],
+        ["MATCH", Functions.match],
+        ["MIN", Functions.min],
+        ["MAX", Functions.max],
+        ["SUM", Functions.sum],
+        ["AVERAGE", Functions.average],
+        ["COUNT", Functions.count],
+        ["COUNTIF", Functions.countif],
+        ["SUMHISTORY", Functions.sumhistory],
 
-        ["abs", Functions.abs],
-        ["floor", Functions.floor],
-        ["ceiling", Functions.ceiling],
-        ["power", Functions.power],
-        ["mmin", Functions.mmin],
-        ["mmax", Functions.mmax],
+        ["ABS", Functions.abs],
+        ["FLOOR", Functions.floor],
+        ["CEILING", Functions.ceiling],
+        ["POWER", Functions.power],
+        ["MMIN", Functions.mmin],
+        ["MMAX", Functions.mmax],
 
-        ["rand", Functions.rand],
-        ["randbetween", Functions.randbetween],
-        ["choice", Functions.choice],
-        ["concat", Functions.concat],
+        ["RAND", Functions.rand],
+        ["RANDBETWEEN", Functions.randbetween],
+        ["CHOICE", Functions.choice],
+        ["CONCAT", Functions.concat],
 
-        ["prev", Functions.prev],
-        ["history", Functions.history],
-        ["step", Functions.step],
+        ["PREV", Functions.prev],
+        ["HISTORY", Functions.history],
+        ["STEP", Functions.step],
     ]);
 
     public run(expression: Expression, step: number, history: History, dataHistory: History) {
@@ -118,7 +118,7 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        if (identifier === "prev" || identifier === "history" || identifier === "sumhistory") {
+        if (identifier === "PREV" || identifier === "HISTORY" || identifier === "SUMHISTORY") {
             this.inCallExpression = true;
         }
 

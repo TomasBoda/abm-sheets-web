@@ -57,7 +57,6 @@ export class Lexer {
 
                     if (this.at() === "=") {
                         this.token(TokenType.RelOp, "==");
-                        console.log("HERE");
                         this.next();
                         break;
                     }
@@ -130,11 +129,11 @@ export class Lexer {
             identifier += this.next()!;
         }
 
-        identifier = identifier.toLowerCase();
+        identifier = identifier.toUpperCase();
 
         switch (identifier) {
-            case "true":
-            case "false": {
+            case "TRUE":
+            case "FALSE": {
                 this.token(TokenType.Boolean, identifier);
                 break;
             }

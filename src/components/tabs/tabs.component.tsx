@@ -5,7 +5,8 @@ import { Logo } from "../logo";
 
 export interface Tab {
     label: string;
-    component: ReactNode;
+    component?: ReactNode;
+    onClick?: () => void;
 }
 
 interface Props {
@@ -32,7 +33,14 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
     }, [current]);
 
     const onTabClick = (index: number) => {
-        setCurrent(index);
+        if (tabs[index].onClick) {
+            tabs[index].onClick();
+        }
+
+        if (tabs[index].component) {
+            setCurrent(index);
+        }
+
         Logger.log("click-tab", tabs[index].label);
     }
 
