@@ -5,7 +5,7 @@
 | ---------- | -------------- | -------------------------- | ------------- | ------- |
 | ABM Sheets | Bc. Tomáš Boďa | Mgr. Tomáš Petříček, Ph.D. | May 11, 2025  | 1.0     |
 
-## Introduction
+## 1. Introduction
 
 This document serves as technical specification for the ABM Sheets research project.
 
@@ -13,17 +13,17 @@ ABM Sheets is a web-based application that enables users to create simulation mo
 
 ABM Sheets does not aim to be a complete, production-ready solution. It rather serves as a proof-of-concept of using discrete time in spreadsheet interfaces to handle more complex simulations. It is intended for scientists, researchers and students specializing in simulation modeling and spreadsheet software with the purpose of evaluating the idea of adding time to spreadsheet interfaces.
 
-## Background & Motivation
+## 2. Background & Motivation
 
 Some types of models and simulations require multiple dimensions. One example is agent-based models, where there is a need for a list of agents, a set of attributes for each agent, and time, through which the model evolves. In an agent-based model, each agent's attributes are recalculated in each time step based on the current state of the model. This paradigm introduces three dimensions to the model - the dimension of agents, agent attributes and discrete time. This is, however, difficult to model in current spreadsheet interfaces, since spreadsheets provide only a two-dimensional grid of cells. If we wanted to map an agent-based model to a two-dimensional grid, we would need to duplicate the first two dimensions for each entity of the third dimension. For instance, if we choose to represent rows as agents and columns as their attributes, each time step needs be represented by a replicated table of agents and their attributes with new, updated values. This is very inconvenient for larger and more complex models.
 
 This is where the idea of ABM Sheets come into play. It introduces built-in discrete time, which hides the third dimension of time into the spreadsheet itself. In this way, cells can reference themselves in their formulas, taking their value from the previous step and calculating their new values based on their previous values. This adds the possibility of modeling three-dimensional simulations inside a two-dimensional spreadseet, opening new possibilities of robust modeling. The goal of ABM Sheets is to simplify modeling complex simulations using a well-known spreadsheet interface, familiar to many non-programmers working with Microsoft Excel or similar spreadsheet interfaces on daily basis.
 
-## System Overview
+## 3. System Overview
 
 ABM Sheets will be a web-based application built purely in TypeScript. It's front-end will be built in the Next.js framework, which is an extension of the React.js library. The computational engine of the spreadsheet will be a part of the project and will run purely in the browser. Its performance should be sufficient for simpler simulations that are used to validate this proof-of-concept.
 
-## Functional Requirements
+## 4. Functional Requirements
 
 Below is a list of functional requirements of the software system:
 
@@ -67,11 +67,11 @@ Below is a list of functional requirements of the software system:
     - on each cell formula change
     - on each cell value change
 
-## Formula Language
+## 5. Formula Language
 
 The formula language in ABM Sheets directly copies the formula language of Microsoft Excel to make the transition to ABM Sheets easier for Microsoft Excel users.
 
-### Formulas
+### 5.1 Formulas
 
 To define a cell formula, the user needs to type in the `=` symbol followed by the actual formula expression. In ABM Sheets, there are two types of formulas:
 
@@ -101,7 +101,7 @@ In this situation, `A1` is evaluated first, holding the value of `0`, then `B1` 
 
 If a cell references itself, the reference always takes the cell's previous value. If a cell references some other cell, the reference always takes the current value of the referenced cell. This is made possible thanks to the built-in topological sorting algorithm, which sorts the cells in a topological ordering in which they should be evaluated. If there is no topological ordering possible, an error is shown to the user and the user must first fix the formulas in order to run the simulation. Moreover, there is a built-in `prev` function in the formula language, making it possible to explicitely take the previous value of the referenced cell. If the user wants to take a value further from history, there is the `history` function which can be used. These functions are introduced later in the specification.
 
-### Cell References
+### 5.2 Cell References
 
 A cell can reference another cell in its formula by using its identifier (row and column), for instance `C6`.
 
@@ -110,9 +110,9 @@ Cell references can also be fixed. The user can fix either the column or the row
     - `C$6` fixes the row `6`
     - `$C$6` fixes both the row and the column
 
-### Operators
+### 5.3 Operators
 
-#### Binary Operators
+#### 5.3.1 Binary Operators
 
 The formula language supports the following binary operators:
 
@@ -122,7 +122,7 @@ The formula language supports the following binary operators:
 - `/` - numeric division
 - `%` - numeric modulo
 
-#### Relational Operators
+#### 5.3.2 Relational Operators
 
 The formula language supports the following relational operators:
 
@@ -133,18 +133,18 @@ The formula language supports the following relational operators:
 - `<` - less than
 - `<=` - less or equal than
 
-#### Unary Operators
+#### 5.3.3 Unary Operators
 
 The formula language supports the following unary operators:
 
 - `!` - boolean negation
 - `-` - numeric negation
 
-### Functions
+### 5.4 Functions
 
 ABM Sheets provides a subset of Microsoft Excel built-in functions.
 
-#### Logical Functions
+#### 5.4.1 Logical Functions
 
 The list of logical functions includes `IF`, `AND`, `OR`.
 
@@ -152,7 +152,7 @@ The list of logical functions includes `IF`, `AND`, `OR`.
 - `AND` - takes any number of boolean arguments and returns the result of their conjunction
 - `OR` - takes any number of boolean arguments and returns the result of their disjunction
 
-#### Cell Functions
+#### 5.4.2 Cell Functions
 
 The list of cell functions includes `INDEX`, `MATCH`, `MIN`, `MAX`, `SUM`, `AVERAGE`, `COUNT`, `COUNTIF`.
 
@@ -165,7 +165,7 @@ The list of cell functions includes `INDEX`, `MATCH`, `MIN`, `MAX`, `SUM`, `AVER
 - `COUNT` - takes a cell range and returns the total number of cells that hold a value in the cell range
 - `COUNTIF` - takes a cell range and any value and returns the total number of cells that hold the provided value in the cell range
 
-#### Mathematical Functions
+#### 5.4.3 Mathematical Functions
 
 The list of mathematical functions includes `ABS`, `FLOOR`, `CEILING`, `POWER`, `MMIN`, `MMAX`, `RAND`, `RANDBETWEEN`, `CHOICE`.
 
@@ -179,13 +179,13 @@ The list of mathematical functions includes `ABS`, `FLOOR`, `CEILING`, `POWER`, 
 - `RANDBETWEEN` - takes two integer arguments and returns a random integer in that range
 - `CHOICE` - takes any number of values and returns a random value of the provided values
 
-#### String Functions
+#### 5.4.4 String Functions
 
 The list of string functions includes `CONCAT`.
 
 - `CONCAT` - takes any number of values and returns a concatenated string of the values
 
-#### Simulation Functions
+#### 5.4.5 Simulation Functions
 
 The list of simulation functions includes `PREV`, `HISTORY`, `SUMHISTORY`, `STEP`.
 
@@ -194,13 +194,13 @@ The list of simulation functions includes `PREV`, `HISTORY`, `SUMHISTORY`, `STEP
 - `SUMHISTORY` - takes a cell reference and returns the sum of all numeric historical values of the cell
 - `STEP` - returns the current index of the simulation step (zero-based)
 
-## Architecture
+## 6. Architecture
 
-### User Interface
+### 6.1 User Interface
 
 The user interface of the system will built in the [Next.js](https://nextjs.org/) framework, which is built on top of the [React.js](https://react.dev/) library. It uses React.js components styled using the [Styled Components](https://styled-components.com/) library. For authentication and logging, [Supabase](https://supabase.com/) will be used.
 
-### Engine
+### 6.2 Engine
 
 The evaluation engine is the "back-end" part of the system (although it still runs in the browser). It is responsible for evaluating the cell formulas and returning the calculated values. It receives a set of cells and their formulas, forwards them through a set of processors and returns a list of calculated values for each cell and time step.
 
@@ -211,7 +211,7 @@ There are four processors through which the cell formulas go through before bein
 3. **runtime** - evaluates the formulas
 4. **evaluator** - wrapper that handles cells and time steps
 
-#### Lexer
+#### 6.2.1 Lexer
 
 The lexer receives a raw formula in string format as the input. It iterates over the characters of the formula and groups them into tokens. A token represents a single, non-divisible unit of the formula language, such as identifier, numeric literal, parenthesis, comma and so on. Its primary purpose is to provide a clean representation of the cell formula, omitting all whitespaces and non-significant characters that do not have any impact on the result. Its output is an array of tokens generated from the input formula.
 
@@ -235,7 +235,7 @@ export enum TokenType {
 };
 ```
 
-#### Parser
+#### 6.2.2 Parser
 
 The parser receives an array of tokens and analyses it from the semantical point of view. It is a finite automaton which validates the correctness of the input, meaning that the formula conforms the grammar rules of the formula language. For instance, it validates that the `+` binary operators has both left and right operands or that a function call starts with an identifier, followed by an open parenthesis, a list of arguments separated by commas, finally ending with a close parenthesis. As it validates the input, it produces a semantical representation of the formula - an abstract syntax tree (henceforth referred to as the AST). Each node in the AST represents one operation and its children are its operands. If the formula conforms the grammar rules of the formula language, the parser returns a valid AST.
 
@@ -286,7 +286,7 @@ export interface CallExpression extends Expression {
 ...
 ```
 
-#### Runtime
+#### 6.2.3 Runtime
 
 The runtime receives a valid AST as its input. It goes through the nodes of the AST recursively and evaluates them one by one. Its ouput is the final, calculated value of the formula.
 
@@ -319,7 +319,7 @@ public class Runtime {
 }
 ```
 
-#### Evaluator
+#### 6.2.4 Evaluator
 
 The evaluator serves as an entry point of the evaluation engine and a wrapper of the above processors. It receives a set of cells and the number of steps as the input. It iterates over all cells and all steps and for each cell and step, it evaluates its formula given the step and stores it to the result. The output of the evaluator is an object referred to as `History`, which is a map of cell IDs and a list of their calculated values for each time step. This object is then used by the front-end part of the system to render correct values to correct cells in the spreadsheet interface.
 
@@ -348,9 +348,9 @@ public class Evaluator {
 }
 ```
 
-## Key Algorithms and Logic
+## 7. Key Algorithms and Logic
 
-### Topological Sorting
+### 7.1 Topological Sorting
 
 Before the evaluation of cells begins, the cells will be sorted topologically in the order they are going to be evaluated in. This is due to the fact that when a cell references some other cell, it must be evaluated after the referenced cell in order to have the most up-to-date value of the referenced cell. If the cells were not sorted topologically before the evaluation beings, cells could hold outdated values and the simulation would not provide correct results to the user.
 
@@ -362,74 +362,40 @@ The logic of the topological sorting is illustrated by the following example:
 
 To sort the cells topologically, the system will first extract cell references from formulas and create a dependency graph. This dependency graph is then forwarded to the topological sorting algorithm, which either returns an array of cell IDs in the order in which they should be evaluated, or it throws an error. If an error is thrown, no topological ordering has been found.
 
-## User Interface
-
-ABM Sheets contains only one main page, which contains the spreadsheet interface and a toolbar with all available options.
-
-### Spreadsheet
-
-<img src="./assets/01-spreadsheet.png" width="800" />
-
-### Toolbar
-
-#### Home Tab
-
-The Home tab provides options for cell font and color styling. It also provides an option to clear all styling from the current selection.
-
-<img src="./assets/02-tab-home.png" width="800" />
-
-#### Simulation Tab
-
-The Simulation tab provides the simulation stepper, where the user can step through the simulation steps using the arrow buttons. The user can also set the total number of simulation steps as well as reset the step to the first step.
-
-<img src="./assets/03-tab-simulation.png" width="800" />
-
-#### Import & Export Tab
-
-The Import & Export tab allows the user to import a local `.json` file or export the current model to a local `.json` file (and specify the filename).
-
-<img src="./assets/04-tab-import-export.png" width="800" />
-
-#### Advanced Tab
-
-The Advanced tab allows the user to import a `.csv` file and specify which column of the `.csv` file to import to the selected cell.
-
-<img src="./assets/05-tab-advanced.png" width="800" />
-
-## Keystrokes
+## 8. Keystrokes
 
 The user will be able to use several keystrokes to control the spreadsheet interface.
 
-### Selection
+### 8.1 Selection
 
 - `Ctrl + A` - selects all cells in the spreadsheet
 - `Backspace` - removes cell formulas and contents in the current selection
 
-### Copy & Paste
+### 8.2 Copy & Paste
 
 - `Ctrl + C` - copies cell formulas in the current selection
 - `Ctrl + V` - pastes copied cell formulas to the current selection
 
-### Simulation
+### 8.3 Simulation
 
 - `Ctrl + Arrow Right` - goes to next simulation step
 - `Ctrl + Arrow Left` - goes to previous simulation step
 
-### Formula
+### 8.4 Formula
 
 - `Ctrl + Left Mouse Click` - adds the clicked cell ID to the current formula
 
-## Authentication & Logging
+## 9. Authentication & Logging
 
 The system will feature logging functionality used for evaluating user behaviour, which will be helpful in the data analysis of the system performance. For separating logs for different users, the system will provide user authentication (sign in & sign up) to separate session IDs and corresponding logs.
 
 For both the authentication and the database for logs, [Supabase](https://supabase.com/) will be used, since it offers a JavaScript API library which can be easily integrated to a Next.js project.
 
-### Authentication
+### 9.1 Authentication
 
 Authentication will be possible using an e-mail address and a password. After the user created an account, the account will be stored in the database including the login credentials as well as the user ID. The user IDs will be used to map logs to sessions.
 
-### Logging
+### 9.2 Logging
 
 The system will asynchronously store logs from user interaction with the spreadsheet interface into the database. Some of the types of logs that will be stored are:
 
@@ -437,18 +403,18 @@ The system will asynchronously store logs from user interaction with the spreads
 - inputting text to a cell
 - clicking on toolbar or simulation buttons
 
-## Limitations & Future Improvements
+## 10. Limitations & Future Improvements
 
 The following sections specify limitations of the resulting system that may be considered to be implemented/improved in potential future releases.
 
-### Evaluation
+### 10.1 Evaluation
 
 For any change to any cell formula, the evaluation engine will evaluate all used cells (cells with formulas) and all steps at once. This has the benefit that the simulation does not need to reset to step 1 after each change and the values in subsequent steps will be displayed to the user instantly. Although this implementation will not be very performant for large spreadsheet with hundreds of cells and steps, it will be sufficient for smaller spreadsheets used in conceptual evaluation of the software system.
 
-### Formula styling
+### 10.2 Formula styling
 
 The system is not expected to support syntax highlighting of the formula language. The system is also not expected to provide code suggestions to the user.
 
-### Error reporting
+### 10.3 Error reporting
 
 The system will not feature sophisticated error reporting. If there is a syntactical or semantical issue with a formula, which results in the cell not being able to be calculated, the cell will show a generic `ERROR` message.
