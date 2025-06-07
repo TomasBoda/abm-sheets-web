@@ -126,6 +126,7 @@ export class Parser {
             case TokenType.Identifier:
                 return this.parseIdentifier();
             case TokenType.BinOp:
+            case TokenType.UnOp:
                 return this.parseUnaryExpression();
             case TokenType.OpenParen:
                 return this.parseParenthesisedExpression();
@@ -174,15 +175,30 @@ export class Parser {
     }
 
     private parseUnaryExpression(): Expression {
-        const operator = this.expect(TokenType.BinOp).value;
+        switch (this.at().type) {
+            case TokenType.UnOp: {
+                const operator = this.expect(TokenType.UnOp).value;
 
-        if (operator !== "-") {
-            throw new Error("Unknown unary operator");
+                if (operator !== "!") {
+                    throw new Error("Unknown unary operator");
+                }
+
+                const value = this.parseExpression();
+
+                return { type: NodeType.UnaryExpression, value, operator } as UnaryExpression;
+            }
+            case TokenType.BinOp: {
+                const operator = this.expect(TokenType.BinOp).value;
+
+                if (operator !== "-") {
+                    throw new Error("Unknown unary operator");
+                }
+
+                const value = this.parseExpression();
+
+                return { type: NodeType.UnaryExpression, value, operator } as UnaryExpression;
+            }
         }
-
-        const value = this.parseExpression();
-
-        return { type: NodeType.UnaryExpression, value, operator } as UnaryExpression;
     }
 
     private parseParenthesisedExpression(): Expression {

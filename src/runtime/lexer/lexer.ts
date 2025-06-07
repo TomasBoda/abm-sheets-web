@@ -72,7 +72,8 @@ export class Lexer {
                         break;
                     }
 
-                    throw new Error("Expected = sign after = sign.");
+                    this.token(TokenType.UnOp, "!");
+                    break;
                 }
                 case ">": {
                     let operator = this.next();

@@ -2,7 +2,7 @@
 export enum TokenType {
     Identifier, Number, Boolean, String,
     OpenParen, CloseParen,
-    BinOp, RelOp,
+    BinOp, RelOp, UnOp,
     Comma, Dot, Colon,
     EOF,
 };

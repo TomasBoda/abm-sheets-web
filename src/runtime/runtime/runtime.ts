@@ -300,16 +300,29 @@ export class Runtime {
         return { type: ValueType.Number, value: result };
     }
 
-    private runUnaryExpression(expression: UnaryExpression): NumberValue {
-        const { value } = expression;
+    private runUnaryExpression(expression: UnaryExpression): NumberValue | BooleanValue {
+        const { value, operator } = expression;
 
-        const result = this.runExpression(value);
+        switch (operator) {
+            case "!": {
+                const result = this.runExpression(value);
 
-        if (result.type !== ValueType.Number) {
-            throw new Error("Expected number in unary expression");
+                if (result.type !== ValueType.Boolean) {
+                    throw new Error("Expected boolean in unary expression");
+                }
+
+                return { type: ValueType.Boolean, value: !(result as BooleanValue).value };
+            }
+            case "-": {
+                const result = this.runExpression(value);
+
+                if (result.type !== ValueType.Number) {
+                    throw new Error("Expected number in unary expression");
+                }
+
+                return { type: ValueType.Number, value: -(result as NumberValue).value };
+            }
         }
-
-        return { type: ValueType.Number, value: -(result as NumberValue).value };
     }
 
     private runNumericLiteral(expression: NumericLiteral): NumberValue {
