@@ -78,7 +78,7 @@ export const SignUpScreen = () => {
                 <Spacing />
                 <Spacing />
 
-                <Button variant="secondary" stretch onClick={signUp} loading={loading}>
+                <Button variant="primary" stretch onClick={signUp} loading={loading}>
                     Sign up
                 </Button>
 
