@@ -36,9 +36,15 @@ export const LandingScreen = () => {
                     <Spacing />
                     <Spacing />
 
-                    <Button href="/spreadsheet">
-                        Get started
-                    </Button>
+                    <ButtonPanel>
+                        <Button variant="primary" href="/spreadsheet">
+                            Get started
+                        </Button>
+
+                        <Button variant="secondary" href="/about">
+                            Learn more
+                        </Button>
+                    </ButtonPanel>
 
                     <Image src="/preview.png" alt="preview" />
                 </View>
@@ -98,31 +104,12 @@ const Spacing = styled.div`
     height: 10px;
 `;
 
-/* const Button = styled.div`
-    color: white;
-    font-size: 12px;
-    font-weight: 400;
-
+const ButtonPanel = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
-
-    cursor: pointer;
-
-    padding: 10px 20px;
-    border-radius: 100px;
-
-    border: 1px solid var(--color-2);
-
-    background-color: var(--color-1);
-
-    transition: all 100ms;
-
-    &:hover {
-        background-color: var(--color-2);
-    }
-`; */
+    gap: 10px;
+`;
 
 const Green = styled.span`
     color: var(--color-2);
