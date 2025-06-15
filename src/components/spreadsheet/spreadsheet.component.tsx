@@ -1,3 +1,5 @@
+"use client"
+
 import { useCellInfo } from "@/hooks/useCells";
 import { useCellStyle } from "@/hooks/useCellStyle";
 import { useHistory } from "@/hooks/useHistory";

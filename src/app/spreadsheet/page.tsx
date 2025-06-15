@@ -1,17 +1,17 @@
-import { SpreadsheetScreen } from "@/screens/spreadsheet.screen";
+import { SidebarProvider } from "@/components/sidebar.provider";
+import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
+import { Toolbar } from "@/components/toolbar.component";
+import { CellInfoProvider } from "@/hooks/useCells";
+import { CellStyleProvider } from "@/hooks/useCellStyle";
+import { GraphProvider } from "@/hooks/useGraph";
+import { HistoryProvider } from "@/hooks/useHistory";
+import { ModalProvider } from "@/hooks/useModal";
+import { ProjectsProvider } from "@/hooks/useProjects";
+import { SelectionProvider } from "@/hooks/useSelection.hook";
+import { StepperProvider } from "@/hooks/useStepper";
 import { createServerClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { CellInfoProvider } from "@/hooks/useCells";
-import { CellStyleProvider } from "@/hooks/useCellStyle";
-import { HistoryProvider } from "@/hooks/useHistory";
-import { ModalProvider } from "@/hooks/useModal";
-import { SelectionProvider } from "@/hooks/useSelection.hook";
-import { StepperProvider } from "@/hooks/useStepper";
-import { ProjectsProvider } from "@/hooks/useProjects";
-import { GraphProvider } from "@/hooks/useGraph";
-import { ProjectsSidebar } from "@/components/projects-sidebar";
-import { GraphSidebar } from "@/components/graph-sidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -20,14 +20,14 @@ export const metadata: Metadata = {
 }
 
 export default async function SpreadsheetPage() {
-
+ 
     const supabase = await createServerClient();
     const response = await supabase.auth.getUser();
 
     if (response.error) {
         redirect("/auth/sign-in");
     }
- 
+
     return (
         <HistoryProvider>
             <ModalProvider>
@@ -37,9 +37,15 @@ export default async function SpreadsheetPage() {
                             <CellStyleProvider>
                                 <ProjectsProvider>
                                     <GraphProvider>
-                                        <ProjectsSidebar />
-                                        <GraphSidebar />
-                                        <SpreadsheetScreen />
+                                        <SidebarProvider
+                                            content={(
+                                                <>
+                                                    <Toolbar />
+                                                    <Spreadsheet />
+                                                </>
+                                            )}
+                                            sidebar={null}
+                                        />
                                     </GraphProvider>
                                 </ProjectsProvider>
                             </CellStyleProvider>
