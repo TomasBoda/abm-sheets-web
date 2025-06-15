@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import styled from "styled-components";
+import { Button } from "./button/button.component";
 
 export const openProjectsSidebar = () => {
     const sidebar = document.getElementById("sidebar")!;
@@ -39,6 +40,12 @@ export const ProjectsSidebar = () => {
                     <P1>
                         Browse through your saved projects.
                     </P1>
+
+                    <Fill />
+
+                    <Button variant="primary" stretch>
+                        New project
+                    </Button>
                 </Content>
             </Container>
 
@@ -57,7 +64,7 @@ const Container = styled.div`
 
     transition: left 300ms;
 
-    background-color: white;
+    background-color: var(--bg-1);
 
     z-index: 800;
 
@@ -117,4 +124,8 @@ const P1 = styled.p`
 
 const Spacing = styled.div`
     height: 10px;
+`;
+
+const Fill = styled.div`
+    flex: 1;
 `;

@@ -23,11 +23,18 @@ import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft,
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { useSidebar } from "./sidebar.provider";
+import { GraphSidebar } from "./graph-sidebar";
 
-export function SpreadsheetScreen() {
+export const Toolbar = () => {
 
     const router = useRouter();
     const { showModal } = useModal();
+    const { toggle } = useSidebar();
+
+    const openGraphSidebar = () => {
+        toggle(<GraphSidebar />);
+    }
     
     const tabs: Tab[] = [
         {
@@ -39,8 +46,8 @@ export function SpreadsheetScreen() {
             component: <SimulationTab />
         },
         {
-            label: "Projects",
-            onClick: openProjectsSidebar,
+            label: "Graph",
+            onClick: openGraphSidebar,
         },
         {
             label: "Import & Export",
@@ -52,12 +59,6 @@ export function SpreadsheetScreen() {
         }
     ];
 
-    const saveProject = () => {
-        showModal(({ hideModal }) => (
-            <SaveProjectModal hideModal={hideModal} />
-        ))
-    }
-
     const signOut = async () => {
         const supabase = createClientClient();
         await supabase.auth.signOut();
@@ -65,30 +66,22 @@ export function SpreadsheetScreen() {
     }
 
     return (
-        <Page>
-            <TabsContainer>
-                <Tabs
-                    tabs={tabs}
-                    rightContent={
-                        <RightContent>
-                            <Button onClick={saveProject}>
-                                Save project
-                            </Button>
+        <TabsContainer>
+            <Tabs
+                tabs={tabs}
+                rightContent={
+                    <RightContent>
+                        <Button onClick={signOut}>
+                            Sign out
+                        </Button>
 
-                            <Button onClick={signOut}>
-                                Sign out
-                            </Button>
-
-                            <GithubLogoHref href="https://github.com/tomasBoda/abm-sheets-web" target="_blank">
-                                <GithubLogo src="/logo-github.svg" />
-                            </GithubLogoHref>
-                        </RightContent>
-                    }
-                />
-            </TabsContainer>
-            
-            <Spreadsheet />
-        </Page>
+                        <GithubLogoHref href="https://github.com/tomasBoda/abm-sheets-web" target="_blank">
+                            <GithubLogo src="/logo-github.svg" />
+                        </GithubLogoHref>
+                    </RightContent>
+                }
+            />
+        </TabsContainer>
     )
 }
 
@@ -187,23 +180,6 @@ const HomeTab = () => {
 
             <Divider />
 
-            <Button>
-                <AlignLeft size={10} />
-                Left
-            </Button>
-
-            <Button>
-                <AlignJustify size={10} />
-                Center
-            </Button>
-
-            <Button>
-                <AlignRight size={10} />
-                Right
-            </Button>
-
-            <Divider />
-
             <ColorPicker onChange={color => setCellColor(color)} />
 
             <Divider />
@@ -238,40 +214,6 @@ const SimulationTab = () => {
         Logger.log("click-reset", "");
     }
 
-    const openGraphModal = () => {
-        const cellId: CellId = Array.from(selectedCells)[0];
-        const historyData = history.get(cellId);
-        const dataHistoryData = dataHistory.get(cellId);
-
-        if (historyData) {
-            const data = historyData;
-
-            const values = data
-                ? data
-                    .filter(value => !isNaN(parseFloat(value)))
-                    .map(value => parseFloat(value))
-                : [];
-
-            return showModal(({ hideModal }) => (
-                <GraphModal hideModal={hideModal} values={values} />
-            ));
-        }
-
-        if (dataHistoryData) {
-            const data = dataHistoryData;
-
-            const values = data
-                ? data
-                    .filter(value => !isNaN(parseFloat(value)))
-                    .map(value => parseFloat(value))
-                : [];
-
-            return showModal(({ hideModal }) => (
-                <GraphModal hideModal={hideModal} values={values} />
-            ));
-        }
-    }
-
     return (
         <TabContainer>
             <Stepper>
@@ -302,13 +244,6 @@ const SimulationTab = () => {
             <Button onClick={onResetClick}>
                 <RotateCcw size={10} />
                 Reset
-            </Button>
-
-            <Divider />
-
-            <Button onClick={openGraphModal}>
-                <ChartLine size={10} />
-                Graph
             </Button>
         </TabContainer>
     )
@@ -648,17 +583,6 @@ const AdvancedTab = () => {
         </TabContainer>
     )
 }
-
-const Page = styled.div`
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-
-    display: flex;
-    flex-direction: column;
-
-    background-color: var(--bg-0);
-`;
 
 const TabsContainer = styled.div`
     width: 100%;

@@ -83,50 +83,6 @@ export function Spreadsheet() {
         }
     }, []);
 
-    /* useEffect(function subscribeToDragAndDrop() {
-        const handleDragOver = (event: any) => {
-            event.preventDefault();
-        };
-
-        const handleDrop = (event: any) => {
-            event.preventDefault();
-            
-            const { files } = event.dataTransfer;
-
-            if (files.length === 0) {
-                return;
-            }
-
-            const file = files[0];
-
-            if (file.type !== "application/json") {
-                console.error("Only JSON files are allowed");
-            }
-    
-            const fileReader = new FileReader();
-            
-            fileReader.onload = (event: ProgressEvent<FileReader>) => {
-                try {
-                    const data = event.target.result as string;
-                    const parsed = JSON.parse(data);
-                    importAndLoad(parsed);
-                } catch (error) {
-                    console.error("Invalid JSON file");
-                }
-            };
-
-            fileReader.readAsText(file);
-        }
-
-        window.addEventListener("dragover", handleDragOver);
-        window.addEventListener("drop", handleDrop);
-    
-        return () => {
-            window.removeEventListener("dragover", handleDragOver);
-            window.removeEventListener("drop", handleDrop);
-        };
-    }, []); */
-
     useEffect(function subscribeToArrowKeys() {
         const handleKey = (event: any) => {
             if (cmdKey && event.key === "ArrowLeft") {
@@ -648,8 +604,8 @@ export function Spreadsheet() {
 }
 
 const Container = styled.div`
-    width: 100vw;
-    height: 100%;
+    flex: 1;
+    height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -683,13 +639,12 @@ const TableContainer = styled.div`
 `;
 
 const TableWrapper = styled.div`
-    width: 100%;
-    height: 100%;
+    flex: 1;
     overflow: auto;
     display: flex;
     flex-wrap: wrap;
 
-    &::-webkit-scrollbar { width: 6px; height: 6px; }
+    &::-webkit-scrollbar { width: 6px; height: 6px; background-color: var(--bg-1); border: 1px solid var(--bg-2); }
     &::-webkit-scrollbar-corner { display: none; }
     &::-webkit-scrollbar-thumb { background-color: var(--bg-5); }
     &::-webkit-scrollbar-track { display: none; }

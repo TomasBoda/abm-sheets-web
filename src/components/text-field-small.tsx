@@ -42,4 +42,7 @@ const Input = styled.input`
     border-radius: 5px;
 
     background-color: var(--color-1);
+
+    width: 100%;
+    max-width: 150px;
 `;

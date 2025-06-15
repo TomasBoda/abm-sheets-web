@@ -79,6 +79,6 @@ const Container = styled.div`
 `;
 
 const Panel = styled.div`
-    width: 500px;
+    width: 400px;
     animation: ${fadeInUp} 0.15s ease-out;
 `;
