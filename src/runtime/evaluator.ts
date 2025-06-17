@@ -44,7 +44,10 @@ export class Evaluator {
                     continue;
                 }
 
-                history.set(cellId, [...(history.get(cellId) ?? []), result]);
+                const current = history.get(cellId) ? [...history.get(cellId)] : [];
+                current.push(result);
+
+                history.set(cellId, current);
             }
         }
 

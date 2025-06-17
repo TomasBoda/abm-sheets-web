@@ -36,27 +36,13 @@ const stringToColor = (str: string): string => {
 
 export const GraphSidebar = () => {
 
-    const { usedCells } = useCellInfo();
+    const { graphCells } = useCellInfo();
     const { history } = useHistory();
     const { step } = useStepper();
     const { toggle } = useSidebar();
 
-    const [selectedCells, setSelectedCells] = useState<Set<CellId>>(new Set());
-
-    const toggleCell = (cellId: CellId) => {
-        const newSelectedCells = new Set(selectedCells);
-
-        if (newSelectedCells.has(cellId)) {
-            newSelectedCells.delete(cellId);
-        } else {
-            newSelectedCells.add(cellId);
-        }
-
-        setSelectedCells(newSelectedCells);
-    }
-
     const data = useMemo(() => {
-        const cells = Array.from(selectedCells);
+        const cells = Array.from(graphCells);
 
         const cellHistories = cells
             .filter(cellId => history.get(cellId) !== undefined)
@@ -82,7 +68,7 @@ export const GraphSidebar = () => {
         }
 
         return data;
-    }, [selectedCells, history, step]);
+    }, [graphCells, history, step]);
 
     return (
         <Container>
@@ -97,19 +83,15 @@ export const GraphSidebar = () => {
             </P1>
 
             <AddedCellsContainer>
-                {Array.from(usedCells).map(usedCellId => (
-                    <CellTag
-                        onClick={() => toggleCell(usedCellId)}
-                        $selected={selectedCells.has(usedCellId)}
-                        key={usedCellId}
-                    >
-                        {usedCellId}
+                {Array.from(graphCells).map(cellId => (
+                    <CellTag key={cellId}>
+                        {cellId}
                     </CellTag>
                 ))}
             </AddedCellsContainer>
 
             <Graph>
-                {selectedCells.size > 0 ? (
+                {graphCells.size > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             width={500}
@@ -124,7 +106,7 @@ export const GraphSidebar = () => {
                         <Tooltip />
                         <Legend />
 
-                        {Array.from(selectedCells).map(cellId => (
+                        {Array.from(graphCells).map(cellId => (
                             <Line
                                 type="monotone"
                                 dataKey={cellId}
@@ -257,7 +239,7 @@ const AddedCellsContainer = styled.div`
     margin: 15px 0px;
 `;
 
-const CellTag = styled.div<{ $selected: boolean; }>`
+const CellTag = styled.div`
     color: var(--text-1);
     font-size: 10px;
     font-weight: 400;
@@ -273,7 +255,4 @@ const CellTag = styled.div<{ $selected: boolean; }>`
     cursor: pointer;
 
     transition: all 100ms;
-
-    color: ${({ $selected }) => $selected && "var(--bg-1)"};
-    background-color: ${({ $selected }) => $selected && "var(--color-1)"};
 `;

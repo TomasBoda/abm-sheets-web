@@ -15,6 +15,7 @@ import styled from "styled-components";
 import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
 import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
+import { Button } from "../button/button.component";
 
 export function Spreadsheet() {
 
@@ -32,7 +33,7 @@ export function Spreadsheet() {
 
     const { step, setStep, steps } = useStepper();
     const { cellColors, cellBolds, cellItalics } = useCellStyle();
-    const { usedCells, setUsedCells } = useCellInfo();
+    const { usedCells, setUsedCells, graphCells, addGraphCell, removeGraphCell } = useCellInfo();
 
     const { history, setHistory, dataHistory } = useHistory();
 
@@ -510,6 +511,8 @@ export function Spreadsheet() {
 
     // other
 
+    const selectedCell = Array.from(selectedCells)[0];
+
     const selectedRows = useMemo(() => {
         const rows = new Set<number>();
         selectedCells.forEach(cellId => {
@@ -528,6 +531,18 @@ export function Spreadsheet() {
         return cols;
     }, [selectedCells]);
 
+    const isCellInGraph = useMemo(() => {
+        return graphCells.has(selectedCell);
+    }, [selectedCell, graphCells]);
+
+    const toggleGraphCell = () => {
+        if (isCellInGraph) {
+            removeGraphCell(selectedCell);
+        } else {
+            addGraphCell(selectedCell);
+        }
+    }
+
     return (
         <Container id="container">
             <Header>
@@ -537,6 +552,10 @@ export function Spreadsheet() {
                     onChange={value => onFormulaInput(value)}
                     placeholder="Enter formula"
                 />
+
+                <Button variant="primary" onClick={toggleGraphCell}>
+                    {isCellInGraph ? "Remove from graph" : "Add to graph"}
+                </Button>
             </Header>
 
             <TableContainer>
@@ -616,8 +635,8 @@ const Container = styled.div`
 const Header = styled.div`
     width: 100%;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr auto;
     gap: 15px;
 
     padding: 15px;

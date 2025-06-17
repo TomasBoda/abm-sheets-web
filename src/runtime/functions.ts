@@ -2,6 +2,62 @@ import { Utils } from "@/utils/utils";
 import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue, StringValue, Value, ValueType } from "./runtime";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 
+// utils
+
+const createNumber = (value: number): NumberValue =>
+    ({ type: ValueType.Number, value });
+
+const createBoolean = (value: boolean): BooleanValue =>
+    ({ type: ValueType.Boolean, value });
+
+const createString = (value: string): StringValue =>
+    ({ type: ValueType.String, value });
+
+// expect
+
+const expectNumber = (args: Value[], index: number): NumberValue => {
+    return expectArg(args, index, ValueType.Number) as NumberValue;
+}
+
+const expectBoolean = (args: Value[], index: number): BooleanValue => {
+    return expectArg(args, index, ValueType.Boolean) as BooleanValue;
+}
+
+const expectCellLiteral = (args: Value[], index: number): CellLiteralValue => {
+    return expectArg(args, index, ValueType.CellLiteral) as CellLiteralValue;
+}
+
+const expectCellRange = (args: Value[], index: number): CellRangeValue => {
+    return expectArg(args, index, ValueType.CellRange) as CellRangeValue;
+}
+
+const expectArg = (args: Value[], index: number, type: ValueType): Value => {
+    if (args.length - 1 < index) {
+        throw new Error("Not enough function arguments");
+    }
+
+    if (args[index].type !== type) {
+        throw new Error("Function argument type mismatch");
+    }
+
+    return args[index];
+}
+
+const getHistoryValue = (cellId: CellId, step: number, history: History, dataHistory: History) => {
+    const historyValue = history.get(cellId);
+    const dataHistoryValue = dataHistory.get(cellId);
+
+    if (historyValue !== undefined) {
+        return historyValue[step];
+    }
+
+    if (dataHistoryValue !== undefined) {
+        return dataHistoryValue[step];
+    }
+
+    return undefined;
+}
+
 export namespace Functions {
 
     export const conditional = ({ args }: FuncProps): Value => {
@@ -468,60 +524,4 @@ export namespace Functions {
     export const step = ({ step }: FuncProps): Value => {
         return createNumber(step);
     }
-}
-
-// utils
-
-const createNumber = (value: number): NumberValue =>
-    ({ type: ValueType.Number, value });
-
-const createBoolean = (value: boolean): BooleanValue =>
-    ({ type: ValueType.Boolean, value });
-
-const createString = (value: string): StringValue =>
-    ({ type: ValueType.String, value });
-
-// expect
-
-const expectNumber = (args: Value[], index: number): NumberValue => {
-    return expectArg(args, index, ValueType.Number) as NumberValue;
-}
-
-const expectBoolean = (args: Value[], index: number): BooleanValue => {
-    return expectArg(args, index, ValueType.Boolean) as BooleanValue;
-}
-
-const expectCellLiteral = (args: Value[], index: number): CellLiteralValue => {
-    return expectArg(args, index, ValueType.CellLiteral) as CellLiteralValue;
-}
-
-const expectCellRange = (args: Value[], index: number): CellRangeValue => {
-    return expectArg(args, index, ValueType.CellRange) as CellRangeValue;
-}
-
-const expectArg = (args: Value[], index: number, type: ValueType): Value => {
-    if (args.length - 1 < index) {
-        throw new Error("Not enough function arguments");
-    }
-
-    if (args[index].type !== type) {
-        throw new Error("Function argument type mismatch");
-    }
-
-    return args[index];
-}
-
-const getHistoryValue = (cellId: CellId, step: number, history: History, dataHistory: History) => {
-    const historyValue = history.get(cellId);
-    const dataHistoryValue = dataHistory.get(cellId);
-
-    if (historyValue !== undefined) {
-        return historyValue[step];
-    }
-
-    if (dataHistoryValue !== undefined) {
-        return dataHistoryValue[step];
-    }
-
-    return undefined;
 }
