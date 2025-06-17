@@ -21,12 +21,12 @@ export const metadata: Metadata = {
 
 export default async function SpreadsheetPage() {
  
-    /* const supabase = await createServerClient();
+    const supabase = await createServerClient();
     const response = await supabase.auth.getUser();
 
     if (response.error) {
         redirect("/auth/sign-in");
-    } */
+    }
 
     return (
         <HistoryProvider>
