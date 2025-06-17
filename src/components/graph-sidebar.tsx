@@ -9,6 +9,7 @@ import { useCellInfo } from "@/hooks/useCells";
 import { useHistory } from "@/hooks/useHistory";
 import { useStepper } from "@/hooks/useStepper";
 import { useSidebar } from "./sidebar.provider";
+import { X } from "lucide-react";
 
 const colors: string[] = [
     "#e6194b", // vivid red
@@ -62,7 +63,13 @@ export const GraphSidebar = () => {
     return (
         <Container>
             <H1>
-                Graph
+                Visualisation
+                <X
+                    onClick={() => toggle()}
+                    color="rgba(0, 0, 0, 0.4)"
+                    size={16}
+                    style={{ cursor: "pointer" }}
+                />
             </H1>
 
             <Spacing />
@@ -83,10 +90,7 @@ export const GraphSidebar = () => {
                 {graphCells.size > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
-                            width={500}
-                            height={300}
                             data={data}
-                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                         >
 
                         <XAxis dataKey="name" />
@@ -113,14 +117,6 @@ export const GraphSidebar = () => {
                     </NoGraphData>
                 )}
             </Graph>
-
-            <Spacing />
-            <Spacing />
-            <Spacing />
-
-            <Button variant="primary" onClick={() => toggle()}>
-                Close
-            </Button>
         </Container>
     )
 }
@@ -136,7 +132,7 @@ const Container = styled.div`
 
     transition: right 300ms;
 
-    background-color: var(--bg-1);
+    background-color: white;
 
     * {
         font-family: "Poppins", sans-serif;
@@ -150,6 +146,12 @@ const H1 = styled.h1`
     font-size: 22px;
     font-weight: 600;
     line-height: 120%;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `;
 
 const P1 = styled.p`
@@ -173,10 +175,11 @@ const Graph = styled.div`
     align-items: center;
     justify-content: center;
 
-    padding: 20px;
+    padding: 0px;
 
     border-radius: 5px;
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 `;
 
 const NoGraphData = styled.div`

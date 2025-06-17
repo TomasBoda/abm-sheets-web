@@ -15,6 +15,25 @@ import { Logo } from "@/components/logo";
 
 		ABM Sheets aims to address this limitation by integrating the dimension of time directly into the spreadsheet environment. This approach enables users to represent and manage discrete time steps natively within the spreadsheet, significantly extending its utility for more complex, time-evolving simulations.
 
+		## Example
+
+		The following example is an agent-based simulation modeled in ABM Sheets.
+
+		The following model represents a wolf-sheep predation model that explores the stability of predator-prey ecosystems. In this simulation, the wolves aim to prey on the sheep to regain their energy and stay alive. In the original model, a system of reproduction is enforced to maintain the population of both wolves and sheep, however, since ABM Sheets is a flat spreadsheet interface and does not support generation of new cells dynamically, a different method is used. Instead, if a wolf dies, it stays on the grid until a sheep crosses their way. On the other hand, sheep become alive again after a certain period of time has passed since their death. Although not completely identical to the original predator-prey simulation, this system yields similar results.
+
+		In the graph, we can observe two lines:
+		
+		- **red line** - represents the wolf population
+		- **green line** - represents the sheep population
+
+		We can observe that when the sheep population decreases, the wolf population decreases as well after a short period of time due to the shortage of prey for the wolves. On the other hand, when the wolf population decreases, the sheep population can prosper again up until there is enough sheep for the wolves to prey on.
+
+		<Video controls>
+			<source src="/abm-sheets-showcase-02.mp4" type="video/mp4"></source>
+		</Video>
+
+		<br />
+
 		## Introduction
 
 		Spreadsheets are among the most widely used tools for data analysis, planning, and modeling due to their flexibility, accessibility, and low barrier to entry. They offer a familiar interface based on a two-dimensional grid of cells, which makes them ideal for a broad range of applications — from financial modeling to project management and scientific calculations. However, their core structural simplicity also introduces limitations, particularly when representing models that extend beyond two dimensions.
