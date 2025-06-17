@@ -339,7 +339,7 @@ export namespace Functions {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const value = getHistoryValue(cellId, step, history, dataHistory);
-                
+
                 if (value === undefined) {
                     continue;
                 }

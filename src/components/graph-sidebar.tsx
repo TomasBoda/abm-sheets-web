@@ -10,29 +10,18 @@ import { useHistory } from "@/hooks/useHistory";
 import { useStepper } from "@/hooks/useStepper";
 import { useSidebar } from "./sidebar.provider";
 
-const stringToSeed = (str: string): number => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return hash;
-}
-
-const seedToHex = (seed: number): string => {
-    const r = (seed >> 16) & 0xff;
-    const g = (seed >> 8) & 0xff;
-    const b = seed & 0xff;
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
-
-const toHex = (n: number): string => {
-    return n.toString(16).padStart(2, '0');
-}
-
-const stringToColor = (str: string): string => {
-    const seed = stringToSeed(str);
-    return seedToHex(seed);
-}
+const colors: string[] = [
+    "#e6194b", // vivid red
+    "#3cb44b", // bright green
+    "#ffe119", // yellow
+    "#4363d8", // strong blue
+    "#f58231", // orange
+    "#911eb4", // purple
+    "#46f0f0", // cyan
+    "#f032e6", // magenta
+    "#bcf60c", // lime
+    "#fabebe"  // light pink
+];
 
 export const GraphSidebar = () => {
 
@@ -106,11 +95,11 @@ export const GraphSidebar = () => {
                         <Tooltip />
                         <Legend />
 
-                        {Array.from(graphCells).map(cellId => (
+                        {Array.from(graphCells).map((cellId, index) => (
                             <Line
                                 type="monotone"
                                 dataKey={cellId}
-                                stroke={stringToColor(cellId)}
+                                stroke={colors[index % colors.length]}
                                 isAnimationActive={false}
                                 key={cellId}
                             />

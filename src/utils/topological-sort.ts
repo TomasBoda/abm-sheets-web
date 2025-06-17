@@ -23,7 +23,7 @@ const getNormalDependencies = (formula: string): CellId[] => {
 }
 
 export const getRangeDependencies = (formula: string): CellId[] => {
-    const rangeRegex = /([A-Z]+)(\d+):([A-Z]+)(\d+)/g;
+    const rangeRegex = /\$?([A-Z]+)\$?(\d+):\$?([A-Z]+)\$?(\d+)/g;
     let matches: any;
     const cells: CellId[] = [];
 
