@@ -65,7 +65,7 @@ export const useSidebar = () => {
 };
 
 const Container = styled.div`
-    width: calc(100vw + ${sidebarWidth});
+    width: 100vw;
     height: 100vh;
     max-height: 100vh;
     min-height: 100vh;
@@ -74,6 +74,8 @@ const Container = styled.div`
     grid-template-columns: 100vw ${sidebarWidth};
 
     transition: grid-template-columns 300ms ease-in-out;
+
+    overflow: hidden;
 `;
 
 const Content = styled.div`
