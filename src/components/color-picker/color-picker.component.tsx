@@ -1,12 +1,20 @@
+import { Plus } from "lucide-react";
 import styled from "styled-components"
+import { useModal } from "@/hooks/useModal";
+import { ColorPickerModal } from "@/modals/color-picker-modal";
 
 interface Props {
     onChange: (color: string) => void;
 }
 
 export const ColorPicker = ({ onChange }: Props) => {
+    const { showModal } = useModal();
 
     const colors = ["", "rgb(230, 230, 230)", "rgb(240, 198, 198)", "rgb(201, 201, 240)", "rgb(194, 234, 194)"];
+
+    const onCustomColorClick = () => {
+        showModal(<ColorPickerModal onColorSelected={onChange} />);
+    }
 
     return (
         <Container>
@@ -15,6 +23,9 @@ export const ColorPicker = ({ onChange }: Props) => {
                     <Color $color={color} onClick={() => onChange(color)} />
                 </ColorItem>
             ))}
+            <ColorItem onClick={onCustomColorClick}>
+                <Plus size={15} style={{ margin: 5 }} />
+            </ColorItem>
         </Container>
     )
 }
