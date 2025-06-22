@@ -16,6 +16,10 @@ import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
 import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
 import { Button } from "../button/button.component";
+import { useSearchParams } from "next/navigation";
+import { createClientClient } from "@/utils/supabase/client";
+import { Project, useProjects } from "@/hooks/useProjects";
+import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 
 export function Spreadsheet() {
 
@@ -28,6 +32,16 @@ export function Spreadsheet() {
         selectionListeners,
         dragWithCopy
     } = useSelection();
+
+    const { project } = useProjects();
+    const spreadsheet = useSpreadsheet();
+
+    useEffect(() => {
+        if (project !== undefined) {
+            spreadsheet.clear();
+            spreadsheet.loadData(JSON.parse(project.data));
+        }
+    }, [project]);
 
     // state
 

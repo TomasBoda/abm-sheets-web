@@ -1,7 +1,7 @@
 "use client"
 
 import { ColorPicker } from "@/components/color-picker/color-picker.component";
-import { openProjectsSidebar } from "@/components/projects-sidebar";
+import { ProjectsSidebar } from "@/components/projects-sidebar";
 import { data } from "@/components/spreadsheet/data";
 import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
@@ -25,15 +25,32 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useSidebar } from "./sidebar.provider";
 import { GraphSidebar } from "./graph-sidebar";
+import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 
 export const Toolbar = () => {
 
     const router = useRouter();
-    const { showModal } = useModal();
+    const spreadsheet = useSpreadsheet();
     const { toggle } = useSidebar();
+    const { showModal } = useModal();
+
+    const saveProject = async () => {
+        showModal(({ hideModal }) => (
+            <SaveProjectModal hideModal={hideModal} />
+        ));
+    }
+
+    const clearAll = () => {
+        spreadsheet.clear();
+        router.replace("/spreadsheet");
+    }
 
     const openGraphSidebar = () => {
         toggle(<GraphSidebar />);
+    }
+
+    const openProjectsSidebar = () => {
+        toggle(<ProjectsSidebar />);
     }
     
     const tabs: Tab[] = [
@@ -50,13 +67,17 @@ export const Toolbar = () => {
             onClick: openGraphSidebar,
         },
         {
-            label: "Import & Export",
-            component: <ExportTab />
+            label: "Projects",
+            onClick: openProjectsSidebar,
         },
         {
+            label: "Import & Export",
+            component: <ImportExportTab />
+        },
+        /* {
             label: "Advanced",
             component: <AdvancedTab />
-        }
+        } */
     ];
 
     const signOut = async () => {
@@ -71,6 +92,14 @@ export const Toolbar = () => {
                 tabs={tabs}
                 rightContent={
                     <RightContent>
+                        <Button onClick={saveProject}>
+                            Save project
+                        </Button>
+
+                        <Button onClick={clearAll}>
+                            Clear
+                        </Button>
+
                         <Button onClick={signOut}>
                             Sign out
                         </Button>
@@ -249,11 +278,12 @@ const SimulationTab = () => {
     )
 }
 
-const ExportTab = () => {
+const ImportExportTab = () => {
 
     const { setCellColors } = useCellStyle();
     const { usedCells, setUsedCells } = useCellInfo();
     const { dataHistory, setDataHistory } = useHistory();
+    const spreadsheet = useSpreadsheet();
 
     const [filename, setFilename] = useState<string>("");
 
@@ -304,6 +334,8 @@ const ExportTab = () => {
     }
 
     const importAndLoad = (importedData: any) => {
+        spreadsheet.clear();
+
         const newUsedCells: CellId[] = [];
         const newCellColors = new Map<CellId, string>();
         const newDataHistory = new Map(dataHistory);
@@ -376,134 +408,6 @@ const ExportTab = () => {
                 <Download size={10} />
                 Export
             </Button>
-        </TabContainer>
-    )
-}
-
-const ProjectsTab = () => {
-
-    const { setCellColors } = useCellStyle();
-    const { usedCells, setUsedCells } = useCellInfo();
-    const { dataHistory, setDataHistory } = useHistory();
-    const { projects, refresh } = useProjects();
-
-    const [title, setTitle] = useState<string>("");
-
-    const getProjectData = () => {
-        const object = {};
-
-        for (let ri = 0; ri < data.length; ri++) {
-            for (let ci = 0; ci < data[ri].length; ci++) {
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value, color } = data[ri][ci];
-
-                if (formula.trim() === "" && value.trim() === "") {
-                    continue;
-                }
-                
-                object[cellId] = { formula, value, color, history };
-            }
-        }
-
-        for (const [cellId, values] of dataHistory.entries()) {
-            const { ri, ci } = Utils.cellIdToCoords(cellId);
-
-            object[cellId] = {
-                formula: "",
-                value: "",
-                color: data[ri][ci].color,
-                ...object[cellId],
-                dataHistory: values,
-            };
-        }
-
-        return object;
-    }
-
-    const saveProject = async () => {
-        const data = getProjectData();
-
-        const supabase = createClientClient();
-
-        const user = await supabase.auth.getUser();
-
-        await supabase
-            .from("projects")
-            .insert([{
-                user_id: user.data.user.id,
-                title,
-                data
-            }]);
-
-        await refresh();
-        setTitle("");
-    }
-
-    const addUsedCells = (cellIds: CellId[]) => {
-        const newUsedCells = new Set<CellId>(usedCells);
-
-        for (const cellId of cellIds) {
-            newUsedCells.add(cellId);
-        }
-
-        setUsedCells(newUsedCells);
-    }
-
-    const loadProject = async (project: Project) => {
-        const importedData = project.data;
-
-        const newUsedCells: CellId[] = [];
-        const newCellColors = new Map<CellId, string>();
-        const newDataHistory = new Map(dataHistory);
-
-        for (const [cellId, cellData] of Object.entries(importedData)) {
-            const { formula, value, color } = cellData as any;
-            const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
-
-            data[ri][ci].formula = formula;
-            data[ri][ci].value = value;
-            data[ri][ci].color = color;
-
-            if (color) {
-                newCellColors.set(cellId as CellId, color);
-            }
-
-            if (formula[0] === "=") {
-                newUsedCells.push(cellId as CellId);
-            } else {
-                Utils.getCellSpan({ ri, ci }).innerText = formula;
-            }
-
-            if ((cellData as any).dataHistory) {
-                newDataHistory.set(cellId as CellId, (cellData as any).dataHistory);
-            }
-        }
-
-        addUsedCells(newUsedCells);
-        setCellColors(newCellColors);
-        setDataHistory(newDataHistory);
-    }
-
-    return (
-        <TabContainer>
-            <TextFieldSmall
-                value={title}
-                onChange={setTitle}
-                placeholder="Enter title"
-            />
-
-            <Button onClick={saveProject}>
-                <Download size={10} />
-                Save
-            </Button>
-
-            <Divider />
-
-            {projects.map(project => (
-                <Button onClick={() => loadProject(project)} key={project.id}>
-                    {project.title}
-                </Button>
-            ))}
         </TabContainer>
     )
 }

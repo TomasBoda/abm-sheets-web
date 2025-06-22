@@ -8,6 +8,7 @@ type CellInfoContextType = {
     setUsedCells: Dispatch<SetStateAction<Set<CellId>>>;
 
     graphCells: Set<CellId>;
+    setGraphCells: Dispatch<SetStateAction<Set<CellId>>>;
     addGraphCell: (cellId: CellId) => void;
     removeGraphCell: (cellId: CellId) => void;
 };
@@ -35,6 +36,7 @@ export const CellInfoProvider = ({ children }: { children: ReactNode; }) => {
         usedCells,
         setUsedCells,
         graphCells,
+        setGraphCells,
         addGraphCell,
         removeGraphCell,
     }

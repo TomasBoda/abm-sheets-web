@@ -1,72 +1,94 @@
 "use client"
 
-import { useEffect } from "react";
+import { useProjects } from "@/hooks/useProjects";
+import { useSpreadsheet } from "@/hooks/useSpreadsheet";
+import { X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
-import { Button } from "./button/button.component";
-
-export const openProjectsSidebar = () => {
-    const sidebar = document.getElementById("sidebar")!;
-    const overlay = document.getElementById("overlay")!;
-
-    sidebar.style.left = "0px";
-    overlay.style.display = "flex";
-    overlay.style.opacity = "1";
-}
-
-export const closeProjectsSidebar = () => {
-    const sidebar = document.getElementById("sidebar")!;
-    const overlay = document.getElementById("overlay")!;
-
-    sidebar.style.left = "-400px";
-    overlay.style.opacity = "0";
-
-    setTimeout(() => {
-        overlay.style.display = "none";
-    }, 300);
-}
+import { useSidebar } from "./sidebar.provider";
 
 export const ProjectsSidebar = () => {
 
+    const { toggle } = useSidebar();
+    const { projects } = useProjects();
+    const spreadsheet = useSpreadsheet();
+
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const openProject = (id: string, data: string) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("projectId", id);
+
+        router.replace(`?${params.toString()}`);
+
+        spreadsheet.clear();
+    }
+
     return (
-        <>
-            <Container id="sidebar">
-                <Content>
-                    <H1>
-                        Projects
-                    </H1>
+        <Container>
+            <H1>
+                Projects
+                <X
+                    onClick={() => toggle()}
+                    color="rgba(0, 0, 0, 0.4)"
+                    size={16}
+                    style={{ cursor: "pointer" }}
+                />
+            </H1>
 
-                    <Spacing />
+            <Spacing />
 
-                    <P1>
-                        Browse through your saved projects.
-                    </P1>
+            <P1>
+                Browse through your projects
+            </P1>
 
-                    <Fill />
+            <Spacing />
+            <Spacing />
+            <Spacing />
 
-                    <Button variant="primary" stretch>
-                        New project
-                    </Button>
-                </Content>
-            </Container>
+            {projects.length > 0 ? (
+                <ProjectList>
+                    <ProjectWrapper>
+                        {projects.map(({ id, title, text, data }) => (
+                            <Project onClick={() => openProject(id, data)} $selected={id === searchParams.get("projectId")} key={id}>
+                                <Title $selected={id === searchParams.get("projectId")}>{title}</Title>
+                                <Text $selected={id === searchParams.get("projectId")}>{text}</Text>
 
-            <Overlay id="overlay" onClick={closeProjectsSidebar} />
-        </>
+                                <Actions>
+                                    <Button>
+                                        Open
+                                    </Button>
+
+                                    <Button>
+                                        Delete
+                                    </Button>
+                                </Actions>
+                            </Project>
+                        ))}
+                    </ProjectWrapper>
+                </ProjectList>
+            ) : (
+                <P1Panel>
+                    No projects
+                </P1Panel>
+            )}
+        </Container>
     )
 }
 
 const Container = styled.div`
-    width: 400px;
-    height: 100vh;
+    flex: 1;
 
-    position: fixed;
-    top: 0px;
-    left: -400px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-    transition: left 300ms;
+    padding: 30px;
 
-    background-color: var(--bg-1);
+    transition: right 300ms;
 
-    z-index: 800;
+    background-color: white;
 
     * {
         font-family: "Poppins", sans-serif;
@@ -75,43 +97,17 @@ const Container = styled.div`
     }
 `;
 
-const Content = styled.div`
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    padding: 30px;
-
-    background-color: rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-`;
-
-const Overlay = styled.div`
-    width: 100vw;
-    height: 100vh;
-
-    position: fixed;
-    top: 0px;
-    left: 0px;
-
-    background-color: rgba(0, 0, 0, 0.3);
-
-    transition: opacity 300ms;
-
-    z-index: 799;
-
-    opacity: 0;
-    display: none;
-`;
-
 const H1 = styled.h1`
     color: var(--text-1);
     font-size: 22px;
     font-weight: 600;
     line-height: 120%;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `;
 
 const P1 = styled.p`
@@ -126,6 +122,109 @@ const Spacing = styled.div`
     height: 10px;
 `;
 
-const Fill = styled.div`
-    flex: 1;
+const ProjectList = styled.div`
+    width: 100%;
+    height: 100%;
+    
+    overflow: auto;
+`;
+
+const ProjectWrapper = styled.div`
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+const Project = styled.div<{ $selected: boolean; }>`
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 15px;
+
+    border-radius: 5px;
+
+    background-color: var(--bg-0);
+    border: 1px solid var(--bg-2);
+
+    cursor: pointer;
+    transition: all 100ms;
+
+    &:hover {
+        background-color: var(--bg-1);
+    }
+
+    background-color: ${({ $selected }) => $selected && "var(--color-2)"};
+    border-color: ${({ $selected }) => $selected && "var(--color-2)"};
+
+    &:hover {
+        background-color: ${({ $selected }) => $selected && "var(--color-2)"};
+    }
+`;
+
+const Title = styled.div<{ $selected: boolean; }>`
+    color: var(--text-1);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 100%;
+
+    color: ${({ $selected }) => $selected && "white"};
+`;
+
+const Text = styled.div<{ $selected: boolean; }>`
+    color: var(--text-);
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 150%;
+
+    color: ${({ $selected }) => $selected && "rgba(255, 255, 255, 0.5)"};
+`;
+
+const Actions = styled.div`
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+`;
+
+const Button = styled.div`
+    color: white;
+    font-size: 11px;
+    font-weight: 400;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+
+    cursor: pointer;
+
+    padding: 5px 12px;
+    border-radius: 5px;
+
+    border: 1px solid var(--color-2);
+
+    background-color: var(--color-1);
+
+    transition: all 100ms;
+
+    &:hover {
+        background-color: var(--color-2);
+    }
+`;
+
+const P1Panel = styled(P1)`
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 `;

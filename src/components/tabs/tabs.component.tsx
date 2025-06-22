@@ -129,6 +129,10 @@ const Background = styled.div`
 
     background-color: var(--color-1);
 
+    border: 1px solid var(--color-2);
+
+    background-color: var(--color-1);
+
     z-index: 2;
 `;
 
