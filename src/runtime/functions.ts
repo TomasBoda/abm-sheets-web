@@ -180,7 +180,6 @@ export namespace Functions {
 
     export const min = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
-
         const c1 = range[0];
         const r1 = range[1];
         const c2 = range[2];
@@ -435,6 +434,42 @@ export namespace Functions {
         const result = Math.max(value1, value2);
         return createNumber(result);
     }
+
+    export const pi = () : Value => {
+        return createNumber(3.14159265359);
+    }
+
+    export const sin = ({ args } : FuncProps): Value => {
+        const value = expectNumber(args, 0).value;
+
+        let degOrRad = false;
+        if (args.length == 2) {
+            degOrRad = expectBoolean(args, 1).value
+        }
+
+        let valueOfSin = Math.sin(value);
+        if (degOrRad) {
+            valueOfSin = Math.sin(value * Math.PI / 180);
+        }
+        return createNumber(valueOfSin);
+    }
+
+    export const cos = ({ args } : FuncProps): Value => {
+        const value = expectNumber(args, 0).value;
+
+        let degOrRad = false;
+        if (args.length == 2) {
+            degOrRad = expectBoolean(args, 1).value
+        }
+
+        let valueOfCos = Math.cos(value);
+        if (degOrRad) {
+            valueOfCos = Math.cos(value * Math.PI / 180);
+        }
+        return createNumber(valueOfCos);
+    }
+        
+    
 
     // ------------------------------
 

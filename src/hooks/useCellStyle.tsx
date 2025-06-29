@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
@@ -14,15 +14,14 @@ type CellStyleContextType = {
     setCellBolds: Dispatch<SetStateAction<CellStyleMap>>;
     setCellItalics: Dispatch<SetStateAction<CellStyleMap>>;
 };
-  
+
 const CellStyleContext = createContext<CellStyleContextType | undefined>(undefined);
 
-export const CellStyleProvider = ({ children }: { children: ReactNode; }) => {
-
+export const CellStyleProvider = ({ children }: { children: ReactNode }) => {
     const [cellColors, setCellColors] = useState<CellStyleMap>(new Map());
     const [cellBolds, setCellBolds] = useState<CellStyleMap>(new Map());
     const [cellItalics, setCellItalics] = useState<CellStyleMap>(new Map());
-  
+
     const values = {
         cellColors,
         cellBolds,
@@ -31,21 +30,17 @@ export const CellStyleProvider = ({ children }: { children: ReactNode; }) => {
         setCellColors,
         setCellBolds,
         setCellItalics,
-    }
+    };
 
-    return (
-        <CellStyleContext.Provider value={values}>
-            {children}
-        </CellStyleContext.Provider>
-    );
+    return <CellStyleContext.Provider value={values}>{children}</CellStyleContext.Provider>;
 };
 
 export const useCellStyle = () => {
     const context = useContext(CellStyleContext);
 
     if (!context) {
-      throw new Error("useCellStyle must be used within a CellStyleProvider");
+        throw new Error("useCellStyle must be used within a CellStyleProvider");
     }
-    
+
     return context;
 };

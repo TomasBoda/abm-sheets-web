@@ -33,6 +33,9 @@ export class Runtime {
         ["POWER", Functions.power],
         ["MMIN", Functions.mmin],
         ["MMAX", Functions.mmax],
+        ["PI", Functions.pi],
+        ["SIN", Functions.sin],
+        ["COS", Functions.cos],
 
         ["RAND", Functions.rand],
         ["RANDBETWEEN", Functions.randbetween],
@@ -112,7 +115,7 @@ export class Runtime {
     private runCallExpression(expression: CallExpression): Value {
         const { identifier, args } = expression;
 
-        const func = this.functions.get(identifier);
+        const func = this.functions.get(identifier);        
 
         if (func === undefined) {
             throw new Error(`Function '${identifier}' does not exist`);

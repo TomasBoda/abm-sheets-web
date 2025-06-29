@@ -35,7 +35,6 @@ export class Evaluator {
 
     public evaluateCells(cells: CellId[], steps: number, dataHistory: History) {
         const history: History = new Map();
-
         for (let step = 0; step < steps; step++) {
             for (const cellId of cells) {
                 const result = this.evaluateCell(cellId, step, history, dataHistory);
