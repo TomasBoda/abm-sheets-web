@@ -18,11 +18,10 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-    title: "Spreadsheet"
-}
+    title: "Spreadsheet",
+};
 
 export default async function SpreadsheetPage() {
- 
     const supabase = await createServerClient();
     const response = await supabase.auth.getUser();
 
@@ -42,12 +41,12 @@ export default async function SpreadsheetPage() {
                                         <SpreadsheetProvider>
                                             <ModalProvider>
                                                 <SidebarProvider
-                                                    content={(
+                                                    content={
                                                         <>
                                                             <Toolbar />
                                                             <Spreadsheet />
                                                         </>
-                                                    )}
+                                                    }
                                                     sidebar={null}
                                                 />
                                             </ModalProvider>
@@ -60,5 +59,5 @@ export default async function SpreadsheetPage() {
                 </CellInfoProvider>
             </HistoryProvider>
         </AuthProvider>
-    )
+    );
 }
