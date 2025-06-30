@@ -72,7 +72,7 @@ export namespace Functions {
     export const and = ({ args }: FuncProps): Value => {
         for (let i = 0; i < args.length; i++) {
             const value = expectBoolean(args, i);
-            
+
             if (!value.value) {
                 return createBoolean(false);
             }
@@ -84,7 +84,7 @@ export namespace Functions {
     export const or = ({ args }: FuncProps): Value => {
         for (let i = 0; i < args.length; i++) {
             const value = expectBoolean(args, i);
-            
+
             if (value.value) {
                 return createBoolean(true);
             }
@@ -191,7 +191,7 @@ export namespace Functions {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const value = getHistoryValue(cellId, step, history, dataHistory);
-                
+
                 if (value === undefined) {
                     continue;
                 }
@@ -221,7 +221,7 @@ export namespace Functions {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const value = getHistoryValue(cellId, step, history, dataHistory);
-                
+
                 if (value === undefined) {
                     continue;
                 }
@@ -274,7 +274,7 @@ export namespace Functions {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const value = getHistoryValue(cellId, step, history, dataHistory);
-                
+
                 if (value === undefined) {
                     continue;
                 }
@@ -307,7 +307,7 @@ export namespace Functions {
             for (let ci = c1; ci <= c2; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
                 const value = getHistoryValue(cellId, step, history, dataHistory);
-                
+
                 if (value === undefined) {
                     continue;
                 }
@@ -380,7 +380,7 @@ export namespace Functions {
         }
 
         let sum = 0;
-        
+
         for (let i = 0; i < value.length; i++) {
             if (!isNaN(parseFloat(value[i]))) {
                 sum += parseFloat(value[i]);
@@ -435,45 +435,42 @@ export namespace Functions {
         return createNumber(result);
     }
 
-    export const pi = () : Value => {
-        return createNumber(3.14159265359);
+    export const pi = (): Value => {
+        return createNumber(Math.PI);
     }
 
-    export const sin = ({ args } : FuncProps): Value => {
+    export const radians = ({ args }: FuncProps): Value => {
+        const valueInRadians = expectNumber(args, 0).value;
+        const valueInDegrees = valueInRadians / 180 * Math.PI;
+        return createNumber(valueInDegrees);
+    }
+
+    export const sin = ({ args }: FuncProps): Value => {
         const value = expectNumber(args, 0).value;
-
-        let degOrRad = false;
-        if (args.length == 2) {
-            degOrRad = expectBoolean(args, 1).value
-        }
-
-        let valueOfSin = Math.sin(value);
-        if (degOrRad) {
-            valueOfSin = Math.sin(value * Math.PI / 180);
-        }
+        const valueOfSin = Math.sin(value);
         return createNumber(valueOfSin);
     }
 
-    export const cos = ({ args } : FuncProps): Value => {
+    export const cos = ({ args }: FuncProps): Value => {
         const value = expectNumber(args, 0).value;
-
-        let degOrRad = false;
-        if (args.length == 2) {
-            degOrRad = expectBoolean(args, 1).value
-        }
-
-        let valueOfCos = Math.cos(value);
-        if (degOrRad) {
-            valueOfCos = Math.cos(value * Math.PI / 180);
-        }
+        const valueOfCos = Math.cos(value)
         return createNumber(valueOfCos);
     }
-        
-    
+
+    export const tan = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0).value;
+        if (Math.abs(value) % Math.PI == Math.PI / 2) {
+            throw new Error("Math error.");
+        }
+        const valueOfTan = Math.tan(value);
+        return createNumber(valueOfTan);
+    }
+
+
 
     // ------------------------------
 
-    export const rand = ({}: FuncProps): Value => {
+    export const rand = ({ }: FuncProps): Value => {
         const result = Math.random();
         return createNumber(result);
     }
