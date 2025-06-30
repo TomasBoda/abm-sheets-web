@@ -36,6 +36,8 @@ export class Runtime {
         ["PI", Functions.pi],
         ["SIN", Functions.sin],
         ["COS", Functions.cos],
+        ["TAN", Functions.tan],
+        ["RADIANS", Functions.radians],
 
         ["RAND", Functions.rand],
         ["RANDBETWEEN", Functions.randbetween],

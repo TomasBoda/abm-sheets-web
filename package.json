@@ -18,7 +18,7 @@
     "@supabase/supabase-js": "^2.49.4",
     "@types/mdx": "^2.0.13",
     "lucide-react": "^0.475.0",
-    "next": "^15.3.4",
+    "next": "^15.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-line-graph": "^1.0.6",
