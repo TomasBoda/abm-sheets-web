@@ -19,7 +19,7 @@ import { SaveProjectModal } from "@/modals/save-project.modal";
 import { Logger } from "@/utils/logger";
 import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
-import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, RotateCcw, Upload } from "lucide-react";
+import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, Key, Keyboard, LucideSquareDashedBottomCode, RotateCcw, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
@@ -223,24 +223,54 @@ const HomeTab = () => {
 
 const SimulationTab = () => {
 
-    const { step, setStep, steps, setSteps, reset } = useStepper();
+    const { step, setStep, steps, setSteps, reset, stepFieldValue, setStepFieldValue } = useStepper();
     const { selectedCells } = useSelection();
     const { history, dataHistory } = useHistory();
     const { showModal } = useModal();
 
     const prevStep = () => {
         setStep(prev => Math.max(0, prev - 1));
+        setStepFieldValue((prev) => ( Math.max(1, Number(prev) - 1)).toString());
         Logger.log("click-step", "prev");
     }
 
     const nextStep = () => {
         setStep(prev => Math.min(prev + 1, steps - 1));
+        setStepFieldValue((prev) => ( Math.min(steps, Number(prev) + 1)).toString());
         Logger.log("click-step", "next");
     }
 
     const onResetClick = () => {
         reset();
         Logger.log("click-reset", "");
+    }
+
+    const handleStepsInput = (value: string) => {
+        if (/^[0-9]*$/.test(value)) {
+            setStepFieldValue(value);
+        }
+    }
+
+    const confirmStep = () => {
+        const newStep = Number(stepFieldValue);
+
+        if (newStep === 0) {
+            setStep(0)
+            setStepFieldValue("1")
+        }
+        else if (newStep > steps) {
+            setStep(steps - 1);
+            setStepFieldValue(steps.toString());
+        }
+        else {
+            setStep(newStep - 1)
+        }
+    }
+
+    const onHandleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            confirmStep();
+        }
     }
 
     return (
@@ -251,8 +281,11 @@ const SimulationTab = () => {
                 </Button>
 
                 <TextFieldSmall
-                    value={(step + 1).toString()}
-                    disabled={true}
+                    value={stepFieldValue}
+                    disabled={false}
+                    onChange={(newValue) => handleStepsInput(newValue)}
+                    onBlur={confirmStep}
+                    onKeyDown={onHandleKeyDown}
                 />
 
                 <Button onClick={nextStep}>

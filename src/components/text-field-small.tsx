@@ -7,9 +7,10 @@ interface Props {
     onKeyDown?: (event: any) => void;
     placeholder?: string;
     disabled?: boolean;
+    onBlur?: () => void;
 }
 
-export const TextFieldSmall = ({ id, value, onChange, onKeyDown, placeholder = "Enter text", disabled = false }: Props) => {
+export const TextFieldSmall = ({ id, value="", onChange, onKeyDown, placeholder = "Enter text", disabled = false, onBlur }: Props) => {
 
     return (
         <Input
@@ -21,6 +22,7 @@ export const TextFieldSmall = ({ id, value, onChange, onKeyDown, placeholder = "
             placeholder={placeholder}
             disabled={disabled}
             autoComplete="off"
+            onBlur={onBlur}
         />
     )
 }
