@@ -30,3 +30,9 @@ export const Video = styled.video`
     width: 100%;
     border-radius: 5px;
 `;
+
+export const Image = styled.img`
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid var(--bg-1);
+`;

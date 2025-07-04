@@ -1,9 +1,9 @@
 
 # Technical Specification
 
-| Project    | Author         | Supervisor                 | Date          | Version |
-| ---------- | -------------- | -------------------------- | ------------- | ------- |
-| ABM Sheets | Bc. Tomáš Boďa | Mgr. Tomáš Petříček, Ph.D. | May 11, 2025  | 1.0     |
+**Project:** ABM Sheets \
+**Author:** Bc. Tomáš Boďa \
+**Supervisor:** Mgr. Tomáš Petříček, Ph.D.
 
 This document serves as technical specification for the ABM Sheets research project.
 
@@ -110,11 +110,17 @@ Below is a list of functional requirements of the ABM Sheets project:
     - on each cell formula change
     - on each cell value change
 
-## 6. Formula Language
+## 6. Non-functional Requirements
+
+- **performance** - the system will be able to handle a grid of 35x35 cells and 100 time steps without significant performance degradation
+- **security** - user authentication and the database will be secured using database row-level security measures
+- **compatibility** - the system will be compatible with modern web browsers, such as Chrome, Firefox, Edge and Safari
+
+## 7. Formula Language
 
 The formula language in ABM Sheets is designed to closely resemble traditional spreadsheet software, particularly Microsoft Excel, in order to minimize the learning curve for existing users. This ensures that users accustomed to traditional spreadsheet interfaces can quickly adapt to the system while benefiting from the extended capabilities of using discrete time in the models.
 
-### 6.1 Data Types
+### 7.1 Data Types
 
 ABM Sheets recognizes the following data types:
 
@@ -124,17 +130,17 @@ ABM Sheets recognizes the following data types:
 - **cell reference** - a reference to a value of the specified cell (e.g. `A1`)
 - **cell range** - a reference to a range of cells (e.g. `A1:A5`)
 
-### 6.2 Cell Reference
+### 7.2 Cell Reference
 
 To reference a cell, we use its column and row, e.g. `B5`. To fix a column or row, we use the `$` symbol before the column or row, e.g. `$B5`, `B$5` or `$B$5`.
 
-### 6.3 Cell Range
+### 7.3 Cell Range
 
 To specify a cell range, we use two cell references delimited by the `:` symbol, e.g. `A1:A5`. This cell range references cells `A1`, `A2`, `A3`, `A4`, `A5`.
 
-### 6.4 Operators
+### 7.4 Operators
 
-#### 6.4.1 Binary Operators
+#### 7.4.1 Binary Operators
 
 The formula language supports the following binary operators:
 
@@ -144,7 +150,7 @@ The formula language supports the following binary operators:
 - `/` - numeric division
 - `%` - numeric modulo
 
-#### 6.4.2 Relational Operators
+#### 7.4.2 Relational Operators
 
 The formula language supports the following relational operators:
 
@@ -155,18 +161,18 @@ The formula language supports the following relational operators:
 - `<` - less than
 - `<=` - less or equal than
 
-#### 6.4.3 Unary Operators
+#### 7.4.3 Unary Operators
 
 The formula language supports the following unary operators:
 
 - `!` - boolean negation
 - `-` - numeric negation
 
-### 6.5 Functions
+### 7.5 Functions
 
 ABM Sheets provides a subset of Microsoft Excel built-in functions.
 
-#### 6.5.1 Logical Functions
+#### 7.5.1 Logical Functions
 
 The list of logical functions includes `IF`, `AND`, `OR`.
 
@@ -174,7 +180,7 @@ The list of logical functions includes `IF`, `AND`, `OR`.
 - `AND` - accepts any number of boolean arguments and returns the result of their conjunction
 - `OR` - accepts any number of boolean arguments and returns the result of their disjunction
 
-#### 6.5.2 Cell Functions
+#### 7.5.2 Cell Functions
 
 The list of cell functions includes `INDEX`, `MATCH`, `MIN`, `MAX`, `SUM`, `AVERAGE`, `COUNT`, `COUNTIF`.
 
@@ -187,7 +193,7 @@ The list of cell functions includes `INDEX`, `MATCH`, `MIN`, `MAX`, `SUM`, `AVER
 - `COUNT` - accepts a cell range and returns the total number of cells that hold a value in the cell range
 - `COUNTIF` - accepts a cell range and any value and returns the total number of cells that hold the provided value in the cell range
 
-#### 6.5.3 Mathematical Functions
+#### 7.5.3 Mathematical Functions
 
 The list of mathematical functions includes `ABS`, `FLOOR`, `CEILING`, `POWER`, `MMIN`, `MMAX`, `RAND`, `RANDBETWEEN`, `CHOICE`.
 
@@ -201,13 +207,13 @@ The list of mathematical functions includes `ABS`, `FLOOR`, `CEILING`, `POWER`, 
 - `RANDBETWEEN` - accepts two integer arguments and returns a random integer in that range
 - `CHOICE` - accepts any number of values and returns a random value of the provided values
 
-#### 6.5.4 String Functions
+#### 7.5.4 String Functions
 
 The list of string functions includes `CONCAT`.
 
 - `CONCAT` - accepts any number of values and returns a concatenated string of the values
 
-#### 6.5.5 Simulation Functions
+#### 7.5.5 Simulation Functions
 
 The list of simulation functions includes `PREV`, `HISTORY`, `SUMHISTORY`, `STEP`.
 
@@ -216,13 +222,13 @@ The list of simulation functions includes `PREV`, `HISTORY`, `SUMHISTORY`, `STEP
 - `SUMHISTORY` - accepts a cell reference and returns the sum of all numeric historical values of the cell
 - `STEP` - accepts the current index of the simulation step (zero-based)
 
-## 7. Architecture
+## 8. Architecture
 
-### 7.1 User Interface
+### 8.1 User Interface
 
 The user interface of ABM Sheets will built in the [Next.js](https://nextjs.org/) framework, which is built on top of the [React.js](https://react.dev/) library. For component styling, the [Styled Components](https://styled-components.com/) library will be used.
 
-### 7.2 Engine
+### 8.2 Engine
 
 The evaluation engine is the "back-end" part of the system (although it still runs in the browser). It is responsible for evaluating cell formulas and returning the computed values. It receives a set of cells and their formulas, forwards them through a set of processors and returns a list of computed values for each cell and time step.
 
@@ -233,7 +239,7 @@ There are four processors through which the cell formulas go through before bein
 3. **runtime** - evaluates the processed formulas
 4. **evaluator** - wrapper that manages the processors and handles communication with the spreadsheet interface
 
-#### 7.2.1 Lexer
+#### 8.2.1 Lexer
 
 The lexer receives a raw formula in string format as the input. It iterates over individual characters in the formula and groups them into tokens. A token represents a fundamental, non-divisible unit of the formula language, such as identifier, numeric literal, parenthesis or comma. The lexer's primary purpose is to provide a clean representation of the cell formula, omitting all whitespaces and ommitable characters that do not have any impact on the result. As output, the lexer provides an array of tokens generated from the input formula.
 
@@ -257,7 +263,7 @@ export enum TokenType {
 };
 ```
 
-#### 7.2.2 Parser
+#### 8.2.2 Parser
 
 The parser receives an array of tokens and analyses them from the semantical point of view. It can be represented as a finite automaton which validates the correctness of the input, meaning that the formula conforms the grammar rules of the formula language. For instance, it validates that the `+` binary operators has both left and right operands or that a function call starts with an identifier, followed by an open parenthesis, a list of arguments separated by commas, ending with a close parenthesis. As it validates the input, it produces a semantical representation of the formula - an abstract syntax tree (henceforth referred to as the AST). Each node in the AST represents one operation and its children are its operands. If the input formula conforms the grammar rules of the formula language, the parser returns a valid AST.
 
@@ -308,7 +314,7 @@ export interface CallExpression extends Expression {
 ...
 ```
 
-#### 7.2.3 Runtime
+#### 8.2.3 Runtime
 
 The runtime receives a valid AST as the input. It processes the nodes of the AST recursively and evaluates them one by one. Its ouput is the final computed value of the formula.
 
@@ -341,44 +347,66 @@ public class Runtime {
 }
 ```
 
-#### 7.2.4 Evaluator
+#### 8.2.4 Evaluator
 
 The evaluator serves as an entry point of the evaluation engine and a wrapper of the above processors. It receives a set of cell formulas and the number of steps as the input. It iterates over the cell formulas and all steps and for each cell and step, it evaluates its formula given the step and stores the computed value to the result object. The output of the evaluator is an object referred to as `History`, which is a map of cell IDs and a list of their computed values for each time step. This object is then used by the spreadsheet interface to render correct values for corresponding cells.
 
-## 8. Keystrokes
+## 9. User Interface
+
+ABM Sheets aims to resemble current spreadsheet interfaces such as Microsoft Excel or Google Sheets as closely as possible. The main part of the user interface is the spreadsheet itself (a grid of cells organized into rows and columns) with a toolbar offering several options to the user.
+
+The `Home` tab will provide several cell styling options, such as changing the cell background colors, font styles as well as clearing cell styles.
+
+![Showcase01](/public/showcase-01.png)
+
+The `Simulation` tab will provide simulation and stepping controls. The user will be able to navigate through the steps of the simulation and see the cell values change in time.
+
+![Showcase02](/public/showcase-02.png)
+
+The `Import & Export` tab will provide a possibility to export the current spreadsheet model to a local file as well as import a saved spreadsheet model to ABM Sheets.
+
+![Showcase03](/public/showcase-03.png)
+
+Apart from the main `/spreadsheet` page, ABM Sheets provides authentication to the users using the sign-in and sign-up pages.
+
+![Showcase04](/public/showcase-04.png)
+
+![Showcase05](/public/showcase-05.png)
+
+## 10. Keystrokes
 
 ABM Sheets provides a set of keystrokes that can be used to interact with the system.
 
-### 8.1 Selection
+### 10.1 Selection
 
 - `Ctrl + A` - selects all cells in the spreadsheet
 - `Backspace` - removes cell formulas and cell contents in the current selection
 
-### 8.2 Copy & Paste
+### 10.2 Copy & Paste
 
 - `Ctrl + C` - copies cell formulas and contents from the current selection
 - `Ctrl + V` - pastes copied cell formulas and contents into the current selection
 
-### 8.3 Simulation
+### 10.3 Simulation
 
 - `Ctrl + Arrow Right` - increments the simulation step
 - `Ctrl + Arrow Left` - decrements the simulation step
 
-### 8.4 Formula
+### 10.4 Formula
 
 - `Ctrl + Left Mouse Click` - adds the clicked cell ID to the current cell formula
 
-## 9. Authentication & Logging
+## 11. Authentication & Logging
 
 The system provides a logging functionality used for tracking user behaviour, which will be analysed for the purposes of evaluating the system's performance. The system will also provide user authentication (sign in & sign up) to track session IDs and correctly assign them to system logs.
 
 For both the authentication and the database for logs, [Supabase](https://supabase.com/) will be used, since it offers a JavaScript API library which can be easily integrated to a Next.js project.
 
-### 9.1 Authentication
+### 11.1 Authentication
 
 Authentication will be possible using an e-mail address and a password. After the user creates an account, the account will be stored in the database including the login credentials as well as the user ID. The user IDs will be used to map system logs to sessions.
 
-### 9.2 Logging
+### 11.2 Logging
 
 The system will asynchronously store logs from user interaction with the spreadsheet interface into the database. Some of the types of logs that will be stored are:
 
@@ -387,18 +415,57 @@ The system will asynchronously store logs from user interaction with the spreads
 - button clicks
 - keystroke usage
 
-## 10. Limitations & Future Improvements
+## 12. Limitations & Future Improvements
 
 The following sections specify limitations of the resulting system that may be considered to be implemented/improved in potential future releases.
 
-### 10.1 Evaluation
+### 12.1 Evaluation
 
-For any change to any cell formula, the evaluation engine will evaluate all used cells (cells with formulas) and all steps at once. This provides the benefit that the simulation does not need to reset to step 1 after each change and the values in subsequent steps will be displayed to the user instantly. Although this implementation will not be very performant for large spreadsheet with hundreds of cells and steps, it will be sufficient for smaller spreadsheets used in conceptual evaluation of the software system.
+For any change to any cell formula, the evaluation engine will evaluate all used cells (cells with formulas) and all steps at once. This provides the benefit that the simulation does not need to reset to step 1 after each change and the values in subsequent steps will be displayed to the user instantly. Although this implementation will not be very performant for large spreadsheet with hundreds of cells and steps, it will be sufficient for smaller spreadsheets (the default setting will be 26 columns and 52 rows) used in conceptual evaluation of the software system.
 
-### 10.2 Formula styling
+### 12.2 Formula styling
 
 The system is not expected to support syntax highlighting of the formula language. The system is also not expected to provide code suggestions to the user.
 
-### 10.3 Error reporting
+### 12.3 Error reporting
 
 The system will not feature sophisticated error reporting. If there is a syntactical or semantical issue within a cell formula, which results in the cell not being able to be computed, the cell will display a generic `ERROR` message.
+
+## 13. Schedule
+
+The ABM Sheets research project has started in March 2025 and is expected to be finished in September 2025. The individual phases of its development, study and testing are as follows:
+
+- **March 2025**        - formative interviews, evaluation of the interviews (~ 10 mandays)
+- **April 2025**        - prototype preparation and development (~ 12 mandays)
+- **May 2025**          - prototype development (~ 12 mandays)
+- **June 2025**         - logging infrastructure, usability study preparation (~ 12 mandays)
+- **July 2025**         - usability study, further system refinement (~ 25 mandays)
+- **August 2025**       - usability study, further system refinement (~ 25 mandays)
+- **September 2025**    - case study development, project write up (~ 25 mandays)
+
+## 14. Team & Collaboration
+
+### 14.1 Team Members
+
+The core team consists of:
+
+- **Tomáš Petříček** - the project's supervisor
+- **Tomáš Boďa** - the student (assignee)
+
+The usability study of the research project's resulting software system will be conducted in collaboration with a professor and two students from the University of Regensburg, namely:
+
+- **Raphael Wimmer** - usability study supervisor
+- **Tobias Wittl** - student conducting the study
+- **Jakob Haimerl** - student conducting the study
+
+The project will be further supported by a Matfyz Summer of Code participant - **Vít Ungermann**, who will help the team with integrating a graphing library into ABM Sheets to better visualize the spreadsheet data.
+
+The project is further supported by **James Geddes** from the Alan Turing Institute in the United Kingdom and **Clemens Klokmose** from the Aarhaus University in Denmark through feedback and consultations about the project's direction and possible improvements.
+
+### 14.2 Organization
+
+The project's development is conducted by Tomáš Boďa and supervised by Tomáš Petříček. The project's progress and further direction is discussed and refined at regular weekly/bi-weekly meetings.
+
+The usability study co-conducted by Raphael Wimmer, Tobias Wittl and Jakob Haimerl is discussed at regular online meetings together with Tomáš Petříček and Tomáš Boďa.
+
+The supporting development of the graphing library by Vít Ungermann is supervised by Tomáš Petříček with the help of Tomáš Boďa. Its direction and progress will be discussed non-regularly based on the current state and needs of the project.

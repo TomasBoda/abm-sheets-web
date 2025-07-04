@@ -40,7 +40,7 @@ export function Spreadsheet() {
 
     const { step, setStep, steps } = useStepper();
     const { cellColors, cellBolds, cellItalics } = useCellStyle();
-    const { usedCells, setUsedCells, graphCells, addGraphCell, removeGraphCell } = useCellInfo();
+    const { usedCells, setUsedCells, graphCells, addGraphCell, removeGraphCell, xGraphCell, setXGraphCell } = useCellInfo();
 
     const { history, setHistory, dataHistory } = useHistory();
 
@@ -567,6 +567,14 @@ export function Spreadsheet() {
         }
     };
 
+    const toggleYGraphCell = () => {
+        if (xGraphCell === selectedCell) {
+            setXGraphCell(undefined);
+        } else {
+            setXGraphCell(selectedCell);
+        }
+    }
+
     return (
         <Container id="container">
             <Header>
@@ -579,6 +587,10 @@ export function Spreadsheet() {
 
                 <Button variant="primary" onClick={toggleGraphCell}>
                     {isCellInGraph ? "Remove from graph" : "Add to graph"}
+                </Button>
+
+                <Button variant="primary" onClick={toggleYGraphCell}>
+                    {xGraphCell === selectedCell ? "Remove X graph cell" : "Add X graph cell"}
                 </Button>
             </Header>
 
@@ -650,7 +662,7 @@ const Header = styled.div`
     width: 100%;
 
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     gap: 15px;
 
     padding: 15px;

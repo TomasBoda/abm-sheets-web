@@ -26,7 +26,7 @@ const colors: string[] = [
 
 export const GraphSidebar = () => {
 
-    const { graphCells } = useCellInfo();
+    const { graphCells, xGraphCell } = useCellInfo();
     const { history } = useHistory();
     const { step } = useStepper();
     const { toggle } = useSidebar();
@@ -43,12 +43,22 @@ export const GraphSidebar = () => {
                     cellId,
                     history: sliced,
                 };
-        });
+            });
+
+        const xHistory = xGraphCell && history.get(xGraphCell)
+            ? history.get(xGraphCell)!.slice(0, step + 1)
+            : null;
 
         const data = [];
 
         for (let i = 0; i <= step; i++) {
-            const entry = {};
+            const entry: Record<string, any> = {};
+
+            if (xHistory) {
+                entry.x = xHistory[i];
+            } else {
+                entry.x = i;
+            }
 
             for (const cell of cellHistories) {
                 entry[cell.cellId] = cell.history[i];
@@ -58,7 +68,7 @@ export const GraphSidebar = () => {
         }
 
         return data;
-    }, [graphCells, history, step]);
+    }, [graphCells, xGraphCell, history, step]);
 
     return (
         <Container>
@@ -93,7 +103,7 @@ export const GraphSidebar = () => {
                             data={data}
                         >
 
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="x" />
                         <YAxis domain={['dataMin - 10', 'dataMax + 10']} />
 
                         <Tooltip />

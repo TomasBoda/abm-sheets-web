@@ -1,4 +1,4 @@
-import { Container, Content, Video, Image } from "./about.screen";
+import { Container, Content, Video } from "./about.screen";
 import { Logo } from "@/components/logo";
 
 <Container>
@@ -7,41 +7,13 @@ import { Logo } from "@/components/logo";
 
 		<br />
 
-		# TODO
-
-		- present the project as Spreadsheet with Time rather than for agent-based modeling
-		- examples
-			- add textual description of the model and the formulas
-			- add link to the model in ABM Sheets
-		- add support for changing graph X axis to a cell value
-
 		# Spreadsheet with Built-in Time
-
-		## Cannonball
-
-		The following example demonstrates how to model and visualize a simulation of shooting a cannonball.
-
-		<Image src="/cannonball.png" />
-
-		A cannonball has the following properties:
-		
-		- initial velocity `V0`
-		- shooting angle `THETA`
-		- x coordinate `X`
-		- y coordinate `Y`
-
-		These values are modeled as following:
-
-		- `[@V0] = 100`
-		- `[@THETA] = 20`
-		- `[@X] = [@V0] * COS(RADIANS([@THETA])) * STEP()`
-		- `[@Y] = [@V0] * SIN(RADIANS([@THETA])) * STEP() - 0.5 * [@GRAVITY] * POWER(STEP(), 2)`
 
 		## Abstract
 
-		Spreadsheets are powerful tools for data analysis and modeling, but they are inherently limited to two dimensions - rows and columns, making it difficult to represent systems that evolve over time. This limitation poses challenges for domains like agent-based modeling, physics simulations, or financial market analysis, where the concept of time is fundamental. In particular, agent-based models require tracking multiple agents, each with evolving attributes, across discrete time steps - something traditional spreadsheets struggle to express without resorting to duplication and convoluted formulas.
+		Some simulation modeling approaches, such as agent-based models, inherently require multiple dimensions. In these models, a list of agents is maintained, each with a set of attributes that evolve over discrete time steps. At each time step, an agent's attributes are recalculated based on the model's current state. This structure introduces three key dimensions: agents, their attributes, and time. However, traditional spreadsheet interfaces are limited to a two-dimensional grid, making it challenging to represent such models effectively. Mapping a three-dimensional agent-based model onto a two-dimensional spreadsheet requires duplicating the agent and attribute dimensions for every time step, resulting in redundancy and reduced clarity.
 
-		We address this gap by extending the spreadsheet paradigm with a native notion of discrete time, allowing cells to reference values from previous time steps directly. This extension preserves the familiar spreadsheet interface while adding a powerful new dimension of time. With this approach, users can build and explore dynamic models, such as agent-based simulations with the same ease as traditional spreadsheet calculations. We demonstrate how this time-aware spreadsheet enables new kinds of simulations and iterative processes that are impractical or impossible to implement in conventional spreadsheet software like Microsoft Excel.
+		ABM Sheets aims to address this limitation by integrating the dimension of time directly into the spreadsheet environment. This approach enables users to represent and manage discrete time steps natively within the spreadsheet, significantly extending its utility for more complex, time-evolving simulations.
 
 		## Example
 

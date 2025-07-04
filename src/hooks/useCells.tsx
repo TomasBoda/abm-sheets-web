@@ -11,6 +11,9 @@ type CellInfoContextType = {
     setGraphCells: Dispatch<SetStateAction<Set<CellId>>>;
     addGraphCell: (cellId: CellId) => void;
     removeGraphCell: (cellId: CellId) => void;
+
+    xGraphCell?: CellId;
+    setXGraphCell: Dispatch<SetStateAction<CellId | undefined>>;
 };
   
 const CellInfoContext = createContext<CellInfoContextType | undefined>(undefined);
@@ -19,6 +22,7 @@ export const CellInfoProvider = ({ children }: { children: ReactNode; }) => {
   
     const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set());
     const [graphCells, setGraphCells] = useState<Set<CellId>>(new Set());
+    const [xGraphCell, setXGraphCell] = useState<CellId | undefined>(undefined);
 
     const addGraphCell = (cellId: CellId) => {
         const newGraphCells = new Set(graphCells);
@@ -39,6 +43,8 @@ export const CellInfoProvider = ({ children }: { children: ReactNode; }) => {
         setGraphCells,
         addGraphCell,
         removeGraphCell,
+        xGraphCell,
+        setXGraphCell,
     }
 
     return (
