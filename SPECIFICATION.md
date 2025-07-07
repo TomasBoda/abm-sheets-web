@@ -245,7 +245,7 @@ The lexer receives a raw formula in string format as the input. It iterates over
 
 A token has a type and value:
 
-```ts
+```
 export type Token = {
     type: TokenType;
     value: string;
@@ -254,7 +254,7 @@ export type Token = {
 
 There are several token types:
 
-```ts
+```
 export enum TokenType {
     Identifier, Number, Boolean, String,
     OpenParen, CloseParen,
@@ -271,7 +271,7 @@ One possible way to implement this finite automaton of the parser is a top-down 
 
 Below is a sample representation of the parser module:
 
-```ts
+```
 export class Parser {
 
     public parse(formula: string): Expression {
@@ -297,7 +297,7 @@ export class Parser {
 
 Each grammar rule returns a node of the AST and combines the results of other grammar rules together to form parts of the AST:
 
-```ts
+```
 export interface BinaryExpression extends Expression {
     type: NodeType.BinaryExpression;
     left: Expression;
@@ -320,7 +320,7 @@ The runtime receives a valid AST as the input. It processes the nodes of the AST
 
 Below is a sample representation of the runtime module:
 
-```ts
+```
 public class Runtime {
 
     public runFormula(expression: Expression): string {
@@ -357,21 +357,21 @@ ABM Sheets aims to resemble current spreadsheet interfaces such as Microsoft Exc
 
 The `Home` tab will provide several cell styling options, such as changing the cell background colors, font styles as well as clearing cell styles.
 
-![Showcase01](/public/showcase-01.png)
+![Showcase01](https://raw.githubusercontent.com/TomasBoda/abm-sheets-web/refs/heads/main/public/showcase-01.png)
 
 The `Simulation` tab will provide simulation and stepping controls. The user will be able to navigate through the steps of the simulation and see the cell values change in time.
 
-![Showcase02](/public/showcase-02.png)
+![Showcase02](https://raw.githubusercontent.com/TomasBoda/abm-sheets-web/refs/heads/main/public/showcase-02.png)
 
 The `Import & Export` tab will provide a possibility to export the current spreadsheet model to a local file as well as import a saved spreadsheet model to ABM Sheets.
 
-![Showcase03](/public/showcase-03.png)
+![Showcase03](https://raw.githubusercontent.com/TomasBoda/abm-sheets-web/refs/heads/main/public/showcase-03.png)
 
 Apart from the main `/spreadsheet` page, ABM Sheets provides authentication to the users using the sign-in and sign-up pages.
 
-![Showcase04](/public/showcase-04.png)
+![Showcase04](https://raw.githubusercontent.com/TomasBoda/abm-sheets-web/refs/heads/main/public/showcase-04.png)
 
-![Showcase05](/public/showcase-05.png)
+![Showcase05](https://raw.githubusercontent.com/TomasBoda/abm-sheets-web/refs/heads/main/public/showcase-05.png)
 
 ## 10. Keystrokes
 

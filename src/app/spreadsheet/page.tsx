@@ -18,7 +18,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-    title: "Spreadsheet",
+    title: "Spreadsheet | ABM Sheets",
 };
 
 export default async function SpreadsheetPage() {

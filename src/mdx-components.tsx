@@ -25,6 +25,11 @@ const H3 = styled.h3`
     margin: 15px 0px;
 `;
 
+const A = styled.a`
+    color: var(--text);
+    text-decoration: underline;
+`;
+
 const Em = styled.em`
     color: var(--text-1);
     font-size: 14px;
@@ -67,6 +72,10 @@ const P = styled.p`
 `;
 
 const Ul = styled.ul`
+    margin: 5px 0px;
+`;
+
+const Ol = styled.ol`
     margin-bottom: 15px;
 `;
 
@@ -76,7 +85,7 @@ const Li = styled.li`
     font-weight: 400;
     line-height: 160%;
 
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     margin-left: 15px;
 `;
  
@@ -85,8 +94,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         h1: ({ children }) => (
             <H1>{children}</H1>
         ),
-        h2: ({ children }) => (
-            <H2>{children}</H2>
+        h2: ({ children, ...props }) => (
+            <H2 {...props}>{children}</H2>
         ),
         h3: ({ children }) => (
             <H3>{children}</H3>
@@ -100,11 +109,17 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         code: ({ children }) => (
             <Code>{children}</Code>
         ),
+        ol: ({ children }) => (
+            <Ol>{children}</Ol>
+        ),
         ul: ({ children }) => (
             <Ul>{children}</Ul>
         ),
         li: ({ children }) => (
             <Li>{children}</Li>
+        ),
+        a: ({ children, ...props }) => (
+            <A {...props}>{children}</A>
         ),
         ...components,
     }

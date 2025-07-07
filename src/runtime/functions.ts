@@ -239,11 +239,7 @@ export namespace Functions {
 
     export const sum = ({ args, step, history, dataHistory }: FuncProps): Value => {
         const range = expectCellRange(args, 0).value;
-
-        const c1 = range[0];
-        const r1 = range[1];
-        const c2 = range[2];
-        const r2 = range[3];
+        const [c1, r1, c2, r2] = range;
 
         let sum = 0;
 
