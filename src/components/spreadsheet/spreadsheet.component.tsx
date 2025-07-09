@@ -18,6 +18,7 @@ import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
 import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
+import { CornerUpLeftIcon } from "lucide-react";
 
 export function Spreadsheet() {
     // hooks
@@ -204,7 +205,6 @@ export function Spreadsheet() {
         },
         [graphCells]
     )
-
     // formula
 
     const getFormulaElement = () => {
@@ -631,6 +631,7 @@ export function Spreadsheet() {
     const toggleGraphCell = () => {
         if (isCellInGraph) {
             removeGraphCell(selectedCell);
+            
         } else {
             addGraphCell(selectedCell);
         }

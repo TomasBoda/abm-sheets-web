@@ -315,7 +315,7 @@ const SimulationTab = () => {
         }
         else {
             setStep(newStep - 1)
-        }
+        }   
     }
 
     const onHandleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
