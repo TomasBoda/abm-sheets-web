@@ -339,8 +339,8 @@ const SimulationTab = () => {
 
 const ImportExportTab = () => {
 
-    const { setCellColors } = useCellStyle();
-    const { usedCells, setUsedCells } = useCellInfo();
+    const { setCellColors, setCellBolds, setCellItalics } = useCellStyle();
+    const { usedCells, setUsedCells, setGraphCells } = useCellInfo();
     const { dataHistory, setDataHistory } = useHistory();
     const spreadsheet = useSpreadsheet();
 
@@ -352,13 +352,13 @@ const ImportExportTab = () => {
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value, color } = data[ri][ci];
+                const { formula, value, color, font, isInGraph } = data[ri][ci];
 
                 if (formula.trim() === "" && value.trim() === "") {
                     continue;
                 }
                 
-                object[cellId] = { formula, value, color, history };
+                object[cellId] = { formula, value, color, font, isInGraph, history };
             }
         }
 
@@ -397,18 +397,39 @@ const ImportExportTab = () => {
 
         const newUsedCells: CellId[] = [];
         const newCellColors = new Map<CellId, string>();
+        const newCellBolds = new Map<CellId, string>();
+        const newCellItalics = new Map<CellId, string>();
+        const newGraphCells = new Set<CellId>();
         const newDataHistory = new Map(dataHistory);
+        
 
         for (const [cellId, cellData] of Object.entries(importedData)) {
-            const { formula, value, color } = cellData as any;
+            const { formula, value, color, font, isInGraph } = cellData as any;
             const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
 
             data[ri][ci].formula = formula;
             data[ri][ci].value = value;
             data[ri][ci].color = color;
+            data[ri][ci].font = font;
+            data[ri][ci].isInGraph = isInGraph;
 
             if (color) {
                 newCellColors.set(cellId as CellId, color);
+            }
+
+            if (font) {
+                for (let i = 0; i < font.length; i++) {
+                    if (font[i] === "bold") {
+                        newCellBolds.set(cellId as CellId, "bold");
+                    }
+                    else if (font[i] === "italic") {
+                        newCellItalics.set(cellId as CellId, "italic");
+                    }
+                }
+            }
+
+            if (isInGraph) {
+                newGraphCells.add(cellId as CellId);
             }
 
             if (formula[0] === "=") {
@@ -424,6 +445,9 @@ const ImportExportTab = () => {
 
         addUsedCells(newUsedCells);
         setCellColors(newCellColors);
+        setCellBolds(newCellBolds);
+        setCellItalics(newCellItalics);
+        setGraphCells(newGraphCells);
         setDataHistory(newDataHistory);
     }
 

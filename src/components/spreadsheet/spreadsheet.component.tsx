@@ -141,6 +141,70 @@ export function Spreadsheet() {
         [cellColors]
     );
 
+    useEffect(
+        function updateCellBolds() {
+            for (let ri = 0; ri < data.length; ri++) {
+                for (let ci = 0; ci < data[ri].length; ci++) {
+                    if (data[ri][ci].font !== undefined) {
+                        data[ri][ci].font = data[ri][ci].font.filter(e => e !== "bold");
+                    }  
+                }
+            }
+
+            for (const [cellId, boldFont] of cellBolds.entries()) {
+                const { ri, ci } = Utils.cellIdToCoords(cellId);
+                if (data[ri][ci].font === undefined) {
+                    data[ri][ci].font = [boldFont];
+                }
+                else {
+                    data[ri][ci].font.push(boldFont);
+                }
+                
+            }
+        },
+        [cellBolds]
+    );
+
+    useEffect(
+        function updateCellItalics() {
+            for (let ri = 0; ri < data.length; ri++) {
+                for (let ci = 0; ci < data[ri].length; ci++) {
+                    if (data[ri][ci].font !== undefined) {
+                        data[ri][ci].font = data[ri][ci].font.filter(e => e !== "italic");
+                    }  
+                }
+            }
+
+            for (const [cellId, italicFont] of cellItalics.entries()) {
+                const { ri, ci } = Utils.cellIdToCoords(cellId);
+                if (data[ri][ci].font === undefined) {
+                    data[ri][ci].font = [italicFont];
+                }
+                else {
+                    data[ri][ci].font.push(italicFont);
+                }
+                
+            }
+        },
+        [cellItalics]
+    );
+
+    useEffect(
+        function updateCellGraph() {
+            for (let ri = 0; ri < data.length; ri++) {
+                for (let ci = 0; ci < data[ri].length; ci++) {
+                    delete data[ri][ci].isInGraph;
+                }
+            }
+
+            for (const cellId of graphCells) {
+                const { ri, ci } = Utils.cellIdToCoords(cellId);
+                 data[ri][ci].isInGraph = true;
+            }
+        },
+        [graphCells]
+    )
+
     // formula
 
     const getFormulaElement = () => {
