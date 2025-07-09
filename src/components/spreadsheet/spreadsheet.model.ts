@@ -3,8 +3,6 @@ export type SpreadsheetCell = {
     formula: string;
     value: string;
     color?: string;
-    font?: string[];
-    isInGraph?: boolean;
 };
 
 export type SpreadsheetRow = SpreadsheetCell[];
