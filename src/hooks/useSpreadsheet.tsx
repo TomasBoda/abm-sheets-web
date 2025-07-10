@@ -42,13 +42,13 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode; }) => {
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value, color } = data[ri][ci];
+                const { formula, value, color, font, isInGraph } = data[ri][ci];
 
                 if (formula.trim() === "" && value.trim() === "") {
                     continue;
                 }
                 
-                object[cellId] = { formula, value, color };
+                object[cellId] = { formula, value, color, font, isInGraph };
             }
         }
 
@@ -58,23 +58,44 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode; }) => {
     const loadData = (object: object) => {
         const newUsedCells = new Set<CellId>();
         const newCellColors = new Map<CellId, string>();
+        const newCellBolds = new Map<CellId, string>();
+        const newCellItalics = new Map<CellId, string>();
+        const newGraphCells = new Set<CellId>();
 
         for (const [key, _value] of Object.entries(object)) {
             const cellId = key as CellId;
             const { ri, ci } = Utils.cellIdToCoords(cellId);
-            const { formula, value, color } = _value;
+            const { formula, value, color, font, isInGraph } = _value;
 
-            data[ri][ci] = { formula, value, color };
+            data[ri][ci] = { formula, value, color, font, isInGraph };
 
             newUsedCells.add(cellId);
 
             if (color) {
                 newCellColors.set(cellId, color);
             }
+
+            if (font) {
+                for (let i = 0; i < font.length; i++) {
+                    if (font[i] === "bold") {
+                        newCellBolds.set(cellId, "bold");
+                    }
+                    else if (font[i] === "italic") {
+                        newCellItalics.set(cellId, "italic");
+                    }
+                }
+            }
+
+            if (isInGraph) {
+                newGraphCells.add(cellId);
+            }
         }
 
         setUsedCells(newUsedCells);
         setCellColors(newCellColors);
+        setCellBolds(newCellBolds);
+        setCellItalics(newCellItalics);
+        setGraphCells(newGraphCells);
     }
 
     const values = {

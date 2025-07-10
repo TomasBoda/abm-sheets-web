@@ -53,7 +53,7 @@ export class Runtime {
         this.step = step;
         this.history = history;
         this.dataHistory = dataHistory;
-        
+
         return this.runFormula(expression);
     }
 
@@ -117,7 +117,7 @@ export class Runtime {
     private runCallExpression(expression: CallExpression): Value {
         const { identifier, args } = expression;
 
-        const func = this.functions.get(identifier);        
+        const func = this.functions.get(identifier);
 
         if (func === undefined) {
             throw new Error(`Function '${identifier}' does not exist`);
@@ -147,7 +147,7 @@ export class Runtime {
         if (leftValue.type === ValueType.Number && rightValue.type === ValueType.Number) {
             const { value: lhs } = leftValue as NumberValue;
             const { value: rhs } = rightValue as NumberValue;
-    
+
             const operators = {
                 "==": (lhs: number, rhs: number) => lhs === rhs,
                 "!=": (lhs: number, rhs: number) => lhs !== rhs,
@@ -156,55 +156,55 @@ export class Runtime {
                 "<": (lhs: number, rhs: number) => lhs < rhs,
                 "<=": (lhs: number, rhs: number) => lhs <= rhs,
             }
-    
+
             const func = operators[operator];
-    
+
             if (!func) {
                 throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
             }
-    
+
             const result: boolean = func(lhs, rhs);
-    
+
             return { type: ValueType.Boolean, value: result };
         }
 
         if (leftValue.type === ValueType.Boolean && rightValue.type === ValueType.Boolean) {
             const { value: lhs } = leftValue as BooleanValue;
             const { value: rhs } = rightValue as BooleanValue;
-    
+
             const operators = {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
-    
+
             const func = operators[operator];
-    
+
             if (!func) {
                 throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
             }
-    
+
             const result: boolean = func(lhs, rhs);
-    
+
             return { type: ValueType.Boolean, value: result };
         }
 
         if (leftValue.type === ValueType.String && rightValue.type === ValueType.String) {
             const { value: lhs } = leftValue as StringValue;
             const { value: rhs } = rightValue as StringValue;
-    
+
             const operators = {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
-    
+
             const func = operators[operator];
-    
+
             if (!func) {
                 throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
             }
-    
+
             const result: boolean = func(lhs, rhs);
-    
+
             return { type: ValueType.Boolean, value: result };
         }
 
@@ -216,15 +216,15 @@ export class Runtime {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
-    
+
             const func = operators[operator];
-    
+
             if (!func) {
                 throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
             }
-    
+
             const result: boolean = func(lhs, rhs);
-    
+
             return { type: ValueType.Boolean, value: result };
         }
 
@@ -236,15 +236,15 @@ export class Runtime {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
             }
-    
+
             const func = operators[operator];
-    
+
             if (!func) {
                 throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
             }
-    
+
             const result: boolean = func(lhs, rhs);
-    
+
             return { type: ValueType.Boolean, value: result };
         }
 
@@ -357,7 +357,7 @@ export class Runtime {
         if (this.inCallExpression) {
             return { type: ValueType.CellLiteral, value: [ri, ci] } as CellLiteralValue;
         }
-    
+
         const cellValue = this.getHistoryValue(cellId);
 
         if (cellValue === undefined) {
@@ -377,7 +377,7 @@ export class Runtime {
 
     private runCellRangeLiteral(expression: CellRangeLiteral): Value {
         const { left, right } = expression;
-        
+
         const value = [left.col.index, left.row.index, right.col.index, right.row.index];
 
         return { type: ValueType.CellRange, value } as CellRangeValue;
