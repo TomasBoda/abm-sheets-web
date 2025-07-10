@@ -117,13 +117,12 @@ export class Lexer {
         }
 
         this.token(TokenType.EOF, "EOF");
-
         return this.tokens;
     }
 
     private static tokenizeIdentifier(value: string): void {
         let identifier = value;
-        
+
         this.next();
 
         while (this.at() !== undefined && (this.isAlpha(this.at()!) || this.isNumber(this.at()!) || this.at()! === "$")) {

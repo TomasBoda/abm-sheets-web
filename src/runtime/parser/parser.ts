@@ -74,13 +74,13 @@ export class Parser {
 
         if (result.type === NodeType.Identifier && this.at().type === TokenType.OpenParen) {
             this.expect(TokenType.OpenParen);
-            
+
             const args: Expression[] = [];
 
             while (this.at().type !== TokenType.CloseParen) {
                 const expression: Expression = this.parseExpression();
                 args.push(expression);
-                
+
                 if (this.at().type === TokenType.Comma) {
                     this.next();
                 }
