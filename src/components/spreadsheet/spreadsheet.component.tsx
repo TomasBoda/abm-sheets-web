@@ -3,7 +3,9 @@
 import { useCellInfo } from "@/hooks/useCells";
 import { useCellStyle } from "@/hooks/useCellStyle";
 import { useHistory } from "@/hooks/useHistory";
+import { useProjects } from "@/hooks/useProjects";
 import { useSelection } from "@/hooks/useSelection.hook";
+import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 import { useStepper } from "@/hooks/useStepper";
 import { Evaluator } from "@/runtime/evaluator";
 import { Constants } from "@/utils/constants";
@@ -12,14 +14,10 @@ import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
 import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
-import { Button } from "../button/button.component";
-import { useSearchParams } from "next/navigation";
-import { createClientClient } from "@/utils/supabase/client";
-import { Project, useProjects } from "@/hooks/useProjects";
-import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 
 export function Spreadsheet() {
     // hooks

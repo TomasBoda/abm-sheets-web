@@ -421,7 +421,7 @@ The following sections specify limitations of the resulting system that may be c
 
 ### 12.1 Evaluation
 
-For any change to any cell formula, the evaluation engine will evaluate all used cells (cells with formulas) and all steps at once. This provides the benefit that the simulation does not need to reset to step 1 after each change and the values in subsequent steps will be displayed to the user instantly. Although this implementation will not be very performant for large spreadsheet with hundreds of cells and steps, it will be sufficient for smaller spreadsheets (the default setting will be 26 columns and 52 rows) used in conceptual evaluation of the software system.
+During each change to a cell formula or value, the spreadsheet is re-evaluated and re-rendered. This may cause performance issues with large spreadsheets, where each evaluation of a time step could take more than 1000 milliseconds. For the purposes of this project, the project will be implemented in a way to be capable of handling spreadsheets of up to 1000x1000 cells.
 
 ### 12.2 Formula styling
 
