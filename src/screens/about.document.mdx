@@ -38,31 +38,49 @@ import { Logo } from "@/components/logo";
 
 		<H2WithID id="cannonball">Cannonball</H2WithID>
 
-		Let's start by showcasing ABM Sheets on an example simulation that models the shooting of cannonballs in a two-dimensional space.
+		Let's start by showcasing ABM Sheets on a simple physics simulation of shooting a cannonball in a two-dimensional space.
 
-		Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=6b2f15b3-b6cb-459d-ac54-d4682d49a792).
+		Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=1ae56eb2-8b98-4a0d-837d-3524b8a169e4).
 
 		<Video controls>
 			<source src="/cannonball-showcase.mp4" type="video/mp4"></source>
 		</Video>
 
 		A cannonball has the following properties:
-		
-		- `[@V]` - initial velocity
-		- `[@A]` - shooting angle
+
 		- `[@X]` - the x coordinate
 		- `[@Y]` - the y coordinate
+		- `[@ANGLE]` - initial shooting angle
+		- `[@SPEED]` - initial shooting speed
+		- `[@VX]` - the x velocity
+		- `[@VY]` - the y velocity
 
-		Then there is a constant value of gravity labeled `[@G]`.
+		<br />
+		Then there is a list of constant values:
 
-		The physics simulation of a cannonball is modeled as following:
+		- `[@GRAVITY]` - gravity
+		- `[@AIR_RESISTANCE]` - air resistance
+		- `[@TIME_FACTOR]` - time factor
 
-		- `[@V] = RANDBETWEEN(90, 120)`
-		- `[@A] = RANDBETWEEN(20, 45)`
-		- `[@X] = [@V] * COS(RADIANS([@A])) * STEP()`
-		- `[@Y] = [@V] * SIN(RADIANS([@A])) * STEP() - 0.5 * [@G] * POWER(STEP(), 2)`
+		<br />
+		The physics simulation of a cannonball is modelled as following:
 
-		For each cannonball, the x and y values are rendered in the graph to show the shooting curve of the corresponding cannonball.
+		- `[@ANGLE] = 20` (can be tweaked)
+		- `[@SPEED] = 50` (can be tweaked)
+		- `[@VX]`
+			- initially set to `[@SPEED] * COS(RADIANS([@ANGLE]))`
+			- then updated as `[@VX] + -[@AIR_RESISTANCE] * [@VX] * [@TIME_FACTOR]`
+		- `[@VY]`
+			- initially set to `[@SPEED] * SIN(RADIANS([@ANGLE]))`
+			- then updated as `[@VY] + (-[@GRAVITY] + -[@AIR_RESISTANCE] * [@VY]) * [@TIME_FACTOR]`
+
+		<br />
+		Finally, the x and y coordinates rendered in the graph are modelled as following:
+
+		- `[@X] = [@X] + [@VX] * [@TIME_FACTOR]`
+		- `[@Y] = [@Y] + [@VY] * [@TIME_FACTOR]`
+
+		<br />
 		
 		</Highlight>
 
@@ -72,7 +90,7 @@ import { Logo } from "@/components/logo";
 
 		In recent years, several research efforts have explored ways to expand the capabilities of spreadsheets to address more complex computational needs. [Espalier](https://sdg.csail.mit.edu/project/espalier/), for example, introduces a novel paradigm that combines spreadsheet usability with SQL-like expressiveness, enabling users to build rich organizational applications while editing hierarchical structured data within a visual environment. [Nezt](https://dl.acm.org/doi/10.1145/3191697.3214343) offers a live programming environment inspired by spreadsheets but enhanced with hierarchical cells and reusable custom functions, aiming to support application prototyping and scientific computing with greater expressiveness. Addressing the growing importance of real-time applications, a prototype [spreadsheet model for streaming data](https://dl.acm.org/doi/10.1145/2702123.2702587) demonstrates how users can stream and manipulate web-based data within a spreadsheet using temporal metadata and dynamic formulas. Finally, [this paper](https://ieeexplore.ieee.org/abstract/document/7476773) looks at spreadsheets from a broader perspective and treats them as a programming language, highlighting their liveness, directness, and ease of deployment, while surveying research directions in spreadsheet software engineering such as testing, refactoring, and clone detection.
 
-		Another domain that challenges the traditional spreadsheet paradigm is agent-based modeling (ABM). ABMs simulate the behavior of individual entities — agents, over time, often requiring the tracking of multiple attributes per agent across discrete time steps. This naturally introduces three essential dimensions: the population of agents, their attributes, and time. Attempting to represent this three-dimensional structure within a conventional spreadsheet often results in workarounds, which quickly become error-prone and difficult to maintain, especially as the model complexity grows.
+		Another domain that challenges the traditional spreadsheet paradigm is agent-based modeling (ABM). ABMs simulate the behavior of individual entities - agents, over time, often requiring the tracking of multiple attributes per agent across discrete time steps. This naturally introduces three essential dimensions - the population of agents, their attributes, and time. Attempting to represent this three-dimensional structure within a conventional spreadsheet often results in workarounds, which quickly become error-prone and difficult to maintain, especially as the model complexity grows.
 
 		Despite these challenges, there is strong motivation to bring time-aware simulations into the spreadsheet environment. Spreadsheets offer a transparent, interactive, and user-friendly platform that encourages experimentation and rapid prototyping. Making them more compliant with complex modeling would significantly lower the barriers to entry for users without formal programming experience, while still supporting powerful and expressive simulations. By embedding time into the core data structure, ABM Sheets provides a seamless way to model state changes over time, making it a powerful tool for agent-based modeling and other time-aware simulation approaches.
 

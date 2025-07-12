@@ -9,12 +9,10 @@
 ## Summer of Code
 
 - 🕝 Vit Ungermann 2 PRs
-- 🕝 set up call meeting
 - 🕝 coordinate on first graph task
 
 ## Regensburg
 
-- ✅ create issues for usability improvements
 - 🕝 implement usability improvements
 
 ## ABM Sheets
