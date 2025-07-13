@@ -5,6 +5,8 @@ export type LogType =
     | "click-step"
     | "click-reset"
     | "click-cell"
+    | "click-play"
+    | "click-stop"
     | "input"
 
 export class Logger {
