@@ -4,7 +4,6 @@
 ## Conference
 
 - 🕝 liveprog.org conference paper
-    - cannonball simulation
 
 ## Summer of Code
 

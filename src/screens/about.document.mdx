@@ -27,6 +27,9 @@ import { Logo } from "@/components/logo";
 			- [Wolf-sheep Predation](#wolf-sheep-predation)
 			- [Running Race](#running-race)
 			- [Hotelling's Law](#hotellings-law)
+		9. [Limitations & Future Improvements](#limitations-and-future-improvements)
+			- [Limitations](#limitations)
+			- [Future Improvements](#future-improvements)
 
 		<H2WithID id="abstract">Abstract</H2WithID>
 
@@ -223,5 +226,34 @@ import { Logo } from "@/components/logo";
 		<Video controls>
 			<source src="/hotellings-law-showcase.mp4" type="video/mp4"></source>
 		</Video>
+
+		<H2WithID id="limitations-and-future-improvements">Limitations & Future Improvements</H2WithID>
+
+		While ABM Sheets introduces a novel approach to integrating discrete time into spreadsheets, several limitations and opportunities for improvement remain.
+
+		<H3WithID id="limitations">Limitations</H3WithID>
+
+		- **Limited Expressiveness for Non-Discrete Time** \
+		The current model assumes a uniform, discrete time progression. Simulations involving continuous time, variable time steps, or asynchronous events are not naturally supported and would require significant workarounds.
+
+		- **Debugging and Traceability** \
+		While time-based formulas enhance expressiveness, they also introduce complexity in debugging. Tracing the origin of unexpected results across time steps and dependencies is non-trivial and may require better tooling support, which is not provided in the current version.
+
+		- **Lack of Built-in Visualization Controls** \
+		Although ABM Sheets provides simple visualisation capabilities, it does not suffice for complex time-aware simulations where plotting aggregated results is beneficial for understanding the simulation output. There is limited support for more sophisticated, interactive visualisations, such as heatmaps, spatial plots or agent trajectories.
+
+		<H3WithID id="future-improvements">Future Improvements</H3WithID>
+
+		- **Optimized Evaluation Engine** \
+		In complex simulations with numerous tables and complex formulas across a large number of time steps, the evaluation's performace could get very slow. Incorporating techniques such as incremental recomputation, parallel evaluation, or just-in-time compilation could significantly enhance performance for larger models.
+
+		- **Improved Error Reporting** \
+		A step-through debugger or a visual dependency inspector could help users understand how values evolve over time. Additionally, adding built-in support for richer error messages and reporting would help users debug complex simulations with greater ease.
+
+		- **Composable Visualisation** \
+		We are currently working on integrating composable visualisation support, which will enable users to compose custom graphs using the formula language directly in cells, which would provide the users with greater flexibility for custom visualisations.
+
+		- **User-defined Functions** \
+		Introducing custom reusable functions with parameters would help decluttering complex formulas and make the experience with more complex simulations much more enjoyable.
 	</Content>
 </Container>
