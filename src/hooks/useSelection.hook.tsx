@@ -1,12 +1,13 @@
 "use client"
 
 import { Utils } from "@/utils/utils";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 import { data } from "../components/spreadsheet/data";
 import { CellCoords, CellId } from "../components/spreadsheet/spreadsheet.model";
 
 type SelectionContextType = {
     selectedCells: Set<CellId>;
+    setSelectedCells: Dispatch<SetStateAction<Set<CellId>>>;
     selectAllCells: () => void;
     deselectAllCells: () => void;
     isCellSelected: (coords: CellCoords) => boolean;
@@ -84,6 +85,7 @@ export const SelectionProvider = ({ children }: { children: ReactNode; }) => {
 
     const values = {
         selectedCells,
+        setSelectedCells,
         selectAllCells,
         deselectAllCells,
         isCellSelected,

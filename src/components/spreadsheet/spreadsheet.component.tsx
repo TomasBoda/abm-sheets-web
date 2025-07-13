@@ -22,7 +22,7 @@ import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadshe
 export function Spreadsheet() {
     // hooks
 
-    const { selectedCells, selectAllCells, isCellSelected, selectionListeners, dragWithCopy } = useSelection();
+    const { selectedCells, setSelectedCells, selectAllCells, isCellSelected, selectionListeners, dragWithCopy } = useSelection();
 
     const { project } = useProjects();
     const spreadsheet = useSpreadsheet();
@@ -164,6 +164,11 @@ export function Spreadsheet() {
         } else {
             removeUsedCell(coords);
         }
+
+        // move to one cell below on enter click
+        const newCoords = { ri: Math.min(coords.ri + 1, data.length), ci: coords.ci };
+        setSelectedCells(new Set([Utils.cellCoordsToId(newCoords)]));
+        setFormulaValue(data[newCoords.ri][newCoords.ci].formula);
     };
 
     const onFormulaKeyDown = (event: any) => {
