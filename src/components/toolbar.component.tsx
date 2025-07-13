@@ -19,9 +19,9 @@ import { SaveProjectModal } from "@/modals/save-project.modal";
 import { Logger } from "@/utils/logger";
 import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
-import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, RotateCcw, Upload } from "lucide-react";
+import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, Play, RotateCcw, Square, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useSidebar } from "./sidebar.provider";
 import { GraphSidebar } from "./graph-sidebar";
@@ -224,9 +224,10 @@ const HomeTab = () => {
 const SimulationTab = () => {
 
     const { step, setStep, steps, setSteps, reset } = useStepper();
-    const { selectedCells } = useSelection();
-    const { history, dataHistory } = useHistory();
-    const { showModal } = useModal();
+
+    const [delay, setDelay] = useState<number>(100);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const prevStep = () => {
         setStep(prev => Math.max(0, prev - 1));
@@ -242,6 +243,42 @@ const SimulationTab = () => {
         reset();
         Logger.log("click-reset", "");
     }
+
+    const onPlayClick = () => {
+        setStep(0);
+        setIsPlaying(true);
+        Logger.log("click-play", "");
+    }
+
+    const onStopClick = () => {
+        setIsPlaying(false);
+        Logger.log("click-stop", "");
+    }
+
+    useEffect(() => {
+        if (isPlaying) {
+            intervalRef.current = setInterval(() => {
+                setStep(prev => Math.min(prev + 1, steps - 1));
+            }, delay);
+        } else {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        }
+    
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
+    }, [isPlaying, delay, steps]);
+
+    useEffect(() => {
+        if (isPlaying && step >= steps - 1) {
+            setIsPlaying(false);
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        }
+    }, [step, steps, isPlaying]);
 
     return (
         <TabContainer>
@@ -274,6 +311,28 @@ const SimulationTab = () => {
                 <RotateCcw size={10} />
                 Reset
             </Button>
+
+            <Divider />
+
+            <TextFieldSmall
+                value={delay.toString()}
+                onChange={value => value === "" ? setDelay(0) : setDelay(parseInt(value))}
+                placeholder="Delay"
+            />
+
+            <Divider />
+
+            {isPlaying ? (
+                <Button onClick={onStopClick}>
+                    <Square size={10} />
+                    Stop
+                </Button>
+            ) : (
+                <Button onClick={onPlayClick}>
+                    <Play size={10} />
+                    Play
+                </Button>
+            )}
         </TabContainer>
     )
 }
