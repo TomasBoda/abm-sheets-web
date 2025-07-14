@@ -51,37 +51,37 @@ import { Logo } from "@/components/logo";
 
 		A cannonball has the following properties:
 
-		- `[@X]` - the x coordinate
-		- `[@Y]` - the y coordinate
-		- `[@ANGLE]` - initial shooting angle
-		- `[@SPEED]` - initial shooting speed
-		- `[@VX]` - the x velocity
-		- `[@VY]` - the y velocity
+		- `X` - the x coordinate
+		- `Y` - the y coordinate
+		- `ANGLE` - initial shooting angle
+		- `SPEED` - initial shooting speed
+		- `VX` - the x velocity
+		- `VY` - the y velocity
 
 		<br />
 		Then there is a list of constant values:
 
-		- `[@GRAVITY]` - gravity
-		- `[@AIR_RESISTANCE]` - air resistance
-		- `[@TIME_FACTOR]` - time factor
+		- `GRAVITY` - gravity
+		- `AIR_RESISTANCE` - air resistance
+		- `TIME_FACTOR` - time factor
 
 		<br />
 		The physics simulation of a cannonball is modelled as following:
 
-		- `[@ANGLE] = 20` (can be tweaked)
-		- `[@SPEED] = 50` (can be tweaked)
-		- `[@VX]`
-			- initially set to `[@SPEED] * COS(RADIANS([@ANGLE]))`
-			- then updated as `[@VX] + -[@AIR_RESISTANCE] * [@VX] * [@TIME_FACTOR]`
-		- `[@VY]`
-			- initially set to `[@SPEED] * SIN(RADIANS([@ANGLE]))`
-			- then updated as `[@VY] + (-[@GRAVITY] + -[@AIR_RESISTANCE] * [@VY]) * [@TIME_FACTOR]`
+		- `ANGLE = 20` (can be tweaked)
+		- `SPEED = 50` (can be tweaked)
+		- `VX`
+			- initially set to `SPEED * COS(RADIANS(ANGLE))`
+			- then updated as `VX + -AIR_RESISTANCE * VX * TIME_FACTOR`
+		- `VY`
+			- initially set to `SPEED * SIN(RADIANS(ANGLE))`
+			- then updated as `VY + (-GRAVITY + -AIR_RESISTANCE * VY) * TIME_FACTOR`
 
 		<br />
 		Finally, the x and y coordinates rendered in the graph are modelled as following:
 
-		- `[@X] = [@X] + [@VX] * [@TIME_FACTOR]`
-		- `[@Y] = [@Y] + [@VY] * [@TIME_FACTOR]`
+		- `X = X + VX * TIME_FACTOR`
+		- `Y = Y + VY * TIME_FACTOR`
 
 		<br />
 		
@@ -205,7 +205,21 @@ import { Logo } from "@/components/logo";
 
 		We can observe that at first, the population of sheep decreases as the wolves eat the sheep. However, when there is less sheep for the wolves to eat, their energy runs out after a short period of time, resulting in the decrease of the wolf population. With this decrease, the sheep can regenerate and respawn and with less wolves to eat them, they prosper. However, with more sheep in the area, there is a higher probability of an encounter with the wolves, resulting in the increase of the wolf population.
 
-		In the graph, we can observe a sinusoid changes in both the wolf and sheep population as time progresses.
+		Both the wolves and the sheep have `X` and `Y` coordinates representing their position in the area. We have a helper column `position` calculated as `CONCAT(X, Y)`, which gives us a unique identifier of their position.
+		
+		Wolves have a column `sheep ID` which represents the ID of the sheep in the same position as the corresponding wolf. In each step, if a sheep doesn't cross the wolf's position, their health is decremented by 1. Otherwise their health is regenerated as they eat the sheep. This is modelled as:
+
+		`IF(AND(SHEEP_ID != "NONE", SHEEP_STATUS == "ALIVE"), MIN(MAX_HEALTH, HEALTH + 5), MAX(0, HEALTH - 1))`
+
+		Sheep's logic is implemented in a similar way, however, when they are eaten by a wolf, they are resurrected after a certain period of time passes. The respawn time of the sheep is modelled as:
+
+		`RESPAWN = IF(STATUS == "ALIVE", 0, IF(AND(PREV(STATUS) == "ALIVE", STATUS == "DEAD"), 10, RESPAWN - 1))`
+
+		Notice the use of `PREV` in this formula. The `PREV` function takes in a cell reference and returns its value in the previous time step. In this way, we can observe the change of the sheep's `STATUS` in time and respond to the changes by updating the `RESPAWN` accordingly. The sheep's `STATUS` is modelled as follows:
+
+		`STATUS = IF(STATUS == "DEAD", IF(RESPAWN > 0, "DEAD", "ALIVE"), IF(WOLF_ID != 0, "DEAD", "ALIVE"))`
+
+		If the sheep is alive and a wolf crosses their way, the sheep becomes dead. If it is dead and the respawn time is greater then zero, it stays dead, otherwise is becomes alive again. The two above formulas inherently use the built-in mechanism of discrete time to observe changes in time and respond to them accordingly.
 
 		<H3WithID id="running-race">Running Race</H3WithID>
 
@@ -217,6 +231,26 @@ import { Logo } from "@/components/logo";
 			<source src="/running-race-showcase.mp4" type="video/mp4"></source>
 		</Video>
 
+		Each runner has a `POSITION`, `SPEED` and an indicator of whether it has crossed the finish line labeled `FINISHED`.
+
+		The `POSITION` is initially set to `0` and calculated as:
+		
+		`POSITION = POSITION + SPEED`.
+		
+		The `SPEED` is initially set to `RANDBETWEEN(1, 5)` and calculated as:
+		
+		`SPEED = MAX(1, SPEED + (RAND() - 0.5) * 2)`.
+
+		The speed is randomly incremented/decremented in each new time step, but we make sure it never goes below `1` in order for the agents to always move forward. Lastly, for each agent we check whether they crossed the finish line using:
+
+		`FINISHED = IF(POSITION >= FINISH_LINE, 1, 0)`
+
+		Finally, we check if any runner has crossed the finish line by summing all `FINISHED` values and checking if their sum is greater than `0`:
+
+		`ANY_FINISHED = IF(SUM(FINISHED_FIRST, FINISHED_LAST) > 0, 1, 0)`
+
+		If any agent has finished the race, we stop updating the other agents' positions and speeds and the race has ended.
+
 		<H3WithID id="hotellings-law">Hotelling's Law</H3WithID>
 
 		The Hotelling's Law model examines the optimal pricing of goods that stores sell in order to maximize their profit. In this models, we have stores and customers placed randomly in a one-dimensional space (line). Each store is assigned a random pricing of their goods. In each new time step, each store attempts to increase/decrease the pricing of their goods to see if they can attract more customers. If so, the stores update their prices. In the graph, we can observe the changing prices of the three stores in the model.
@@ -226,6 +260,14 @@ import { Logo } from "@/components/logo";
 		<Video controls>
 			<source src="/hotellings-law-showcase.mp4" type="video/mp4"></source>
 		</Video>
+
+		This model is quite complex and difficult to explain using sample formula code. The main idea is that we create an interest matrix where rows represent customers and columns represent stores. Each cell in the matrix represents the interest of the given customer for the given store, calculated as:
+
+		`INTEREST = ABS(STORE_POSITION - CUSTOMER_POSITION) + STORE_PRICE`
+
+		Each store tries to increment or decrement their price to see whether they can gain more customers with this new pricing strategy. For this, we create two new matrices with the same structure as the matrix above, but we count in the new incremented/decremented prices.
+
+		Each customer looks at the interest matrix and chooses to go to the store with the lowest interest value. Each store then sums their total number of customers. This is performed also for the incremented/decremented interest rates. If a store gains more customers by either incrementing or decrementing their price, they update their current price based on the new best strategy. This process is repeated in each step of the simulation.
 
 		<H2WithID id="limitations-and-future-improvements">Limitations & Future Improvements</H2WithID>
 
