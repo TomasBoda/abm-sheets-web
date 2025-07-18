@@ -6,11 +6,12 @@ import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 import { useSidebar } from "./sidebar.provider";
+import { createClientClient } from "@/utils/supabase/client";
 
 export const ProjectsSidebar = () => {
 
     const { toggle } = useSidebar();
-    const { projects } = useProjects();
+    const { projects, loadProjects } = useProjects();
     const spreadsheet = useSpreadsheet();
 
     const router = useRouter();
@@ -23,6 +24,23 @@ export const ProjectsSidebar = () => {
         router.replace(`?${params.toString()}`);
 
         spreadsheet.clear();
+    }
+
+    const deleteProject = async (event: any, id: string) => {
+        event.stopPropagation();
+
+        const supabase = createClientClient();
+
+        const request = await supabase
+            .from("projects")
+            .delete()
+            .eq("id", id);
+
+        if (request.error) {
+            return alert("Error: cannot delete project");
+        }
+
+        loadProjects();
     }
 
     return (
@@ -60,7 +78,7 @@ export const ProjectsSidebar = () => {
                                         Open
                                     </Button>
 
-                                    <Button>
+                                    <Button onClick={event => deleteProject(event, id)}>
                                         Delete
                                     </Button>
                                 </Actions>
