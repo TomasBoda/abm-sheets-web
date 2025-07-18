@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const H1 = styled.h1`
     color: var(--text-1);
-    font-size: 30px;
+    font-size: 35px;
     font-weight: 700;
 
     margin-bottom: 30px;

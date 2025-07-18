@@ -53,12 +53,20 @@ export const Highlight = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-export const H2WithID = styled.h2`
+export const H2WithID = styled.h2<{ $border?: boolean; }>`
     color: var(--text-1);
     font-size: 22px;
     font-weight: 700;
 
     margin: 15px 0px;
+
+    ${({ $border = true }) =>
+        $border &&
+            `
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            `
+    }
 `;
 
 export const H3WithID = styled.h3`
@@ -67,4 +75,10 @@ export const H3WithID = styled.h3`
     font-weight: 700;
 
     margin: 15px 0px;
+`;
+
+export const SmallText = styled.span`
+    & * {
+        font-size: 14px;
+    }
 `;
