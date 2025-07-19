@@ -24,6 +24,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { GraphSidebar } from "./graph-sidebar";
 import { useSidebar } from "./sidebar.provider";
+import { Constants } from "@/utils/constants";
 
 interface ToolbarProps {
     user: User;
@@ -237,21 +238,20 @@ const HomeTab = () => {
 
 const SimulationTab = () => {
 
-    const { step, setStep, steps, setSteps, reset, stepFieldValue, setStepFieldValue } = useStepper();
+    const { step, setStep, steps, setSteps, reset } = useStepper();
 
     const [delay, setDelay] = useState<number>(100);
     const [isPlaying, setIsPlaying] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const [stepFieldValue, setStepFieldValue] = useState<number>(Constants.DEFAULT_STEP + 1);
 
     const prevStep = () => {
         setStep(prev => Math.max(0, prev - 1));
-        setStepFieldValue((prev) => ( Math.max(1, Number(prev) - 1)).toString());
         Logger.log("click-step", "prev");
     }
 
     const nextStep = () => {
         setStep(prev => Math.min(prev + 1, steps - 1));
-        setStepFieldValue((prev) => ( Math.min(steps, Number(prev) + 1)).toString());
         Logger.log("click-step", "next");
     }
 
@@ -296,9 +296,13 @@ const SimulationTab = () => {
         }
     }, [step, steps, isPlaying]);
 
+    useEffect(() => {
+        setStepFieldValue(step + 1);
+    }, [step])
+
     const handleStepsInput = (value: string) => {
         if (/^[0-9]*$/.test(value)) {
-            setStepFieldValue(value);
+            setStepFieldValue(Number(value));
         }
     }
 
@@ -307,11 +311,11 @@ const SimulationTab = () => {
 
         if (newStep === 0) {
             setStep(0)
-            setStepFieldValue("1")
+            setStepFieldValue(1)
         }
         else if (newStep > steps) {
             setStep(steps - 1);
-            setStepFieldValue(steps.toString());
+            setStepFieldValue(steps);
         }
         else {
             setStep(newStep - 1)
@@ -332,7 +336,7 @@ const SimulationTab = () => {
                 </Button>
 
                 <TextFieldSmall
-                    value={stepFieldValue}
+                    value={stepFieldValue.toString()}
                     disabled={false}
                     onChange={(newValue) => handleStepsInput(newValue)}
                     onBlur={confirmStep}
