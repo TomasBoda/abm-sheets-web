@@ -37,7 +37,7 @@ export function Spreadsheet() {
 
     // state
 
-    const { step, setStep, steps, setStepFieldValue } = useStepper();
+    const { step, setStep, steps } = useStepper();
     const { cellColors, cellBolds, cellItalics } = useCellStyle();
     const { usedCells, setUsedCells, graphCells, addGraphCell, removeGraphCell, xGraphCell, setXGraphCell } = useCellInfo();
 
@@ -594,12 +594,10 @@ export function Spreadsheet() {
 
     const prevStep = () => {
         setStep((prev) => Math.max(0, prev - 1));
-        setStepFieldValue((prev) => ( Math.max(1, Number(prev) - 1)).toString());
     };
 
     const nextStep = () => {
         setStep((prev) => Math.min(prev + 1, steps - 1));
-        setStepFieldValue((prev) => ( Math.min(steps, Number(prev) + 1)).toString());
     };
 
     // other
