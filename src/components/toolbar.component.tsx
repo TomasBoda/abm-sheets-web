@@ -3,7 +3,6 @@
 import { ColorPicker } from "@/components/color-picker/color-picker.component";
 import { ProjectsSidebar } from "@/components/projects-sidebar";
 import { data } from "@/components/spreadsheet/data";
-import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.component";
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 import { Tab, Tabs } from "@/components/tabs/tabs.component";
 import { TextFieldSmall } from "@/components/text-field-small";
@@ -11,23 +10,26 @@ import { useCellInfo } from "@/hooks/useCells";
 import { useCellStyle } from "@/hooks/useCellStyle";
 import { useHistory } from "@/hooks/useHistory";
 import { useModal } from "@/hooks/useModal";
-import { Project, useProjects } from "@/hooks/useProjects";
 import { useSelection } from "@/hooks/useSelection.hook";
+import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 import { useStepper } from "@/hooks/useStepper";
-import { GraphModal } from "@/modals/graph-modal";
 import { SaveProjectModal } from "@/modals/save-project.modal";
 import { Logger } from "@/utils/logger";
 import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
-import { AlignJustify, AlignLeft, AlignRight, Ban, Bold, ChartLine, ChevronLeft, ChevronRight, Download, Italic, Play, RotateCcw, Square, Upload } from "lucide-react";
+import { User } from "@supabase/supabase-js";
+import { Ban, Bold, ChevronLeft, ChevronRight, Download, Italic, Play, RotateCcw, Square, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import { useSidebar } from "./sidebar.provider";
 import { GraphSidebar } from "./graph-sidebar";
-import { useSpreadsheet } from "@/hooks/useSpreadsheet";
+import { useSidebar } from "./sidebar.provider";
 
-export const Toolbar = () => {
+interface ToolbarProps {
+    user: User;
+}
+
+export const Toolbar = ({ user }: ToolbarProps) => {
 
     const router = useRouter();
     const spreadsheet = useSpreadsheet();
@@ -66,10 +68,10 @@ export const Toolbar = () => {
             label: "Graph",
             onClick: openGraphSidebar,
         },
-        {
+        ...(user ? [{
             label: "Projects",
-            onClick: openProjectsSidebar,
-        },
+            onClick: openProjectsSidebar
+        }] : []),
         {
             label: "Import & Export",
             component: <ImportExportTab />
@@ -79,6 +81,10 @@ export const Toolbar = () => {
             component: <AdvancedTab />
         } */
     ];
+
+    const signIn = () => {
+        router.push("/auth/sign-in");
+    }
 
     const signOut = async () => {
         const supabase = createClientClient();
@@ -92,17 +98,25 @@ export const Toolbar = () => {
                 tabs={tabs}
                 rightContent={
                     <RightContent>
-                        <Button onClick={saveProject}>
-                            Save project
-                        </Button>
+                        {user && (
+                            <Button onClick={saveProject}>
+                                Save project
+                            </Button>
+                        )}
 
                         <Button onClick={clearAll}>
                             Clear
                         </Button>
 
-                        <Button onClick={signOut}>
-                            Sign out
-                        </Button>
+                        {user ? (
+                            <Button onClick={signOut}>
+                                Sign out
+                            </Button>
+                        ) : (
+                            <Button onClick={signIn}>
+                                Sign in
+                            </Button>
+                        )}
 
                         <GithubLogoHref href="https://github.com/tomasBoda/abm-sheets-web" target="_blank">
                             <GithubLogo src="/logo-github.svg" />

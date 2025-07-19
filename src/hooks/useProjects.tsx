@@ -39,6 +39,10 @@ export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
 
         const user = await supabase.auth.getUser();
 
+        if (!user.data.user) {
+            return;
+        }
+
         const response = await supabase
             .from("projects")
             .select()

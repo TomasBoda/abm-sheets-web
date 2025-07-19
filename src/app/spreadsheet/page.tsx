@@ -13,7 +13,6 @@ import { SpreadsheetProvider } from "@/hooks/useSpreadsheet";
 import { StepperProvider } from "@/hooks/useStepper";
 import { createServerClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -24,10 +23,7 @@ export const metadata: Metadata = {
 export default async function SpreadsheetPage() {
     const supabase = await createServerClient();
     const response = await supabase.auth.getUser();
-
-    if (response.error) {
-        redirect("/auth/sign-in");
-    }
+    const user = response.data.user;
 
     return (
         <AuthProvider>
@@ -43,7 +39,7 @@ export default async function SpreadsheetPage() {
                                                 <SidebarProvider
                                                     content={
                                                         <>
-                                                            <Toolbar />
+                                                            <Toolbar user={user} />
                                                             <Spreadsheet />
                                                         </>
                                                     }

@@ -656,9 +656,9 @@ export function Spreadsheet() {
                     {isCellInGraph ? "Remove from graph" : "Add to graph"}
                 </Button>
 
-                <Button variant="primary" onClick={toggleYGraphCell}>
+                {/* <Button variant="primary" onClick={toggleYGraphCell}>
                     {xGraphCell === selectedCell ? "Remove X graph cell" : "Add X graph cell"}
-                </Button>
+                </Button> */}
             </Header>
 
             <TableContainer>
