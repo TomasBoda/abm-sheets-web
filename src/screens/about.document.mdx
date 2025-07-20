@@ -117,7 +117,7 @@ import { Logo } from "@/components/logo";
 
 		In recent years, several research efforts have explored ways to expand the capabilities of spreadsheets to address more complex computational needs. [Espalier](https://sdg.csail.mit.edu/project/espalier/), for example, introduces a novel paradigm that combines spreadsheet usability with SQL-like expressiveness, enabling users to build rich organizational applications while editing hierarchical structured data within a visual environment. [Nezt](https://dl.acm.org/doi/10.1145/3191697.3214343) offers a live programming environment inspired by spreadsheets but enhanced with hierarchical cells and reusable custom functions, aiming to support application prototyping and scientific computing with greater expressiveness. Addressing the growing importance of real-time applications, a prototype [spreadsheet model for streaming data](https://dl.acm.org/doi/10.1145/2702123.2702587) demonstrates how users can stream and manipulate web-based data within a spreadsheet using temporal metadata and dynamic formulas. Finally, [this paper](https://ieeexplore.ieee.org/abstract/document/7476773) looks at spreadsheets from a broader perspective and treats them as a programming language, highlighting their liveness, directness, and ease of deployment, while surveying research directions in spreadsheet software engineering such as testing, refactoring, and clone detection.
 
-		In this paper, we focus on the problem of extending the traditional spreadsheet paradigm with discrete time. There are multiple domains where discrete time simulations are ubiquitous. Those include physics simulations, agent-based models or financial market analyses. The typical way of modelling time in spreadsheets is to reserve one of the available dimensions (rows or columns) for modelling time steps. For instance, the model may add a new row for each new time step. However, reserving one of the two available dimensions for time leaves the spreadsheet with only one dimension for the other aspects of the model, eventually making it difficult to model more complex models.
+		In this paper, we focus on the problem of extending the traditional spreadsheet paradigm with discrete time. There are multiple domains where discrete time simulations are ubiquitous. Those include physics simulations, agent-based models or financial market analyses. The typical way of modeling time in spreadsheets is to reserve one of the available dimensions (rows or columns) for modeling time steps. For instance, the model may add a new row for each new time step. However, reserving one of the two available dimensions for time leaves the spreadsheet with only one dimension for the other aspects of the model, eventually making it difficult to model more complex models.
 
 		Therefore, there is a strong motivation for directly supporting time-aware models in a spreadsheet environment. Spreadsheets offer a transparent, interactive, and user-friendly platform that encourages experimentation and rapid prototyping. Making them more compliant with complex modeling would significantly lower the barriers to entry for users without formal programming experience, while still supporting powerful and expressive simulations. By embedding time into the core data structure, ABM Sheets provides a seamless way to model state changes over time, making it a powerful tool for various time-aware simulation approaches.
 
@@ -309,18 +309,18 @@ import { Logo } from "@/components/logo";
 		While time-based formulas enhance expressiveness, they also introduce complexity in debugging. Tracing the origin of unexpected results across time steps and dependencies is non-trivial and may require better tooling support, which is not provided in the current version.
 
 		- **Lack of Built-in Visualization Controls** \
-		Although ABM Sheets provides simple visualisation capabilities, it does not suffice for complex time-aware simulations where plotting aggregated results is beneficial for understanding the simulation output. There is limited support for more sophisticated, interactive visualisations, such as heatmaps, spatial plots or agent trajectories.
+		Although ABM Sheets provides simple visualization capabilities, it does not suffice for complex time-aware simulations where plotting aggregated results is beneficial for understanding the simulation output. There is limited support for more sophisticated, interactive visualizations, such as heatmaps, spatial plots or agent trajectories.
 
 		<H3WithID id="future-improvements">Future Improvements</H3WithID>
 
 		- **Optimized Evaluation Engine** \
-		In complex simulations with numerous tables and complex formulas across a large number of time steps, the evaluation's performace could get very slow. Incorporating techniques such as incremental recomputation, parallel evaluation, or just-in-time compilation could significantly enhance performance for larger models.
+		In complex simulations with numerous tables and complex formulas across a large number of time steps, the evaluation's performance could get very slow. Incorporating techniques such as incremental re-computation, parallel evaluation, or just-in-time compilation could significantly enhance performance for larger models.
 
 		- **Improved Error Reporting** \
 		A step-through debugger or a visual dependency inspector could help users understand how values evolve over time. Additionally, adding built-in support for richer error messages and reporting would help users debug complex simulations with greater ease.
 
-		- **Composable Visualisation** \
-		We are currently working on integrating composable visualisation support, which will enable users to compose custom graphs using the formula language directly in cells, which would provide the users with greater flexibility for custom visualisations.
+		- **Composable Visualization** \
+		We are currently working on integrating composable visualization support, which will enable users to compose custom graphs using the formula language directly in cells, which would provide the users with greater flexibility for custom visualizations.
 
 		- **User-defined Functions** \
 		Introducing custom reusable functions with parameters would help decluttering complex formulas and make the experience with more complex simulations much more comfortable.
