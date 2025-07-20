@@ -50,8 +50,9 @@ import { Logo } from "@/components/logo";
 		9. [Limitations & Future Improvements](#limitations-and-future-improvements)
 			- [Limitations](#limitations)
 			- [Future Improvements](#future-improvements)
-		10. [Conclusion](#conclusion)
-		11. [Related Work](#related-work)
+		10. [Related work](#related-work)
+		11. [Conclusion](#conclusion)
+		12. [References](#references)
 
 		<H2WithID id="abstract">Abstract</H2WithID>
 
@@ -324,13 +325,25 @@ import { Logo } from "@/components/logo";
 		- **User-defined Functions** \
 		Introducing custom reusable functions with parameters would help decluttering complex formulas and make the experience with more complex simulations much more comfortable.
 
+		<H2WithID id="related-work">Related Work</H2WithID>
+
+		Numerous efforts have been made to extend the traditional spreadsheet paradigm by enhancing its expressive power. In this section, we highlight several of these works and their key contributions. The complete list of references can be found in [this section](#references).
+
+		There have been attempts to integrate continuous streaming data, such as data from web services, to spreadsheets ([[2]](https://dl.acm.org/doi/pdf/10.1145/2702123.2702587), [[3]](https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf)), enabling the development of analytics applications without requiring formal programming experience. Gneiss [[1]](https://dl.acm.org/doi/10.1145/2642918.2647371) has built upon this idea by presenting a dynamic website builder that utilizes spreadsheets, directly mapping cells with streaming data to GUI elements.
+
+		The pioneer work on Forms/3 [[4]](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F) shows that it is possible to treat spreadsheets as an end-user programming system, introducing a declarative way of programming together with the notion of built-in time into the spreadsheet model.
+
+		Mito [[6](https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-)]  takes a different approach by bridging spreadsheets with Python, enhancing spreadsheet expressiveness while simultaneously providing a pathway for users, especially those familiar with tools like Microsoft Excel but lacking formal programming experience, to learn Python.
+		
+		Last but not least, [[11](https://dl.acm.org/doi/pdf/10.1145/2240236.2240260)] proposes extending spreadsheets with user-defined, reusable functions, with an objective to bring more expressive power of modern programming languages to the spreadsheet paradigm.
+
 		<H2WithID id="conclusion">Conclusion</H2WithID>
 
 		ABM Sheets demonstrates that it is both possible and practical to extend the spreadsheet paradigm with native support for discrete time, opening new possibilities of constructing dynamic, time-aware models without abandoning the intuitiveness and transparency of traditional spreadsheets. By allowing cells to reference their own prior states and by embedding time as a first-class concept, our approach increases the expressive power and unlocks a wide range of applications, from agent-based simulations to physical systems and economic models, that are otherwise difficult to implement in conventional spreadsheet tools.
 
 		Through case studies and user feedback, we have shown how this time-aware extension lowers the technical barriers for simulation modeling in spreadsheets, offering a powerful and accessible environment for experimentation, analysis and learning. We see this work as a step toward reimagining spreadsheets not just as static data tools, but as expressive environments for modeling complex, time-aware systems.
 
-		<H2WithID id="related-work">Related Work</H2WithID>
+		<H2WithID id="references">References</H2WithID>
 
 		1. Chang, K. S. P., & Myers, B. A. (2014, October). Creating interactive web data applications with spreadsheets. In Proceedings of the 27th annual ACM symposium on User interface software and technology (pp. 87-96)
 			- [https://dl.acm.org/doi/10.1145/2642918.2647371](https://dl.acm.org/doi/10.1145/2642918.2647371)
