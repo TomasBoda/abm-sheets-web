@@ -1,4 +1,3 @@
-
 # NetLogo Models
 
 # 1. ✅ Bidding Market

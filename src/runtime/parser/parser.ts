@@ -1,9 +1,21 @@
 import { Utils } from "@/utils/utils";
 import { Lexer, Token, TokenType } from "../lexer";
-import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "./model";
+import {
+    BinaryExpression,
+    BooleanLiteral,
+    CallExpression,
+    CellLiteral,
+    CellRangeLiteral,
+    Expression,
+    Identifier,
+    NodeType,
+    NumericLiteral,
+    RelationalExpression,
+    StringLiteral,
+    UnaryExpression,
+} from "./model";
 
 export class Parser {
-
     private tokens: Token[] = [];
 
     public parse(formula: string): Expression {
@@ -18,7 +30,11 @@ export class Parser {
     private parseRelationalExpression(): Expression {
         let left: Expression = this.parseAdditiveExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.RelOp && ["==", "!=", ">", ">=", "<", "<="].includes(this.at().value)) {
+        while (
+            this.at().type !== TokenType.EOF &&
+            this.at().type === TokenType.RelOp &&
+            ["==", "!=", ">", ">=", "<", "<="].includes(this.at().value)
+        ) {
             const operator = this.next().value;
             const right = this.parseAdditiveExpression();
 
@@ -36,7 +52,11 @@ export class Parser {
     private parseAdditiveExpression(): Expression {
         let left: Expression = this.parseMultiplicativeExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && ["+", "-"].includes(this.at().value)) {
+        while (
+            this.at().type !== TokenType.EOF &&
+            this.at().type === TokenType.BinOp &&
+            ["+", "-"].includes(this.at().value)
+        ) {
             const operator = this.next().value;
             const right = this.parseMultiplicativeExpression();
 
@@ -54,7 +74,11 @@ export class Parser {
     private parseMultiplicativeExpression(): Expression {
         let left: Expression = this.parseCallExpression();
 
-        while (this.at().type !== TokenType.EOF && this.at().type === TokenType.BinOp && ["*", "/", "%"].includes(this.at().value)) {
+        while (
+            this.at().type !== TokenType.EOF &&
+            this.at().type === TokenType.BinOp &&
+            ["*", "/", "%"].includes(this.at().value)
+        ) {
             const operator = this.next().value;
             const right = this.parseCallExpression();
 
@@ -72,7 +96,10 @@ export class Parser {
     private parseCallExpression(): Expression {
         const result = this.parseCellRangeExpression();
 
-        if (result.type === NodeType.Identifier && this.at().type === TokenType.OpenParen) {
+        if (
+            result.type === NodeType.Identifier &&
+            this.at().type === TokenType.OpenParen
+        ) {
             this.expect(TokenType.OpenParen);
 
             const args: Expression[] = [];
@@ -131,18 +158,26 @@ export class Parser {
             case TokenType.OpenParen:
                 return this.parseParenthesisedExpression();
             default:
-                throw new Error(`Unknown token '${TokenType[this.at().type]}' in parsePrimaryExpression()`);
+                throw new Error(
+                    `Unknown token '${TokenType[this.at().type]}' in parsePrimaryExpression()`,
+                );
         }
     }
 
     private parseNumericLiteral(): Expression {
         const value = this.expect(TokenType.Number).value;
-        return { type: NodeType.NumericLiteral, value: parseFloat(value) } as NumericLiteral;
+        return {
+            type: NodeType.NumericLiteral,
+            value: parseFloat(value),
+        } as NumericLiteral;
     }
 
     private parseBooleanLiteral(): Expression {
         const value = this.expect(TokenType.Boolean).value;
-        return { type: NodeType.BooleanLiteral, value: value === "true" } as BooleanLiteral;
+        return {
+            type: NodeType.BooleanLiteral,
+            value: value === "true",
+        } as BooleanLiteral;
     }
 
     private parseStringLiteral(): Expression {
@@ -185,7 +220,11 @@ export class Parser {
 
                 const value = this.parseExpression();
 
-                return { type: NodeType.UnaryExpression, value, operator } as UnaryExpression;
+                return {
+                    type: NodeType.UnaryExpression,
+                    value,
+                    operator,
+                } as UnaryExpression;
             }
             case TokenType.BinOp: {
                 const operator = this.expect(TokenType.BinOp).value;
@@ -196,7 +235,11 @@ export class Parser {
 
                 const value = this.parseExpression();
 
-                return { type: NodeType.UnaryExpression, value, operator } as UnaryExpression;
+                return {
+                    type: NodeType.UnaryExpression,
+                    value,
+                    operator,
+                } as UnaryExpression;
             }
         }
     }

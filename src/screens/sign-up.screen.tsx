@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/button/button.component";
 import { Href } from "@/components/href";
@@ -9,7 +9,6 @@ import { useState } from "react";
 import styled from "styled-components";
 
 export const SignUpScreen = () => {
-
     const router = useRouter();
 
     const [email, setEmail] = useState<string>("");
@@ -35,7 +34,7 @@ export const SignUpScreen = () => {
         }
 
         router.push("/spreadsheet");
-    }
+    };
 
     return (
         <Container>
@@ -46,15 +45,11 @@ export const SignUpScreen = () => {
             <Spacing />
 
             <Card>
-                <H1>
-                    Get started
-                </H1>
+                <H1>Get started</H1>
 
                 <Spacing />
 
-                <P1>
-                    Create a free account.
-                </P1>
+                <P1>Create a free account.</P1>
 
                 <Spacing />
                 <Spacing />
@@ -62,7 +57,7 @@ export const SignUpScreen = () => {
                 <TextField
                     type="text"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter e-mail"
                 />
 
@@ -71,14 +66,19 @@ export const SignUpScreen = () => {
                 <TextField
                     type="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                 />
 
                 <Spacing />
                 <Spacing />
 
-                <Button variant="primary" stretch onClick={signUp} loading={loading}>
+                <Button
+                    variant="primary"
+                    stretch
+                    onClick={signUp}
+                    loading={loading}
+                >
                     Sign up
                 </Button>
 
@@ -86,12 +86,15 @@ export const SignUpScreen = () => {
                 <Spacing />
 
                 <P1>
-                    Already have an account? <Href href="/auth/sign-in"><Link>Sign in</Link></Href>
+                    Already have an account?{" "}
+                    <Href href="/auth/sign-in">
+                        <Link>Sign in</Link>
+                    </Href>
                 </P1>
             </Card>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;

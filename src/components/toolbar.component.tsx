@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ColorPicker } from "@/components/color-picker/color-picker.component";
 import { ProjectsSidebar } from "@/components/projects-sidebar";
@@ -14,24 +14,34 @@ import { useSelection } from "@/hooks/useSelection.hook";
 import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 import { useStepper } from "@/hooks/useStepper";
 import { SaveProjectModal } from "@/modals/save-project.modal";
+import { Constants } from "@/utils/constants";
 import { Logger } from "@/utils/logger";
 import { createClientClient } from "@/utils/supabase/client";
 import { Utils } from "@/utils/utils";
 import { User } from "@supabase/supabase-js";
-import { Ban, Bold, ChevronLeft, ChevronRight, Download, Italic, Play, RotateCcw, Square, Upload } from "lucide-react";
+import {
+    Ban,
+    Bold,
+    ChevronLeft,
+    ChevronRight,
+    Download,
+    Italic,
+    Play,
+    RotateCcw,
+    Square,
+    Upload,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { GraphSidebar } from "./graph-sidebar";
 import { useSidebar } from "./sidebar.provider";
-import { Constants } from "@/utils/constants";
 
 interface ToolbarProps {
     user: User;
 }
 
 export const Toolbar = ({ user }: ToolbarProps) => {
-
     const router = useRouter();
     const spreadsheet = useSpreadsheet();
     const { toggle } = useSidebar();
@@ -41,41 +51,45 @@ export const Toolbar = ({ user }: ToolbarProps) => {
         showModal(({ hideModal }) => (
             <SaveProjectModal hideModal={hideModal} />
         ));
-    }
+    };
 
     const clearAll = () => {
         spreadsheet.clear();
         router.replace("/spreadsheet");
-    }
+    };
 
     const openGraphSidebar = () => {
         toggle(<GraphSidebar />);
-    }
+    };
 
     const openProjectsSidebar = () => {
         toggle(<ProjectsSidebar />);
-    }
-    
+    };
+
     const tabs: Tab[] = [
         {
             label: "Home",
-            component: <HomeTab />
+            component: <HomeTab />,
         },
         {
             label: "Simulation",
-            component: <SimulationTab />
+            component: <SimulationTab />,
         },
         {
             label: "Graph",
             onClick: openGraphSidebar,
         },
-        ...(user ? [{
-            label: "Projects",
-            onClick: openProjectsSidebar
-        }] : []),
+        ...(user
+            ? [
+                  {
+                      label: "Projects",
+                      onClick: openProjectsSidebar,
+                  },
+              ]
+            : []),
         {
             label: "Import & Export",
-            component: <ImportExportTab />
+            component: <ImportExportTab />,
         },
         /* {
             label: "Advanced",
@@ -85,13 +99,13 @@ export const Toolbar = ({ user }: ToolbarProps) => {
 
     const signIn = () => {
         router.push("/auth/sign-in");
-    }
+    };
 
     const signOut = async () => {
         const supabase = createClientClient();
         await supabase.auth.signOut();
         router.push("/auth/sign-in");
-    }
+    };
 
     return (
         <TabsContainer>
@@ -100,42 +114,39 @@ export const Toolbar = ({ user }: ToolbarProps) => {
                 rightContent={
                     <RightContent>
                         {user && (
-                            <Button onClick={saveProject}>
-                                Save project
-                            </Button>
+                            <Button onClick={saveProject}>Save project</Button>
                         )}
 
-                        <Button onClick={clearAll}>
-                            Clear
-                        </Button>
+                        <Button onClick={clearAll}>Clear</Button>
 
                         {user ? (
-                            <Button onClick={signOut}>
-                                Sign out
-                            </Button>
+                            <Button onClick={signOut}>Sign out</Button>
                         ) : (
-                            <Button onClick={signIn}>
-                                Sign in
-                            </Button>
+                            <Button onClick={signIn}>Sign in</Button>
                         )}
 
-                        <GithubLogoHref href="https://github.com/tomasBoda/abm-sheets-web" target="_blank">
+                        <GithubLogoHref
+                            href="https://github.com/tomasBoda/abm-sheets-web"
+                            target="_blank"
+                        >
                             <GithubLogo src="/logo-github.svg" />
                         </GithubLogoHref>
                     </RightContent>
                 }
             />
         </TabsContainer>
-    )
-}
+    );
+};
 
 const HomeTab = () => {
-
     const { selectedCells } = useSelection();
     const {
-        cellColors, setCellColors,
-        cellBolds, setCellBolds,
-        cellItalics, setCellItalics,
+        cellColors,
+        setCellColors,
+        cellBolds,
+        setCellBolds,
+        cellItalics,
+        setCellItalics,
     } = useCellStyle();
 
     const setCellColor = (color: string) => {
@@ -150,7 +161,7 @@ const HomeTab = () => {
         }
 
         setCellColors(newCellColors);
-    }
+    };
 
     const setCellBold = () => {
         const newCellBolds = new Map(cellBolds);
@@ -160,7 +171,7 @@ const HomeTab = () => {
         }
 
         setCellBolds(newCellBolds);
-    }
+    };
 
     const setCellItalic = () => {
         const newCellItalics = new Map(cellItalics);
@@ -170,7 +181,7 @@ const HomeTab = () => {
         }
 
         setCellItalics(newCellItalics);
-    }
+    };
 
     const setCellNormal = () => {
         const newCellBolds = new Map(cellBolds);
@@ -183,7 +194,7 @@ const HomeTab = () => {
 
         setCellBolds(newCellBolds);
         setCellItalics(newCellItalics);
-    }
+    };
 
     const clear = () => {
         const newCellColors = new Map(cellColors);
@@ -203,7 +214,7 @@ const HomeTab = () => {
             newCellItalics.delete(cellId);
         }
         setCellItalics(newCellItalics);
-    }
+    };
 
     return (
         <TabContainer>
@@ -224,7 +235,7 @@ const HomeTab = () => {
 
             <Divider />
 
-            <ColorPicker onChange={color => setCellColor(color)} />
+            <ColorPicker onChange={(color) => setCellColor(color)} />
 
             <Divider />
 
@@ -233,55 +244,56 @@ const HomeTab = () => {
                 Clear
             </Button>
         </TabContainer>
-    )
-}
+    );
+};
 
 const SimulationTab = () => {
-
     const { step, setStep, steps, setSteps, reset } = useStepper();
 
     const [delay, setDelay] = useState<number>(100);
     const [isPlaying, setIsPlaying] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const [stepFieldValue, setStepFieldValue] = useState<number>(Constants.DEFAULT_STEP + 1);
+    const [stepFieldValue, setStepFieldValue] = useState<number>(
+        Constants.DEFAULT_STEP + 1,
+    );
 
     const prevStep = () => {
-        setStep(prev => Math.max(0, prev - 1));
+        setStep((prev) => Math.max(0, prev - 1));
         Logger.log("click-step", "prev");
-    }
+    };
 
     const nextStep = () => {
-        setStep(prev => Math.min(prev + 1, steps - 1));
+        setStep((prev) => Math.min(prev + 1, steps - 1));
         Logger.log("click-step", "next");
-    }
+    };
 
     const onResetClick = () => {
         reset();
         Logger.log("click-reset", "");
-    }
+    };
 
     const onPlayClick = () => {
         setStep(0);
         setIsPlaying(true);
         Logger.log("click-play", "");
-    }
+    };
 
     const onStopClick = () => {
         setIsPlaying(false);
         Logger.log("click-stop", "");
-    }
+    };
 
     useEffect(() => {
         if (isPlaying) {
             intervalRef.current = setInterval(() => {
-                setStep(prev => Math.min(prev + 1, steps - 1));
+                setStep((prev) => Math.min(prev + 1, steps - 1));
             }, delay);
         } else {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
             }
         }
-    
+
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
@@ -298,35 +310,33 @@ const SimulationTab = () => {
 
     useEffect(() => {
         setStepFieldValue(step + 1);
-    }, [step])
+    }, [step]);
 
     const handleStepsInput = (value: string) => {
         if (/^[0-9]*$/.test(value)) {
             setStepFieldValue(Number(value));
         }
-    }
+    };
 
     const confirmStep = () => {
         const newStep = Number(stepFieldValue);
 
         if (newStep === 0) {
-            setStep(0)
-            setStepFieldValue(1)
-        }
-        else if (newStep > steps) {
+            setStep(0);
+            setStepFieldValue(1);
+        } else if (newStep > steps) {
             setStep(steps - 1);
             setStepFieldValue(steps);
+        } else {
+            setStep(newStep - 1);
         }
-        else {
-            setStep(newStep - 1)
-        }   
-    }
+    };
 
     const onHandleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             confirmStep();
         }
-    }
+    };
 
     return (
         <TabContainer>
@@ -352,7 +362,9 @@ const SimulationTab = () => {
 
             <TextFieldSmall
                 value={steps.toString()}
-                onChange={value => value === "" ? setSteps(0) : setSteps(parseInt(value))}
+                onChange={(value) =>
+                    value === "" ? setSteps(0) : setSteps(parseInt(value))
+                }
                 placeholder="Steps"
             />
 
@@ -367,7 +379,9 @@ const SimulationTab = () => {
 
             <TextFieldSmall
                 value={delay.toString()}
-                onChange={value => value === "" ? setDelay(0) : setDelay(parseInt(value))}
+                onChange={(value) =>
+                    value === "" ? setDelay(0) : setDelay(parseInt(value))
+                }
                 placeholder="Delay"
             />
 
@@ -385,11 +399,10 @@ const SimulationTab = () => {
                 </Button>
             )}
         </TabContainer>
-    )
-}
+    );
+};
 
 const ImportExportTab = () => {
-
     const { setCellColors, setCellBolds, setCellItalics } = useCellStyle();
     const { usedCells, setUsedCells, setGraphCells } = useCellInfo();
     const { dataHistory, setDataHistory } = useHistory();
@@ -408,8 +421,15 @@ const ImportExportTab = () => {
                 if (formula.trim() === "" && value.trim() === "") {
                     continue;
                 }
-                
-                object[cellId] = { formula, value, color, font, isInGraph, history };
+
+                object[cellId] = {
+                    formula,
+                    value,
+                    color,
+                    font,
+                    isInGraph,
+                    history,
+                };
             }
         }
 
@@ -427,11 +447,11 @@ const ImportExportTab = () => {
 
         Utils.download(object, filename);
         setFilename("");
-    }
+    };
 
     const onFileInputClick = () => {
         document.getElementById("fileInput").click();
-    }
+    };
 
     const addUsedCells = (cellIds: CellId[]) => {
         const newUsedCells = new Set<CellId>(usedCells);
@@ -441,7 +461,7 @@ const ImportExportTab = () => {
         }
 
         setUsedCells(newUsedCells);
-    }
+    };
 
     const importAndLoad = (importedData: any) => {
         spreadsheet.clear();
@@ -452,7 +472,6 @@ const ImportExportTab = () => {
         const newCellItalics = new Map<CellId, string>();
         const newGraphCells = new Set<CellId>();
         const newDataHistory = new Map(dataHistory);
-        
 
         for (const [cellId, cellData] of Object.entries(importedData)) {
             const { formula, value, color, font, isInGraph } = cellData as any;
@@ -472,8 +491,7 @@ const ImportExportTab = () => {
                 for (let i = 0; i < font.length; i++) {
                     if (font[i] === "bold") {
                         newCellBolds.set(cellId as CellId, "bold");
-                    }
-                    else if (font[i] === "italic") {
+                    } else if (font[i] === "italic") {
                         newCellItalics.set(cellId as CellId, "italic");
                     }
                 }
@@ -490,7 +508,10 @@ const ImportExportTab = () => {
             }
 
             if ((cellData as any).dataHistory) {
-                newDataHistory.set(cellId as CellId, (cellData as any).dataHistory);
+                newDataHistory.set(
+                    cellId as CellId,
+                    (cellData as any).dataHistory,
+                );
             }
         }
 
@@ -500,10 +521,12 @@ const ImportExportTab = () => {
         setCellItalics(newCellItalics);
         setGraphCells(newGraphCells);
         setDataHistory(newDataHistory);
-    }
+    };
 
     useEffect(() => {
-        const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+        const fileInput = document.getElementById(
+            "fileInput",
+        ) as HTMLInputElement;
 
         fileInput.addEventListener("change", () => {
             const file = fileInput.files[0];
@@ -513,7 +536,7 @@ const ImportExportTab = () => {
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 const jsonContent = JSON.parse(e.target.result as string);
                 importAndLoad(jsonContent);
             };
@@ -528,7 +551,13 @@ const ImportExportTab = () => {
                 Import
             </Button>
 
-            <input type="file" id="fileInput" name="input-file" accept=".json" style={{ display: "none" }} />
+            <input
+                type="file"
+                id="fileInput"
+                name="input-file"
+                accept=".json"
+                style={{ display: "none" }}
+            />
 
             <Divider />
 
@@ -543,84 +572,8 @@ const ImportExportTab = () => {
                 Export
             </Button>
         </TabContainer>
-    )
-}
-
-const AdvancedTab = () => {
-
-    const { selectedCells } = useSelection();
-    const { dataHistory, setDataHistory } = useHistory();
-
-    const [column, setColumn] = useState<string>("");
-
-    const selectedCell = useMemo(() => Array.from(selectedCells)[0], [selectedCells]);
-
-    const onFileInputClick = () => {
-        document.getElementById("fileInput").click();
-    }
-
-    const importAndLoad = (content: string) => {
-        const header = content.split("\n")[0];
-        const columns = header.split(",");
-
-        const index = columns.findIndex(value => value === column);
-
-        const rows = content.split("\n").slice(1);
-        const data: string[] = [];
-
-        for (const row of rows) {
-            const values = row.split(",");
-            data.push(values[index]);
-        }
-
-        const newHistory = new Map<CellId, string[]>(dataHistory);
-        newHistory.set(selectedCell, data);
-        setDataHistory(newHistory);
-    }
-
-    const onFileInput = useCallback(() => {
-        const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-        const file = fileInput.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const csvContent = e.target.result as string;
-            importAndLoad(csvContent);
-            fileInput.value = "";
-        };
-        reader.readAsText(file);
-    }, [column]);
-
-    useEffect(() => {
-        const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-
-        fileInput.addEventListener("change", onFileInput);
-
-        return () => {
-            fileInput.removeEventListener("change", onFileInput);
-        }
-    }, [column, onFileInput]);
-
-    return (
-        <TabContainer>
-            <TextFieldSmall
-                value={column}
-                onChange={setColumn}
-                placeholder="Enter column name"
-            />
-
-            <Button onClick={onFileInputClick}>
-                Add data to {selectedCell}
-            </Button>
-
-            <input type="file" id="fileInput" name="input-file" accept=".csv" style={{ display: "none" }} />
-        </TabContainer>
-    )
-}
+    );
+};
 
 const TabsContainer = styled.div`
     width: 100%;
@@ -678,9 +631,7 @@ const Stepper = styled.div`
     gap: 10px;
 `;
 
-const GithubLogoHref = styled.a`
-
-`;
+const GithubLogoHref = styled.a``;
 
 const GithubLogo = styled.img`
     width: 22px;

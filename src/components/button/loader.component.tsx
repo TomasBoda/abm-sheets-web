@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-"use client"
+"use client";
 
 import styled, { keyframes } from "styled-components";
 

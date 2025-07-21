@@ -1,15 +1,14 @@
-"use client"
+"use client";
 
 import { useProjects } from "@/hooks/useProjects";
 import { useSpreadsheet } from "@/hooks/useSpreadsheet";
+import { createClientClient } from "@/utils/supabase/client";
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 import { useSidebar } from "./sidebar.provider";
-import { createClientClient } from "@/utils/supabase/client";
 
 export const ProjectsSidebar = () => {
-
     const { toggle } = useSidebar();
     const { projects, loadProjects } = useProjects();
     const spreadsheet = useSpreadsheet();
@@ -17,31 +16,28 @@ export const ProjectsSidebar = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const openProject = (id: string, data: string) => {
+    const openProject = (id: string) => {
         const params = new URLSearchParams(searchParams);
         params.set("projectId", id);
 
         router.replace(`?${params.toString()}`);
 
         spreadsheet.clear();
-    }
+    };
 
     const deleteProject = async (event: any, id: string) => {
         event.stopPropagation();
 
         const supabase = createClientClient();
 
-        const request = await supabase
-            .from("projects")
-            .delete()
-            .eq("id", id);
+        const request = await supabase.from("projects").delete().eq("id", id);
 
         if (request.error) {
             return alert("Error: cannot delete project");
         }
 
         loadProjects();
-    }
+    };
 
     return (
         <Container>
@@ -57,9 +53,7 @@ export const ProjectsSidebar = () => {
 
             <Spacing />
 
-            <P1>
-                Browse through your projects
-            </P1>
+            <P1>Browse through your projects</P1>
 
             <Spacing />
             <Spacing />
@@ -68,17 +62,35 @@ export const ProjectsSidebar = () => {
             {projects.length > 0 ? (
                 <ProjectList>
                     <ProjectWrapper>
-                        {projects.map(({ id, title, text, data }) => (
-                            <Project onClick={() => openProject(id, data)} $selected={id === searchParams.get("projectId")} key={id}>
-                                <Title $selected={id === searchParams.get("projectId")}>{title}</Title>
-                                <Text $selected={id === searchParams.get("projectId")}>{text}</Text>
+                        {projects.map(({ id, title, text }) => (
+                            <Project
+                                onClick={() => openProject(id)}
+                                $selected={id === searchParams.get("projectId")}
+                                key={id}
+                            >
+                                <Title
+                                    $selected={
+                                        id === searchParams.get("projectId")
+                                    }
+                                >
+                                    {title}
+                                </Title>
+                                <Text
+                                    $selected={
+                                        id === searchParams.get("projectId")
+                                    }
+                                >
+                                    {text}
+                                </Text>
 
                                 <Actions>
-                                    <Button>
-                                        Open
-                                    </Button>
+                                    <Button>Open</Button>
 
-                                    <Button onClick={event => deleteProject(event, id)}>
+                                    <Button
+                                        onClick={(event) =>
+                                            deleteProject(event, id)
+                                        }
+                                    >
                                         Delete
                                     </Button>
                                 </Actions>
@@ -87,13 +99,11 @@ export const ProjectsSidebar = () => {
                     </ProjectWrapper>
                 </ProjectList>
             ) : (
-                <P1Panel>
-                    No projects
-                </P1Panel>
+                <P1Panel>No projects</P1Panel>
             )}
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     flex: 1;
@@ -143,7 +153,7 @@ const Spacing = styled.div`
 const ProjectList = styled.div`
     width: 100%;
     height: 100%;
-    
+
     overflow: auto;
 `;
 
@@ -155,7 +165,7 @@ const ProjectWrapper = styled.div`
     gap: 10px;
 `;
 
-const Project = styled.div<{ $selected: boolean; }>`
+const Project = styled.div<{ $selected: boolean }>`
     width: 100%;
 
     display: flex;
@@ -184,7 +194,7 @@ const Project = styled.div<{ $selected: boolean; }>`
     }
 `;
 
-const Title = styled.div<{ $selected: boolean; }>`
+const Title = styled.div<{ $selected: boolean }>`
     color: var(--text-1);
     font-size: 14px;
     font-weight: 600;
@@ -193,7 +203,7 @@ const Title = styled.div<{ $selected: boolean; }>`
     color: ${({ $selected }) => $selected && "white"};
 `;
 
-const Text = styled.div<{ $selected: boolean; }>`
+const Text = styled.div<{ $selected: boolean }>`
     color: var(--text-);
     font-size: 12px;
     font-weight: 300;

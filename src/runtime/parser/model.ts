@@ -1,4 +1,3 @@
-
 export enum NodeType {
     NumericLiteral,
     BooleanLiteral,
@@ -39,7 +38,7 @@ export interface Identifier extends Expression {
 type CellAxis = {
     index: number;
     fixed: boolean;
-}
+};
 
 export interface CellLiteral extends Expression {
     type: NodeType.CellLiteral;

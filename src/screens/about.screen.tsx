@@ -1,12 +1,11 @@
-"use client"
+"use client";
 
 import styled from "styled-components";
 import AboutDocument from "./about.document.mdx";
 
 export const AboutScreen = () => {
-
     return <AboutDocument />;
-}
+};
 
 export const Container = styled.div`
     width: 100%;
@@ -40,7 +39,7 @@ export const Image = styled.img`
 
 export const Highlight = styled.div`
     display: inline-block;
-    
+
     padding: 25px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -53,7 +52,7 @@ export const Highlight = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-export const H2WithID = styled.h2<{ $border?: boolean; }>`
+export const H2WithID = styled.h2<{ $border?: boolean }>`
     color: var(--text-1);
     font-size: 22px;
     font-weight: 700;
@@ -62,11 +61,10 @@ export const H2WithID = styled.h2<{ $border?: boolean; }>`
 
     ${({ $border = true }) =>
         $border &&
-            `
+        `
                 padding-bottom: 10px;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-            `
-    }
+            `}
 `;
 
 export const H3WithID = styled.h3`

@@ -7,16 +7,11 @@ interface Props {
 }
 
 export const GraphModal = ({ values }: Props) => {
-
     return (
         <Container>
-            <Heading>
-                Graph
-            </Heading>
+            <Heading>Graph</Heading>
 
-            <Text>
-                Display a graph of a certain cell value history.
-            </Text>
+            <Text>Display a graph of a certain cell value history.</Text>
 
             <Graph>
                 <LineGraph
@@ -27,8 +22,8 @@ export const GraphModal = ({ values }: Props) => {
                 />
             </Graph>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;

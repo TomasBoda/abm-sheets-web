@@ -9,21 +9,27 @@ interface Props {
     disabled?: boolean;
 }
 
-export const TextField = ({ id, value, onChange, onKeyDown, placeholder = "Enter text", disabled = false }: Props) => {
-
+export const TextField = ({
+    id,
+    value,
+    onChange,
+    onKeyDown,
+    placeholder = "Enter text",
+    disabled = false,
+}: Props) => {
     return (
         <Input
             id={id}
             type="text"
             value={value}
-            onChange={e => onChange?.(e.target.value)}
+            onChange={(e) => onChange?.(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={placeholder}
             disabled={disabled}
             autoComplete="off"
         />
-    )
-}
+    );
+};
 
 const Input = styled.input`
     width: 100%;

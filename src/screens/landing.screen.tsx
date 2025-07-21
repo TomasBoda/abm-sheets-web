@@ -1,11 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/button/button.component"
-import { Logo } from "@/components/logo"
-import styled from "styled-components"
+import { Button } from "@/components/button/button.component";
+import { Logo } from "@/components/logo";
+import styled from "styled-components";
 
 export const LandingScreen = () => {
-
     return (
         <Container>
             <Content>
@@ -22,12 +21,13 @@ export const LandingScreen = () => {
                         <br />
                         with built-in discrete time<Green>.</Green>
                     </H1>
-                    
+
                     <Spacing />
                     <Spacing />
 
                     <P1>
-                        A powerful spreadsheet interface with built-in discrete time
+                        A powerful spreadsheet interface with built-in discrete
+                        time
                         <br />
                         for modeling complex, multi-dimensional simulations.
                     </P1>
@@ -50,8 +50,8 @@ export const LandingScreen = () => {
                 </View>
             </Content>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100vw;

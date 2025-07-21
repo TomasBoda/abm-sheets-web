@@ -1,4 +1,3 @@
-
 export type SpreadsheetCell = {
     formula: string;
     value: string;
@@ -12,6 +11,6 @@ export type SpreadsheetData = SpreadsheetRow[];
 
 export type CellId = `${string}${number}`;
 
-export type CellCoords = { ri: number; ci: number; };
+export type CellCoords = { ri: number; ci: number };
 
 export type History = Map<CellId, string[]>;

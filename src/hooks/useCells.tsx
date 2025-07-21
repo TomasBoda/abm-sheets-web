@@ -1,7 +1,14 @@
-"use client"
+"use client";
 
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from "react";
 
 type CellInfoContextType = {
     usedCells: Set<CellId>;
@@ -15,11 +22,12 @@ type CellInfoContextType = {
     xGraphCell?: CellId;
     setXGraphCell: Dispatch<SetStateAction<CellId | undefined>>;
 };
-  
-const CellInfoContext = createContext<CellInfoContextType | undefined>(undefined);
 
-export const CellInfoProvider = ({ children }: { children: ReactNode; }) => {
-  
+const CellInfoContext = createContext<CellInfoContextType | undefined>(
+    undefined,
+);
+
+export const CellInfoProvider = ({ children }: { children: ReactNode }) => {
     const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set());
     const [graphCells, setGraphCells] = useState<Set<CellId>>(new Set());
     const [xGraphCell, setXGraphCell] = useState<CellId | undefined>(undefined);
@@ -28,13 +36,13 @@ export const CellInfoProvider = ({ children }: { children: ReactNode; }) => {
         const newGraphCells = new Set(graphCells);
         newGraphCells.add(cellId);
         setGraphCells(newGraphCells);
-    }
+    };
 
     const removeGraphCell = (cellId: CellId) => {
         const newGraphCells = new Set(graphCells);
         newGraphCells.delete(cellId);
         setGraphCells(newGraphCells);
-    }
+    };
 
     const values = {
         usedCells,
@@ -45,7 +53,7 @@ export const CellInfoProvider = ({ children }: { children: ReactNode; }) => {
         removeGraphCell,
         xGraphCell,
         setXGraphCell,
-    }
+    };
 
     return (
         <CellInfoContext.Provider value={values}>
@@ -58,8 +66,8 @@ export const useCellInfo = () => {
     const context = useContext(CellInfoContext);
 
     if (!context) {
-      throw new Error("useCellInfo must be used within a CellInfoProvider");
+        throw new Error("useCellInfo must be used within a CellInfoProvider");
     }
-    
+
     return context;
 };

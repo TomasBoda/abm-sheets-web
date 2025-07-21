@@ -1,9 +1,7 @@
-
 import { Utils } from "@/utils/utils";
 import "@testing-library/jest-dom";
 
 describe("Utils", () => {
-
     it("should return correct default and primary formulas", () => {
         expect(Utils.getFormula("=10")).toEqual({
             primaryFormula: "10",
@@ -12,7 +10,7 @@ describe("Utils", () => {
 
         expect(Utils.getFormula("=10=A1+1")).toEqual({
             primaryFormula: "A1+1",
-            defaultFormula: "10"
+            defaultFormula: "10",
         });
     });
 
@@ -49,7 +47,15 @@ describe("Utils", () => {
     });
 
     it("should return correct cell IDs from formula", () => {
-        expect(Utils.getCellIdsFromFormula("= A1 + B2 * C3")).toEqual(["A1", "B2", "C3"])
-        expect(Utils.getCellIdsFromFormula("= $A$1 + $B2 * C$3")).toEqual(["A1", "B2", "C3"])
+        expect(Utils.getCellIdsFromFormula("= A1 + B2 * C3")).toEqual([
+            "A1",
+            "B2",
+            "C3",
+        ]);
+        expect(Utils.getCellIdsFromFormula("= $A$1 + $B2 * C$3")).toEqual([
+            "A1",
+            "B2",
+            "C3",
+        ]);
     });
 });

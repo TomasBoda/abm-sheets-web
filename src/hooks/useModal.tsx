@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ReactNode, createContext, useContext, useState } from "react";
 import styled, { keyframes } from "styled-components";
@@ -7,15 +7,14 @@ type ModalContextType = {
     showModal: (content: (props: ModalControls) => ReactNode) => void;
     hideModal: () => void;
 };
-  
+
 type ModalControls = {
     hideModal: ModalContextType["hideModal"];
 };
-  
+
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-    
     const [modals, setModals] = useState<ReactNode[]>([]);
 
     const showModal = (content: (props: ModalControls) => ReactNode) => {
@@ -25,7 +24,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const hideModal = () => {
         setModals((prev) => prev.slice(0, -1));
     };
-  
+
     return (
         <ModalContext.Provider value={{ showModal, hideModal }}>
             {children}
@@ -46,7 +45,7 @@ export const useModal = () => {
     if (!context) {
         throw new Error("useModal must be used within a ModalProvider");
     }
-    
+
     return context;
 };
 

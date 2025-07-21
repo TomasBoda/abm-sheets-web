@@ -5,28 +5,44 @@ import { Parser } from "./parser";
 import { Runtime } from "./runtime";
 
 export class Evaluator {
-
-    private evaluateCell(cellId: CellId, step: number, history: History, dataHistory: History): string | undefined {
+    private evaluateCell(
+        cellId: CellId,
+        step: number,
+        history: History,
+        dataHistory: History,
+    ): string | undefined {
         const { ri, ci } = Utils.cellIdToCoords(cellId);
         const cell = data[ri][ci];
 
         const formulaWithoutFixes = cell.formula.replaceAll("$", "");
-        
-        const { defaultFormula, primaryFormula } = Utils.getFormula(formulaWithoutFixes);
-    
+
+        const { defaultFormula, primaryFormula } =
+            Utils.getFormula(formulaWithoutFixes);
+
         if (!defaultFormula && !primaryFormula) {
             return undefined;
         }
 
-        const formula = step === 0 ? (defaultFormula ?? primaryFormula) : primaryFormula;
+        const formula =
+            step === 0 ? (defaultFormula ?? primaryFormula) : primaryFormula;
 
         return this.evaluateFormula(formula, step, history, dataHistory);
     }
 
-    private evaluateFormula(formula: string, step: number, history: History, dataHistory: History): string {
+    private evaluateFormula(
+        formula: string,
+        step: number,
+        history: History,
+        dataHistory: History,
+    ): string {
         try {
             const expression = new Parser().parse(formula);
-            const result = new Runtime().run(expression, step, history, dataHistory);
+            const result = new Runtime().run(
+                expression,
+                step,
+                history,
+                dataHistory,
+            );
             return result;
         } catch (e) {
             return "ERROR " + e;
@@ -37,13 +53,20 @@ export class Evaluator {
         const history: History = new Map();
         for (let step = 0; step < steps; step++) {
             for (const cellId of cells) {
-                const result = this.evaluateCell(cellId, step, history, dataHistory);
+                const result = this.evaluateCell(
+                    cellId,
+                    step,
+                    history,
+                    dataHistory,
+                );
 
                 if (!result) {
                     continue;
                 }
 
-                const current = history.get(cellId) ? [...history.get(cellId)] : [];
+                const current = history.get(cellId)
+                    ? [...history.get(cellId)]
+                    : [];
                 current.push(result);
 
                 history.set(cellId, current);

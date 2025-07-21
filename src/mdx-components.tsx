@@ -88,39 +88,19 @@ const Li = styled.li`
     margin-bottom: 5px;
     margin-left: 15px;
 `;
- 
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
     return {
-        h1: ({ children }) => (
-            <H1>{children}</H1>
-        ),
-        h2: ({ children, ...props }) => (
-            <H2 {...props}>{children}</H2>
-        ),
-        h3: ({ children }) => (
-            <H3>{children}</H3>
-        ),
-        p: ({ children }) => (
-            <P>{children}</P>
-        ),
-        em: ({ children }) => (
-            <Em>{children}</Em>
-        ),
-        code: ({ children }) => (
-            <Code>{children}</Code>
-        ),
-        ol: ({ children }) => (
-            <Ol>{children}</Ol>
-        ),
-        ul: ({ children }) => (
-            <Ul>{children}</Ul>
-        ),
-        li: ({ children }) => (
-            <Li>{children}</Li>
-        ),
-        a: ({ children, ...props }) => (
-            <A {...props}>{children}</A>
-        ),
+        h1: ({ children }) => <H1>{children}</H1>,
+        h2: ({ children, ...props }) => <H2 {...props}>{children}</H2>,
+        h3: ({ children }) => <H3>{children}</H3>,
+        p: ({ children }) => <P>{children}</P>,
+        em: ({ children }) => <Em>{children}</Em>,
+        code: ({ children }) => <Code>{children}</Code>,
+        ol: ({ children }) => <Ol>{children}</Ol>,
+        ul: ({ children }) => <Ul>{children}</Ul>,
+        li: ({ children }) => <Li>{children}</Li>,
+        a: ({ children, ...props }) => <A {...props}>{children}</A>,
         ...components,
-    }
+    };
 }

@@ -1,4 +1,3 @@
-
 # Technical Specification
 
 **Project:** ABM Sheets \
@@ -435,13 +434,13 @@ The system will not feature sophisticated error reporting. If there is a syntact
 
 The ABM Sheets research project has started in March 2025 and is expected to be finished in September 2025. The individual phases of its development, study and testing are as follows:
 
-- **March 2025**        - formative interviews, evaluation of the interviews (~ 10 mandays)
-- **April 2025**        - prototype preparation and development (~ 12 mandays)
-- **May 2025**          - prototype development (~ 12 mandays)
-- **June 2025**         - logging infrastructure, usability study preparation (~ 12 mandays)
-- **July 2025**         - usability study, further system refinement (~ 25 mandays)
-- **August 2025**       - usability study, further system refinement (~ 25 mandays)
-- **September 2025**    - case study development, project write up (~ 25 mandays)
+- **March 2025** - formative interviews, evaluation of the interviews (~ 10 mandays)
+- **April 2025** - prototype preparation and development (~ 12 mandays)
+- **May 2025** - prototype development (~ 12 mandays)
+- **June 2025** - logging infrastructure, usability study preparation (~ 12 mandays)
+- **July 2025** - usability study, further system refinement (~ 25 mandays)
+- **August 2025** - usability study, further system refinement (~ 25 mandays)
+- **September 2025** - case study development, project write up (~ 25 mandays)
 
 ## 14. Team & Collaboration
 

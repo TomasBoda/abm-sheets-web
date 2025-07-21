@@ -3,8 +3,11 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function AuthLayout({ children }: { children: React.ReactNode; }) {
-
+export default async function AuthLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const supabase = await createServerClient();
     const response = await supabase.auth.getUser();
 
@@ -13,4 +16,4 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
     }
 
     return <>{children}</>;
-  }
+}
