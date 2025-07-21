@@ -1,11 +1,32 @@
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { Utils } from "@/utils/utils";
 import { Functions } from "../functions";
-import { BinaryExpression, BooleanLiteral, CallExpression, CellLiteral, CellRangeLiteral, Expression, Identifier, NodeType, NumericLiteral, RelationalExpression, StringLiteral, UnaryExpression } from "../parser";
-import { BooleanValue, CellLiteralValue, CellRangeValue, FuncCall, NumberValue, StringValue, Value, ValueType } from "./model";
+import {
+    BinaryExpression,
+    BooleanLiteral,
+    CallExpression,
+    CellLiteral,
+    CellRangeLiteral,
+    Expression,
+    Identifier,
+    NodeType,
+    NumericLiteral,
+    RelationalExpression,
+    StringLiteral,
+    UnaryExpression,
+} from "../parser";
+import {
+    BooleanValue,
+    CellLiteralValue,
+    CellRangeValue,
+    FuncCall,
+    NumberValue,
+    StringValue,
+    Value,
+    ValueType,
+} from "./model";
 
 export class Runtime {
-
     private step: number;
     private history: History;
     private dataHistory: History;
@@ -49,7 +70,12 @@ export class Runtime {
         ["STEP", Functions.step],
     ]);
 
-    public run(expression: Expression, step: number, history: History, dataHistory: History) {
+    public run(
+        expression: Expression,
+        step: number,
+        history: History,
+        dataHistory: History,
+    ) {
         this.step = step;
         this.history = history;
         this.dataHistory = dataHistory;
@@ -58,7 +84,7 @@ export class Runtime {
     }
 
     public runFormula(expression: Expression): string {
-        const result = this.runExpression(expression)
+        const result = this.runExpression(expression);
 
         switch (result.type) {
             case ValueType.Number: {
@@ -92,7 +118,9 @@ export class Runtime {
             case NodeType.CallExpression:
                 return this.runCallExpression(expression as CallExpression);
             case NodeType.RelationalExpression:
-                return this.runRelationalExpression(expression as RelationalExpression);
+                return this.runRelationalExpression(
+                    expression as RelationalExpression,
+                );
             case NodeType.BinaryExpression:
                 return this.runBinaryExpression(expression as BinaryExpression);
             case NodeType.UnaryExpression:
@@ -110,7 +138,9 @@ export class Runtime {
             case NodeType.CellRangeLiteral:
                 return this.runCellRangeLiteral(expression as CellRangeLiteral);
             default:
-                throw new Error(`Unsupported expression '${NodeType[expression.type]}' in runExpression()`);
+                throw new Error(
+                    `Unsupported expression '${NodeType[expression.type]}' in runExpression()`,
+                );
         }
     }
 
@@ -123,11 +153,15 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        if (identifier === "PREV" || identifier === "HISTORY" || identifier === "SUMHISTORY") {
+        if (
+            identifier === "PREV" ||
+            identifier === "HISTORY" ||
+            identifier === "SUMHISTORY"
+        ) {
             this.inCallExpression = true;
         }
 
-        const evaluatedArgs = args.map(arg => this.runExpression(arg));
+        const evaluatedArgs = args.map((arg) => this.runExpression(arg));
         this.inCallExpression = false;
 
         return func({
@@ -138,13 +172,18 @@ export class Runtime {
         });
     }
 
-    private runRelationalExpression(expression: RelationalExpression): BooleanValue {
+    private runRelationalExpression(
+        expression: RelationalExpression,
+    ): BooleanValue {
         const { left, right, operator } = expression;
 
         const leftValue = this.runExpression(left);
         const rightValue = this.runExpression(right);
 
-        if (leftValue.type === ValueType.Number && rightValue.type === ValueType.Number) {
+        if (
+            leftValue.type === ValueType.Number &&
+            rightValue.type === ValueType.Number
+        ) {
             const { value: lhs } = leftValue as NumberValue;
             const { value: rhs } = rightValue as NumberValue;
 
@@ -155,12 +194,14 @@ export class Runtime {
                 ">=": (lhs: number, rhs: number) => lhs >= rhs,
                 "<": (lhs: number, rhs: number) => lhs < rhs,
                 "<=": (lhs: number, rhs: number) => lhs <= rhs,
-            }
+            };
 
             const func = operators[operator];
 
             if (!func) {
-                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+                throw new Error(
+                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                );
             }
 
             const result: boolean = func(lhs, rhs);
@@ -168,19 +209,24 @@ export class Runtime {
             return { type: ValueType.Boolean, value: result };
         }
 
-        if (leftValue.type === ValueType.Boolean && rightValue.type === ValueType.Boolean) {
+        if (
+            leftValue.type === ValueType.Boolean &&
+            rightValue.type === ValueType.Boolean
+        ) {
             const { value: lhs } = leftValue as BooleanValue;
             const { value: rhs } = rightValue as BooleanValue;
 
             const operators = {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
-            }
+            };
 
             const func = operators[operator];
 
             if (!func) {
-                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+                throw new Error(
+                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                );
             }
 
             const result: boolean = func(lhs, rhs);
@@ -188,19 +234,24 @@ export class Runtime {
             return { type: ValueType.Boolean, value: result };
         }
 
-        if (leftValue.type === ValueType.String && rightValue.type === ValueType.String) {
+        if (
+            leftValue.type === ValueType.String &&
+            rightValue.type === ValueType.String
+        ) {
             const { value: lhs } = leftValue as StringValue;
             const { value: rhs } = rightValue as StringValue;
 
             const operators = {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
-            }
+            };
 
             const func = operators[operator];
 
             if (!func) {
-                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+                throw new Error(
+                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                );
             }
 
             const result: boolean = func(lhs, rhs);
@@ -215,12 +266,14 @@ export class Runtime {
             const operators = {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
-            }
+            };
 
             const func = operators[operator];
 
             if (!func) {
-                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+                throw new Error(
+                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                );
             }
 
             const result: boolean = func(lhs, rhs);
@@ -235,12 +288,14 @@ export class Runtime {
             const operators = {
                 "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
                 "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
-            }
+            };
 
             const func = operators[operator];
 
             if (!func) {
-                throw new Error(`Unsupported operator '${operator}' in runRelationalExpression()`);
+                throw new Error(
+                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                );
             }
 
             const result: boolean = func(lhs, rhs);
@@ -248,7 +303,9 @@ export class Runtime {
             return { type: ValueType.Boolean, value: result };
         }
 
-        throw new Error("LHS and RHS types do not match in relational expression");
+        throw new Error(
+            "LHS and RHS types do not match in relational expression",
+        );
     }
 
     private runBinaryExpression(expression: BinaryExpression): NumberValue {
@@ -299,13 +356,17 @@ export class Runtime {
                 break;
             }
             default:
-                throw new Error(`Unsupported operator '${operator}' in runBinaryExpression()`);
+                throw new Error(
+                    `Unsupported operator '${operator}' in runBinaryExpression()`,
+                );
         }
 
         return { type: ValueType.Number, value: result };
     }
 
-    private runUnaryExpression(expression: UnaryExpression): NumberValue | BooleanValue {
+    private runUnaryExpression(
+        expression: UnaryExpression,
+    ): NumberValue | BooleanValue {
         const { value, operator } = expression;
 
         switch (operator) {
@@ -316,7 +377,10 @@ export class Runtime {
                     throw new Error("Expected boolean in unary expression");
                 }
 
-                return { type: ValueType.Boolean, value: !(result as BooleanValue).value };
+                return {
+                    type: ValueType.Boolean,
+                    value: !(result as BooleanValue).value,
+                };
             }
             case "-": {
                 const result = this.runExpression(value);
@@ -325,7 +389,10 @@ export class Runtime {
                     throw new Error("Expected number in unary expression");
                 }
 
-                return { type: ValueType.Number, value: -(result as NumberValue).value };
+                return {
+                    type: ValueType.Number,
+                    value: -(result as NumberValue).value,
+                };
             }
         }
     }
@@ -355,7 +422,10 @@ export class Runtime {
         const cellId = Utils.cellCoordsToId({ ri, ci });
 
         if (this.inCallExpression) {
-            return { type: ValueType.CellLiteral, value: [ri, ci] } as CellLiteralValue;
+            return {
+                type: ValueType.CellLiteral,
+                value: [ri, ci],
+            } as CellLiteralValue;
         }
 
         const cellValue = this.getHistoryValue(cellId);
@@ -378,7 +448,12 @@ export class Runtime {
     private runCellRangeLiteral(expression: CellRangeLiteral): Value {
         const { left, right } = expression;
 
-        const value = [left.col.index, left.row.index, right.col.index, right.row.index];
+        const value = [
+            left.col.index,
+            left.row.index,
+            right.col.index,
+            right.row.index,
+        ];
 
         return { type: ValueType.CellRange, value } as CellRangeValue;
     }

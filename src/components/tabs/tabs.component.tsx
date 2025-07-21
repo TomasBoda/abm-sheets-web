@@ -15,7 +15,6 @@ interface Props {
 }
 
 export const Tabs = ({ tabs = [], rightContent }: Props) => {
-
     const [current, setCurrent] = useState<number>(0);
 
     useEffect(() => {
@@ -26,8 +25,10 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
             return;
         }
 
-        backgroundElement.style.left = tabElement.getBoundingClientRect().left + "px";
-        backgroundElement.style.top = tabElement.getBoundingClientRect().top + "px";
+        backgroundElement.style.left =
+            tabElement.getBoundingClientRect().left + "px";
+        backgroundElement.style.top =
+            tabElement.getBoundingClientRect().top + "px";
         backgroundElement.style.width = tabElement.clientWidth + "px";
         backgroundElement.style.height = tabElement.clientHeight + "px";
     }, [current]);
@@ -42,7 +43,7 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
         }
 
         Logger.log("click-tab", tabs[index].label);
-    }
+    };
 
     return (
         <Container>
@@ -53,9 +54,7 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
 
                 {tabs.map((tab, index) => (
                     <Tab onClick={() => onTabClick(index)} key={index}>
-                        <TabLabel id={`tab-${index}`}>
-                            {tab.label}
-                        </TabLabel>
+                        <TabLabel id={`tab-${index}`}>{tab.label}</TabLabel>
                     </Tab>
                 ))}
 
@@ -63,19 +62,13 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
 
                 <div style={{ flex: 1 }} />
 
-                {rightContent && (
-                    <RightContent>
-                        {rightContent}
-                    </RightContent>
-                )}
+                {rightContent && <RightContent>{rightContent}</RightContent>}
             </Header>
 
-            <Content>
-                {tabs[current]?.component}
-            </Content>
+            <Content>{tabs[current]?.component}</Content>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;

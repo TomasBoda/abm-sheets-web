@@ -10,22 +10,29 @@ interface Props {
     onBlur?: () => void;
 }
 
-export const TextFieldSmall = ({ id, value="", onChange, onKeyDown, placeholder = "Enter text", disabled = false, onBlur }: Props) => {
-
+export const TextFieldSmall = ({
+    id,
+    value = "",
+    onChange,
+    onKeyDown,
+    placeholder = "Enter text",
+    disabled = false,
+    onBlur,
+}: Props) => {
     return (
         <Input
             id={id}
             type="text"
             value={value}
-            onChange={e => onChange?.(e.target.value)}
+            onChange={(e) => onChange?.(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={placeholder}
             disabled={disabled}
             autoComplete="off"
             onBlur={onBlur}
         />
-    )
-}
+    );
+};
 
 const Input = styled.input`
     color: white;

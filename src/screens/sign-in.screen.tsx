@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/button/button.component";
 import { Href } from "@/components/href";
@@ -9,7 +9,6 @@ import { useState } from "react";
 import styled from "styled-components";
 
 export const SignInScreen = () => {
-
     const router = useRouter();
 
     const [email, setEmail] = useState<string>("");
@@ -26,16 +25,19 @@ export const SignInScreen = () => {
 
         const supabase = createClientClient();
 
-        const response = await supabase.auth.signInWithPassword({ email, password });
+        const response = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
 
         if (response.error) {
             setLoading(false);
             alert("ERROR: " + response.error.message);
             return;
         }
-        
+
         router.push("/spreadsheet");
-    }
+    };
 
     return (
         <Container>
@@ -46,15 +48,11 @@ export const SignInScreen = () => {
             <Spacing />
 
             <Card>
-                <H1>
-                    Welcome back
-                </H1>
+                <H1>Welcome back</H1>
 
                 <Spacing />
 
-                <P1>
-                    Sign in to your account.
-                </P1>
+                <P1>Sign in to your account.</P1>
 
                 <Spacing />
                 <Spacing />
@@ -62,7 +60,7 @@ export const SignInScreen = () => {
                 <TextField
                     type="text"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter e-mail"
                 />
 
@@ -71,14 +69,19 @@ export const SignInScreen = () => {
                 <TextField
                     type="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                 />
 
                 <Spacing />
                 <Spacing />
 
-                <Button variant="primary" stretch onClick={signIn} loading={loading}>
+                <Button
+                    variant="primary"
+                    stretch
+                    onClick={signIn}
+                    loading={loading}
+                >
                     Sign in
                 </Button>
 
@@ -86,12 +89,15 @@ export const SignInScreen = () => {
                 <Spacing />
 
                 <P1>
-                    Don't have an account? <Href href="/auth/sign-up"><Link>Sign up</Link></Href>
+                    Don't have an account?{" "}
+                    <Href href="/auth/sign-up">
+                        <Link>Sign up</Link>
+                    </Href>
                 </P1>
             </Card>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;

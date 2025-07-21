@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,24 +12,24 @@ interface Props {
 }
 
 export const Href = ({ href, children, style, newTab = false }: Props) => {
-
     const pathname = usePathname();
 
     if (!href) {
-        return <>{children}</>
+        return <>{children}</>;
     }
 
     if (!href || pathname === href) {
-        return (
-            <span style={{ ...style, cursor: "pointer" }}>
-                {children}
-            </span>
-        )
+        return <span style={{ ...style, cursor: "pointer" }}>{children}</span>;
     }
-    
+
     return (
-        <Link href={href} passHref target={newTab ? "blank" : undefined} style={{ all: 'unset', cursor: "pointer", display: 'contents' }}>
+        <Link
+            href={href}
+            passHref
+            target={newTab ? "blank" : undefined}
+            style={{ all: "unset", cursor: "pointer", display: "contents" }}
+        >
             {children}
         </Link>
-    )
-}
+    );
+};

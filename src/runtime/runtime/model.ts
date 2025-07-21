@@ -1,6 +1,12 @@
 import { History } from "@/components/spreadsheet/spreadsheet.model";
 
-export enum ValueType { Number, Boolean, String, CellLiteral, CellRange };
+export enum ValueType {
+    Number,
+    Boolean,
+    String,
+    CellLiteral,
+    CellRange,
+}
 
 export interface Value {
     type: ValueType;
@@ -37,6 +43,6 @@ export type FuncProps = {
     step: number;
     history: History;
     dataHistory: History;
-}
+};
 
 export type FuncCall = (props: FuncProps) => Value;

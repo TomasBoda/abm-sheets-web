@@ -1,12 +1,19 @@
-
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
 import { Functions } from "@/runtime/functions";
-import { BooleanValue, CellLiteralValue, CellRangeValue, FuncProps, NumberValue, StringValue, Value, ValueType } from "@/runtime/runtime";
+import {
+    BooleanValue,
+    CellLiteralValue,
+    CellRangeValue,
+    FuncProps,
+    NumberValue,
+    StringValue,
+    Value,
+    ValueType,
+} from "@/runtime/runtime";
 import { Utils } from "@/utils/utils";
 import "@testing-library/jest-dom";
 
 describe("Functions", () => {
-
     let props: FuncProps;
 
     beforeEach(() => {
@@ -19,17 +26,13 @@ describe("Functions", () => {
     });
 
     describe("match", () => {
-
         it("should match numbers vertically", () => {
             const range: CellId[] = ["A1", "A5"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createNumber(1),
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createNumber(1), createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["2"]);
             props.history.set("A3", ["3"]);
@@ -59,11 +62,8 @@ describe("Functions", () => {
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createString(""),
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createString(""), createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["a"]);
             props.history.set("B1", ["b"]);
             props.history.set("C1", ["c"]);
@@ -91,11 +91,8 @@ describe("Functions", () => {
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createNumber(1),
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createNumber(1), createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["2"]);
             props.history.set("A3", ["3"]);
@@ -109,11 +106,8 @@ describe("Functions", () => {
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createNumber(1),
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createNumber(1), createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["2"]);
             props.history.set("B1", ["3"]);
@@ -125,17 +119,13 @@ describe("Functions", () => {
     });
 
     describe("index", () => {
-
         it("should correctly index", () => {
             const range: CellId[] = ["A1", "A5"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-                createNumber(0),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2]), createNumber(0)];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["2"]);
             props.history.set("A3", ["3"]);
@@ -163,11 +153,8 @@ describe("Functions", () => {
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-                createNumber(0),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2]), createNumber(0)];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["2"]);
             props.history.set("A3", ["3"]);
@@ -180,13 +167,8 @@ describe("Functions", () => {
     });
 
     describe("concat", () => {
-
         it("should concat numbers", () => {
-            props.args = [
-                createNumber(1),
-                createNumber(2),
-                createNumber(3),
-            ];
+            props.args = [createNumber(1), createNumber(2), createNumber(3)];
 
             expectString(Functions.concat(props), "123");
         });
@@ -223,7 +205,6 @@ describe("Functions", () => {
     });
 
     describe("step", () => {
-
         it("should return correct step", () => {
             props.step = 0;
             expect(Functions.step(props)).toEqual(createNumber(0));
@@ -237,7 +218,6 @@ describe("Functions", () => {
     });
 
     describe("if", () => {
-
         it("should return consequent on true", () => {
             props.args = [
                 createBoolean(true),
@@ -260,16 +240,13 @@ describe("Functions", () => {
     });
 
     describe("sum", () => {
-
         it("should return correct sum", () => {
             const range: CellId[] = ["A1", "A9"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["a"]);
             props.history.set("A3", ["2"]);
@@ -280,22 +257,20 @@ describe("Functions", () => {
             props.history.set("A8", [""]);
             props.history.set("A9", ["5"]);
 
-            expect(Functions.sum(props)).toEqual(createNumber(1 + 2 + 3 + 4 + 5));
+            expect(Functions.sum(props)).toEqual(
+                createNumber(1 + 2 + 3 + 4 + 5),
+            );
         });
     });
 
     describe("countif", () => {
-
         it("should return correct value", () => {
             const range: CellId[] = ["A1", "A5"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-                createNumber(0),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2]), createNumber(0)];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["2"]);
             props.history.set("A3", ["2"]);
@@ -311,16 +286,13 @@ describe("Functions", () => {
     });
 
     describe("min", () => {
-
         it("should return correct min value", () => {
             const range: CellId[] = ["A1", "A5"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["TRUE"]);
             props.history.set("A3", ["hello"]);
@@ -332,16 +304,13 @@ describe("Functions", () => {
     });
 
     describe("max", () => {
-
         it("should return correct max value", () => {
             const range: CellId[] = ["A1", "A5"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["TRUE"]);
             props.history.set("A3", ["hello"]);
@@ -353,28 +322,26 @@ describe("Functions", () => {
     });
 
     describe("average", () => {
-
         it("should return correct average value", () => {
             const range: CellId[] = ["A1", "A5"];
             const { ri: r1, ci: c1 } = Utils.cellIdToCoords(range[0]);
             const { ri: r2, ci: c2 } = Utils.cellIdToCoords(range[1]);
 
-            props.args = [
-                createCellRange([c1, r1, c2, r2]),
-            ];
-            
+            props.args = [createCellRange([c1, r1, c2, r2])];
+
             props.history.set("A1", ["1"]);
             props.history.set("A2", ["TRUE"]);
             props.history.set("A3", ["hello"]);
             props.history.set("A4", ["5"]);
             props.history.set("A5", ["20"]);
 
-            expect(Functions.average(props)).toEqual(createNumber((1 + 5 + 20) / 3));
+            expect(Functions.average(props)).toEqual(
+                createNumber((1 + 5 + 20) / 3),
+            );
         });
     });
 
     describe("and", () => {
-
         it("should return correct value", () => {
             props.args = [createBoolean(true), createBoolean(true)];
             expect(Functions.and(props)).toEqual(createBoolean(true));
@@ -391,7 +358,6 @@ describe("Functions", () => {
     });
 
     describe("or", () => {
-
         it("should return correct value", () => {
             props.args = [createBoolean(true), createBoolean(true)];
             expect(Functions.or(props)).toEqual(createBoolean(true));
@@ -408,7 +374,6 @@ describe("Functions", () => {
     });
 
     describe("prev", () => {
-
         it("should return correct previous value", () => {
             const cellId = "A1";
             const { ri, ci } = Utils.cellIdToCoords(cellId);
@@ -438,14 +403,10 @@ describe("Functions", () => {
     });
 
     describe("history", () => {
-
         it("should return correct historical value", () => {
             const cellId = "A1";
             const { ri, ci } = Utils.cellIdToCoords(cellId);
-            props.args = [
-                createCellLiteral([ci, ri]),
-                createNumber(0),
-            ];
+            props.args = [createCellLiteral([ci, ri]), createNumber(0)];
 
             props.history.set(cellId, ["1", "2", "3", "4", "5"]);
 

@@ -1,16 +1,21 @@
-"use client"
+"use client";
 
 import { createClientClient } from "@/utils/supabase/client";
-import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 
 type AuthContextType = {
     userId: string | undefined;
 };
-  
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode; }) => {
-
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [userId, setUserId] = useState<string | undefined>(undefined);
 
     const loadAuthUser = async () => {
@@ -23,12 +28,12 @@ export const AuthProvider = ({ children }: { children: ReactNode; }) => {
         } else {
             setUserId(undefined);
         }
-    }
+    };
 
     useEffect(() => {
         loadAuthUser();
     }, []);
-  
+
     return (
         <AuthContext.Provider value={{ userId }}>
             {children}
@@ -40,8 +45,8 @@ export const useAuth = () => {
     const context = useContext(AuthContext);
 
     if (!context) {
-      throw new Error("useAuth must be used within a AuthProvider");
+        throw new Error("useAuth must be used within a AuthProvider");
     }
-    
+
     return context;
 };

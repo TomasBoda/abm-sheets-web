@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import styled from "styled-components";
@@ -18,49 +18,44 @@ const contentWidth = "60vw";
 const sidebarWidth = "40vw";
 
 export const SidebarProvider = (props: Props) => {
-
     const [toggled, setToggled] = useState<boolean>(false);
     const [sidebar, setSidebar] = useState<ReactNode>(props.sidebar);
 
     const toggle = (sidebar?: ReactNode) => {
-        setToggled(prev => !prev);
+        setToggled((prev) => !prev);
 
         if (sidebar) {
             setSidebar(sidebar);
         }
-    }
+    };
 
     const gridTemplateColumns = useMemo(() => {
         if (toggled) return `${contentWidth} ${sidebarWidth}`;
         return `100vw ${sidebarWidth}`;
     }, [toggled]);
- 
+
     const values = {
         toggle,
-    }
+    };
 
     return (
         <SidebarContext.Provider value={values}>
             <Container style={{ gridTemplateColumns }}>
-                <Content>
-                    {props.content}
-                </Content>
+                <Content>{props.content}</Content>
 
-                <Sidebar>
-                    {sidebar}
-                </Sidebar>
+                <Sidebar>{sidebar}</Sidebar>
             </Container>
         </SidebarContext.Provider>
-    )
-}
+    );
+};
 
 export const useSidebar = () => {
     const context = useContext(SidebarContext);
 
     if (!context) {
-      throw new Error("useSidebar must be used within a SidebarContext");
+        throw new Error("useSidebar must be used within a SidebarContext");
     }
-    
+
     return context;
 };
 

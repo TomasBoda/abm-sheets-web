@@ -30,13 +30,13 @@ The modeling assignment involved simulating a footrace between agents. Each agen
 
 Interestingly, one participant chose to avoid the time-stepped approach altogether, instead calculating agents’ final positions using direct formulas. When asked why they opted to bypass modeling with time steps, they explained:
 
-*"I guess because once you set the rows to time steps, you have lost a dimension of your spreadsheet and so now everything is one-dimensional and everything about the dynamics has to be embedded in a single formula and that can get really complicated, so I was trying to get away from not having to do that for as long as possible. You've only got two dimensions, and if you use one for time, everything else becomes miserable."*
+_"I guess because once you set the rows to time steps, you have lost a dimension of your spreadsheet and so now everything is one-dimensional and everything about the dynamics has to be embedded in a single formula and that can get really complicated, so I was trying to get away from not having to do that for as long as possible. You've only got two dimensions, and if you use one for time, everything else becomes miserable."_
 
 This feedback directly supports the core hypothesis behind ABM Sheets - that embedding time as a native dimension in spreadsheet environments could alleviate major usability and expressiveness issues in modeling dynamic systems.
 
 Another participant offered a valuable reflection on the enduring appeal of spreadsheet software:
 
-*"One of the benefits of Excel, as you probably know, is just the whip attitude of it, you know, this kind of interactive, reactive programming environment. The ability to mix data and formulas/programming in the same environment is extremely attractive."*
+_"One of the benefits of Excel, as you probably know, is just the whip attitude of it, you know, this kind of interactive, reactive programming environment. The ability to mix data and formulas/programming in the same environment is extremely attractive."_
 
 This insight underscores the power of spreadsheets as hybrid tools for both data manipulation and lightweight programming. ABM Sheets aims to build on this foundation by preserving the interactivity and flexibility of traditional spreadsheets while extending their capabilities to support time-evolving simulations in a more intuitive and maintainable way.
 
@@ -55,7 +55,7 @@ Most notably, cells in ABM Sheets are allowed to reference themselves within the
 Each cell in ABM Sheets can therefore have two formulas:
 
 - **default formula** - defines the cell's value at the initial time step (t = 1)
-- **primary formula** - defines the cell's value in all subsequent time steps (t > 1), potentially referencing its own prior state or the states of other cells 
+- **primary formula** - defines the cell's value in all subsequent time steps (t > 1), potentially referencing its own prior state or the states of other cells
 
 If a cell attempts to reference itself without a defined default formula, the evaluation results in an error due to the absence of an initial state.
 

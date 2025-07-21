@@ -4,12 +4,9 @@ import { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-    title: "Sign in"
-}
+    title: "Sign in",
+};
 
 export default function SignInPage() {
-
-    return (
-        <SignInScreen />
-    )
+    return <SignInScreen />;
 }

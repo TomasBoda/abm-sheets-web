@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Atom } from "lucide-react";
 import styled from "styled-components";
@@ -11,7 +11,6 @@ interface Props {
 }
 
 export const Logo = ({ variant }: Props) => {
-
     return (
         <Href href="/">
             <Container $variant={variant}>
@@ -19,12 +18,12 @@ export const Logo = ({ variant }: Props) => {
                 ABM Sheets
             </Container>
         </Href>
-    )
-}
+    );
+};
 
-const Container = styled.div<{ $variant: LogoVariant; }>`
+const Container = styled.div<{ $variant: LogoVariant }>`
     font-family: "Poppins", sans-serif;
-    
+
     font-size: 16px;
     font-weight: 500 !important;
     line-height: 100%;

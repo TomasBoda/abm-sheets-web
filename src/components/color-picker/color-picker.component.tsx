@@ -1,23 +1,28 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 interface Props {
     onChange: (color: string) => void;
 }
 
 export const ColorPicker = ({ onChange }: Props) => {
-
-    const colors = ["", "rgb(230, 230, 230)", "rgb(240, 198, 198)", "rgb(201, 201, 240)", "rgb(194, 234, 194)"];
+    const colors = [
+        "",
+        "rgb(230, 230, 230)",
+        "rgb(240, 198, 198)",
+        "rgb(201, 201, 240)",
+        "rgb(194, 234, 194)",
+    ];
 
     return (
         <Container>
-            {colors.map(color => (
+            {colors.map((color) => (
                 <ColorItem key={color}>
                     <Color $color={color} onClick={() => onChange(color)} />
                 </ColorItem>
             ))}
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     display: flex;
@@ -37,7 +42,7 @@ const ColorItem = styled.div`
     }
 `;
 
-const Color = styled.div<{ $color: string; }>`
+const Color = styled.div<{ $color: string }>`
     width: 15px;
     height: 15px;
 
@@ -45,5 +50,6 @@ const Color = styled.div<{ $color: string; }>`
 
     border-radius: 100%;
 
-    background-color: ${({ $color }) => $color === "" ? "var(--bg-3)" : $color};
+    background-color: ${({ $color }) =>
+        $color === "" ? "var(--bg-3)" : $color};
 `;

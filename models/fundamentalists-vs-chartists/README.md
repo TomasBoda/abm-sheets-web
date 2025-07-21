@@ -1,4 +1,3 @@
-
 # Fundamentalists vs. Chartists
 
 This model represents a simplified financial market populated by two types of traders: fundamentalists and chartists. It is inspired by real-world investor behavior and widely used in computational finance to understand price formation, volatility, and emergent market dynamics. The goal is to simulate how the interaction of different trading strategies influences the evolution of asset prices over time.

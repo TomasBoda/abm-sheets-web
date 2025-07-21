@@ -1,8 +1,14 @@
-"use client"
+"use client";
 
 import { createClientClient } from "@/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 
 export interface Project {
     id: string;
@@ -23,11 +29,12 @@ type ProjectsContextType = {
     saveProject: (project: ProjectInsert) => Promise<string>;
     updateProject: (project: ProjectUpdate) => Promise<string>;
 };
-  
-const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
 
-export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
+const ProjectsContext = createContext<ProjectsContextType | undefined>(
+    undefined,
+);
 
+export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -50,7 +57,7 @@ export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
             .order("created_at", { ascending: false });
 
         setProjects(response.data ?? []);
-    }
+    };
 
     const loadProject = async (projectId: string) => {
         const supabase = createClientClient();
@@ -66,7 +73,7 @@ export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
         }
 
         setProject(response.data[0]);
-    }
+    };
 
     const saveProject = async (project: ProjectInsert) => {
         const supabase = createClientClient();
@@ -84,9 +91,9 @@ export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
 
         await loadProjects();
         return response.data[0].id;
-    }
+    };
 
-    const updateProject = async(project: ProjectUpdate) => {
+    const updateProject = async (project: ProjectUpdate) => {
         const supabase = createClientClient();
 
         const { id, title, text, data } = project;
@@ -103,7 +110,7 @@ export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
 
         await loadProjects();
         return response.data[0].id;
-    }
+    };
 
     useEffect(() => {
         loadProjects();
@@ -119,7 +126,13 @@ export const ProjectsProvider = ({ children }: { children: ReactNode; }) => {
         }
     }, [searchParams]);
 
-    const values = { project, projects, loadProjects, saveProject, updateProject };
+    const values = {
+        project,
+        projects,
+        loadProjects,
+        saveProject,
+        updateProject,
+    };
 
     return (
         <ProjectsContext.Provider value={values}>
@@ -132,8 +145,8 @@ export const useProjects = () => {
     const context = useContext(ProjectsContext);
 
     if (!context) {
-      throw new Error("useProjects must be used within a ProjectsProvider");
+        throw new Error("useProjects must be used within a ProjectsProvider");
     }
-    
+
     return context;
 };

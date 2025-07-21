@@ -1,7 +1,6 @@
 import { Token, TokenType } from "./model";
 
 export class Lexer {
-
     private static formula: string[] = [];
     private static tokens: Token[] = [];
 
@@ -106,7 +105,7 @@ export class Lexer {
                         break;
                     }
 
-                    if (this.at() === "\"") {
+                    if (this.at() === '"') {
                         this.tokenizeString();
                         break;
                     }
@@ -125,7 +124,12 @@ export class Lexer {
 
         this.next();
 
-        while (this.at() !== undefined && (this.isAlpha(this.at()!) || this.isNumber(this.at()!) || this.at()! === "$")) {
+        while (
+            this.at() !== undefined &&
+            (this.isAlpha(this.at()!) ||
+                this.isNumber(this.at()!) ||
+                this.at()! === "$")
+        ) {
             identifier += this.next()!;
         }
 
@@ -150,7 +154,10 @@ export class Lexer {
 
         this.next();
 
-        while (this.at() !== undefined && (this.isNumber(this.at()!) || this.at()! === ".")) {
+        while (
+            this.at() !== undefined &&
+            (this.isNumber(this.at()!) || this.at()! === ".")
+        ) {
             if (this.at()! === ".") {
                 if (foundDot) {
                     throw new Error("Second dot in number");
@@ -172,7 +179,7 @@ export class Lexer {
 
         let string = "";
 
-        while (this.at() !== "\"") {
+        while (this.at() !== '"') {
             string += this.next();
         }
 
@@ -205,7 +212,7 @@ export class Lexer {
         const symbol = value.charCodeAt(0);
         const bounds = {
             lower: "0".charCodeAt(0),
-            upper: "9".charCodeAt(0)
+            upper: "9".charCodeAt(0),
         };
 
         return symbol >= bounds.lower && symbol <= bounds.upper;

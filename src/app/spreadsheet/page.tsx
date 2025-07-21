@@ -39,7 +39,9 @@ export default async function SpreadsheetPage() {
                                                 <SidebarProvider
                                                     content={
                                                         <>
-                                                            <Toolbar user={user} />
+                                                            <Toolbar
+                                                                user={user}
+                                                            />
                                                             <Spreadsheet />
                                                         </>
                                                     }

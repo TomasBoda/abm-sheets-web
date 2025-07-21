@@ -1,384 +1,394 @@
-import { Container, Content, Video, Image, Highlight, H2WithID, H3WithID, SmallText } from "./about.screen";
+import {
+    Container,
+    Content,
+    Video,
+    Image,
+    Highlight,
+    H2WithID,
+    H3WithID,
+    SmallText,
+} from "./about.screen";
 import { Logo } from "@/components/logo";
 
 <Container>
   	<Content>
 		<Logo />
 
-		<br />
-
-		# Spreadsheet with Built-in Time
-
-		<span style={{ marginTop: 0 }}>
-			**Tomáš Boďa** ([tominoboda@gmail.com](mailto:tominoboda@gmail.com))
-		</span>
-
-		<span style={{ marginTop: -10 }}>
-			**Tomáš Petříček** ([tomas@tomasp.net](mailto:tomas@tomasp.net))
-		</span>
+    	<br />
+
+    	# Spreadsheet with Built-in Time
 
-		<span style={{ marginTop: 0 }}>
-			Faculty of Mathematics and Physics
-		</span>
+    	<span style={{ marginTop: 0 }}>
+    		**Tomáš Boďa** ([tominoboda@gmail.com](mailto:tominoboda@gmail.com))
+    	</span>
 
-		<span style={{ marginTop: -10 }}>
-			Charles University
-		</span>
+    	<span style={{ marginTop: -10 }}>
+    		**Tomáš Petříček** ([tomas@tomasp.net](mailto:tomas@tomasp.net))
+    	</span>
 
-		<span style={{ marginTop: -10 }}>
-			Prague, Czech republic
-		</span>
+    	<span style={{ marginTop: 0 }}>
+    		Faculty of Mathematics and Physics
+    	</span>
 
-		## Table of Contents
+    	<span style={{ marginTop: -10 }}>
+    		Charles University
+    	</span>
 
-		1. [Abstract](#abstract)
-		2. [Cannonball](#cannonball)
-		3. [Introduction](#introduction)
-		4. [Time-aware Simulations](#time-aware-simulations)
-		5. [Contributions](#contributions)
-		6. [Formative Interviews](#formative-interviews)
-			- [Participants](#participants)
-			- [Assignment](#assignment)
-			- [Findings](#findings)
-		7. [System Overview](#system-overview)
-			- [Built-in Discrete Time](#built-in-discrete-time)
-			- [Cell References](#cell-references)
-		8. [Case studies](#case-studies)
-			- [Wolf-sheep Predation](#wolf-sheep-predation)
-			- [Running Race](#running-race)
-			- [Hotelling's Law](#hotellings-law)
-		9. [Limitations & Future Improvements](#limitations-and-future-improvements)
-			- [Limitations](#limitations)
-			- [Future Improvements](#future-improvements)
-		10. [Related work](#related-work)
-		11. [Conclusion](#conclusion)
-		12. [References](#references)
+    	<span style={{ marginTop: -10 }}>
+    		Prague, Czech republic
+    	</span>
 
-		<H2WithID id="abstract">Abstract</H2WithID>
+    	## Table of Contents
 
-		Spreadsheets are powerful tools for data analysis and modeling, but they are inherently limited to two dimensions - rows and columns, making it difficult to represent systems that evolve over time. This limitation poses challenges for domains like agent-based modeling, physics simulations, or financial market analysis, where the concept of time is fundamental. In particular, agent-based models require tracking multiple agents, each with evolving attributes, across discrete time steps - something traditional spreadsheets struggle to express without resorting to duplication and convoluted formulas.
-		
-		We address this limitation by extending the spreadsheet paradigm with a built-in support for discrete time, allowing cells to reference their own values from previous time steps directly. This extension preserves the familiar spreadsheet paradigm while adding a powerful new dimension of time. With this approach, users can build and explore dynamic models, such as agent-based simulations with the same ease as traditional spreadsheet calculations. In this paper, we demonstrate how this time-aware spreadsheet enables new kinds of simulations and iterative processes that are impractical or impossible to implement in conventional spreadsheet software like Microsoft Excel or Google Sheets.
+    	1. [Abstract](#abstract)
+    	2. [Cannonball](#cannonball)
+    	3. [Introduction](#introduction)
+    	4. [Time-aware Simulations](#time-aware-simulations)
+    	5. [Contributions](#contributions)
+    	6. [Formative Interviews](#formative-interviews)
+    		- [Participants](#participants)
+    		- [Assignment](#assignment)
+    		- [Findings](#findings)
+    	7. [System Overview](#system-overview)
+    		- [Built-in Discrete Time](#built-in-discrete-time)
+    		- [Cell References](#cell-references)
+    	8. [Case studies](#case-studies)
+    		- [Wolf-sheep Predation](#wolf-sheep-predation)
+    		- [Running Race](#running-race)
+    		- [Hotelling's Law](#hotellings-law)
+    	9. [Limitations & Future Improvements](#limitations-and-future-improvements)
+    		- [Limitations](#limitations)
+    		- [Future Improvements](#future-improvements)
+    	10. [Related work](#related-work)
+    	11. [Conclusion](#conclusion)
+    	12. [References](#references)
 
-		<Highlight>
+    	<H2WithID id="abstract">Abstract</H2WithID>
 
-		<H2WithID id="cannonball" $border={false}>Cannonball</H2WithID>
+    	Spreadsheets are powerful tools for data analysis and modeling, but they are inherently limited to two dimensions - rows and columns, making it difficult to represent systems that evolve over time. This limitation poses challenges for domains like agent-based modeling, physics simulations, or financial market analysis, where the concept of time is fundamental. In particular, agent-based models require tracking multiple agents, each with evolving attributes, across discrete time steps - something traditional spreadsheets struggle to express without resorting to duplication and convoluted formulas.
 
-		Let's start by showcasing ABM Sheets on a simple physics simulation of shooting a cannonball in a two-dimensional space.
+    	We address this limitation by extending the spreadsheet paradigm with a built-in support for discrete time, allowing cells to reference their own values from previous time steps directly. This extension preserves the familiar spreadsheet paradigm while adding a powerful new dimension of time. With this approach, users can build and explore dynamic models, such as agent-based simulations with the same ease as traditional spreadsheet calculations. In this paper, we demonstrate how this time-aware spreadsheet enables new kinds of simulations and iterative processes that are impractical or impossible to implement in conventional spreadsheet software like Microsoft Excel or Google Sheets.
 
-		Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=c12d7697-7d5a-49fb-8240-7e55feddcec9).
+    	<Highlight>
 
-		<Video controls>
-			<source src="/cannonball-showcase.mp4" type="video/mp4"></source>
-		</Video>
+    	<H2WithID id="cannonball" $border={false}>Cannonball</H2WithID>
 
-		A cannonball has the following properties:
+    	Let's start by showcasing ABM Sheets on a simple physics simulation of shooting a cannonball in a two-dimensional space.
 
-		- `X` and `Y` - the cannonball's coordinates
-		- `VX` and `VY` - the cannonball's `X` and `Y` velocity
-		- `ANGLE` - initial shooting angle
-		- `SPEED` - initial shooting speed
+    	Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=c12d7697-7d5a-49fb-8240-7e55feddcec9).
 
-		<br />
-		Then there is a list of constant values:
+    	<Video controls>
+    		<source src="/cannonball-showcase.mp4" type="video/mp4"></source>
+    	</Video>
 
-		- `GRAVITY` - gravity
-		- `AIR_RESISTANCE` - air resistance
-		- `TIME_FACTOR` - time factor
+    	A cannonball has the following properties:
 
-		<br />
-		The physics simulation of a cannonball is modelled as following:
+    	- `X` and `Y` - the cannonball's coordinates
+    	- `VX` and `VY` - the cannonball's `X` and `Y` velocity
+    	- `ANGLE` - initial shooting angle
+    	- `SPEED` - initial shooting speed
 
-		- `ANGLE = 20` (can be tweaked)
-		- `SPEED = 50` (can be tweaked)
-		- `VX`
-			- initially set to `SPEED * COS(RADIANS(ANGLE))`
-			- then updated as `VX + -AIR_RESISTANCE * VX * TIME_FACTOR`
-		- `VY`
-			- initially set to `SPEED * SIN(RADIANS(ANGLE))`
-			- then updated as `VY + (-GRAVITY + -AIR_RESISTANCE * VY) * TIME_FACTOR`
+    	<br />
+    	Then there is a list of constant values:
 
-		<br />
-		Finally, the x and y coordinates rendered in the graph are modelled as following:
+    	- `GRAVITY` - gravity
+    	- `AIR_RESISTANCE` - air resistance
+    	- `TIME_FACTOR` - time factor
 
-		- `X = X + VX * TIME_FACTOR`
-		- `Y = Y + VY * TIME_FACTOR`
+    	<br />
+    	The physics simulation of a cannonball is modelled as following:
 
-		<br />
-		Notice how the `X`, `Y` and `VX`, `VY` cells self-reference their own values, calculating their new values from previous time steps.
+    	- `ANGLE = 20` (can be tweaked)
+    	- `SPEED = 50` (can be tweaked)
+    	- `VX`
+    		- initially set to `SPEED * COS(RADIANS(ANGLE))`
+    		- then updated as `VX + -AIR_RESISTANCE * VX * TIME_FACTOR`
+    	- `VY`
+    		- initially set to `SPEED * SIN(RADIANS(ANGLE))`
+    		- then updated as `VY + (-GRAVITY + -AIR_RESISTANCE * VY) * TIME_FACTOR`
 
-		<br />
-		
-		</Highlight>
+    	<br />
+    	Finally, the x and y coordinates rendered in the graph are modelled as following:
 
-		<H2WithID id="introduction">Introduction</H2WithID>
+    	- `X = X + VX * TIME_FACTOR`
+    	- `Y = Y + VY * TIME_FACTOR`
 
-		Spreadsheets are among the most widely used tools for data analysis, planning, and modeling due to their flexibility, accessibility, and low barrier to entry. They offer a familiar interface based on a two-dimensional grid of cells, which makes them ideal for a broad range of applications, from financial modeling to project management and scientific calculations. However, their core structural simplicity also introduces limitations, particularly when representing models that extend beyond two dimensions.
+    	<br />
+    	Notice how the `X`, `Y` and `VX`, `VY` cells self-reference their own values, calculating their new values from previous time steps.
 
-		In recent years, several research efforts have explored ways to expand the capabilities of spreadsheets to address more complex computational needs. [Espalier](https://sdg.csail.mit.edu/project/espalier/), for example, introduces a novel paradigm that combines spreadsheet usability with SQL-like expressiveness, enabling users to build rich organizational applications while editing hierarchical structured data within a visual environment. [Nezt](https://dl.acm.org/doi/10.1145/3191697.3214343) offers a live programming environment inspired by spreadsheets but enhanced with hierarchical cells and reusable custom functions, aiming to support application prototyping and scientific computing with greater expressiveness. Addressing the growing importance of real-time applications, a prototype [spreadsheet model for streaming data](https://dl.acm.org/doi/10.1145/2702123.2702587) demonstrates how users can stream and manipulate web-based data within a spreadsheet using temporal metadata and dynamic formulas. Finally, [this paper](https://ieeexplore.ieee.org/abstract/document/7476773) looks at spreadsheets from a broader perspective and treats them as a programming language, highlighting their liveness, directness, and ease of deployment, while surveying research directions in spreadsheet software engineering such as testing, refactoring, and clone detection.
+    	<br />
 
-		In this paper, we focus on the problem of extending the traditional spreadsheet paradigm with discrete time. There are multiple domains where discrete time simulations are ubiquitous. Those include physics simulations, agent-based models or financial market analyses. The typical way of modeling time in spreadsheets is to reserve one of the available dimensions (rows or columns) for modeling time steps. For instance, the model may add a new row for each new time step. However, reserving one of the two available dimensions for time leaves the spreadsheet with only one dimension for the other aspects of the model, eventually making it difficult to model more complex models.
+    	</Highlight>
 
-		Therefore, there is a strong motivation for directly supporting time-aware models in a spreadsheet environment. Spreadsheets offer a transparent, interactive, and user-friendly platform that encourages experimentation and rapid prototyping. Making them more compliant with complex modeling would significantly lower the barriers to entry for users without formal programming experience, while still supporting powerful and expressive simulations. By embedding time into the core data structure, ABM Sheets provides a seamless way to model state changes over time, making it a powerful tool for various time-aware simulation approaches.
+    	<H2WithID id="introduction">Introduction</H2WithID>
 
-		<H2WithID id="time-aware-simulations">Time-aware Simulations</H2WithID>
+    	Spreadsheets are among the most widely used tools for data analysis, planning, and modeling due to their flexibility, accessibility, and low barrier to entry. They offer a familiar interface based on a two-dimensional grid of cells, which makes them ideal for a broad range of applications, from financial modeling to project management and scientific calculations. However, their core structural simplicity also introduces limitations, particularly when representing models that extend beyond two dimensions.
 
-		Discrete time is a fundamental component of many modeling domains, yet it remains difficult to represent effectively within the traditional spreadsheet paradigm, particularly as the model complexity grows.
+    	In recent years, several research efforts have explored ways to expand the capabilities of spreadsheets to address more complex computational needs. [Espalier](https://sdg.csail.mit.edu/project/espalier/), for example, introduces a novel paradigm that combines spreadsheet usability with SQL-like expressiveness, enabling users to build rich organizational applications while editing hierarchical structured data within a visual environment. [Nezt](https://dl.acm.org/doi/10.1145/3191697.3214343) offers a live programming environment inspired by spreadsheets but enhanced with hierarchical cells and reusable custom functions, aiming to support application prototyping and scientific computing with greater expressiveness. Addressing the growing importance of real-time applications, a prototype [spreadsheet model for streaming data](https://dl.acm.org/doi/10.1145/2702123.2702587) demonstrates how users can stream and manipulate web-based data within a spreadsheet using temporal metadata and dynamic formulas. Finally, [this paper](https://ieeexplore.ieee.org/abstract/document/7476773) looks at spreadsheets from a broader perspective and treats them as a programming language, highlighting their liveness, directness, and ease of deployment, while surveying research directions in spreadsheet software engineering such as testing, refactoring, and clone detection.
 
-		Agent-based modeling (ABM) is one such domain. ABMs simulate the behavior of individual entities (agents) over time, requiring the tracking of multiple attributes for each agent across discrete time steps. This inherently introduces three-dimensional to the model: a set of agents, a set of attributes for each agent, and time. Traditional spreadsheets, constrained to two dimensions, force users into workarounds, such as encoding time along rows or columns, which quickly become error-prone and difficult to maintain as models scale in size and complexity.
+    	In this paper, we focus on the problem of extending the traditional spreadsheet paradigm with discrete time. There are multiple domains where discrete time simulations are ubiquitous. Those include physics simulations, agent-based models or financial market analyses. The typical way of modeling time in spreadsheets is to reserve one of the available dimensions (rows or columns) for modeling time steps. For instance, the model may add a new row for each new time step. However, reserving one of the two available dimensions for time leaves the spreadsheet with only one dimension for the other aspects of the model, eventually making it difficult to model more complex models.
 
-		Moreover, physics simulations present similar challenges. While simple physical phenomena can often be modeled analytically, more sophisticated simulations, especially those involving numerical integration of differential equations, require iterative, time-stepped computation. One example is the cannonball simulation presented at the beginning of this paper, as it illustrates the need to track object states over time. Expressing such evolving systems within conventional spreadsheet interfaces quickly becomes difficult, if not infeasible.
+    	Therefore, there is a strong motivation for directly supporting time-aware models in a spreadsheet environment. Spreadsheets offer a transparent, interactive, and user-friendly platform that encourages experimentation and rapid prototyping. Making them more compliant with complex modeling would significantly lower the barriers to entry for users without formal programming experience, while still supporting powerful and expressive simulations. By embedding time into the core data structure, ABM Sheets provides a seamless way to model state changes over time, making it a powerful tool for various time-aware simulation approaches.
 
-		Last but not least, financial modeling also heavily relies on temporal data. Whether analyzing historical trends, simulating future market behaviors, or evaluating investment strategies, financial models must track entities whose values evolve over time. Representing these changes accurately and efficiently within traditional spreadsheets often requires duplicating logic or data, increasing the likelihood of errors and limiting the model's extensibility.
+    	<H2WithID id="time-aware-simulations">Time-aware Simulations</H2WithID>
 
-		<H2WithID id="contributions">Contributions</H2WithID>
+    	Discrete time is a fundamental component of many modeling domains, yet it remains difficult to represent effectively within the traditional spreadsheet paradigm, particularly as the model complexity grows.
 
-		This paper makes the following contributions:
+    	Agent-based modeling (ABM) is one such domain. ABMs simulate the behavior of individual entities (agents) over time, requiring the tracking of multiple attributes for each agent across discrete time steps. This inherently introduces three-dimensional to the model: a set of agents, a set of attributes for each agent, and time. Traditional spreadsheets, constrained to two dimensions, force users into workarounds, such as encoding time along rows or columns, which quickly become error-prone and difficult to maintain as models scale in size and complexity.
 
-		- **Identification of a gap in conventional spreadsheet modeling** \
-		Through formative user interviews and analysis of common modeling scenarios, we identify a core limitation of traditional spreadsheets in representing systems that evolve over time, particularly in the context of agent-based modeling and dynamic simulations
+    	Moreover, physics simulations present similar challenges. While simple physical phenomena can often be modeled analytically, more sophisticated simulations, especially those involving numerical integration of differential equations, require iterative, time-stepped computation. One example is the cannonball simulation presented at the beginning of this paper, as it illustrates the need to track object states over time. Expressing such evolving systems within conventional spreadsheet interfaces quickly becomes difficult, if not infeasible.
 
-		- **Design and implementation of a time-extended spreadsheet model** \
-		We introduce an extension to the traditional spreadsheet paradigm that integrates discrete time as a first-class concept. Our prototype allows cells to reference values from previous time steps directly, enabling natural expression of stateful and time-dependent computations.
+    	Last but not least, financial modeling also heavily relies on temporal data. Whether analyzing historical trends, simulating future market behaviors, or evaluating investment strategies, financial models must track entities whose values evolve over time. Representing these changes accurately and efficiently within traditional spreadsheets often requires duplicating logic or data, increasing the likelihood of errors and limiting the model's extensibility.
 
-		- **Demonstration through case studies** \
-		We validate the expressiveness and utility of our time-aware spreadsheet model by implementing three case studies: an agent-based model, a physical system simulation, and a financial process. These examples highlight scenarios that are cumbersome or infeasible to construct using conventional spreadsheet tools like Excel or Google Sheets.
+    	<H2WithID id="contributions">Contributions</H2WithID>
 
-		<H2WithID id="formative-interviews">Formative Interviews</H2WithID>
+    	This paper makes the following contributions:
 
-		Prior to implementing the system, a series of formative interviews was conducted to discover limitations of the traditional spreadsheet software, such as Microsoft Excel or Google Sheets, when applied to agent-based modeling tasks. Participants were given a simple agent-based modeling scenario and asked to implement it in Microsoft Excel using whatever approach they found most appropriate.
+    	- **Identification of a gap in conventional spreadsheet modeling** \
+    	Through formative user interviews and analysis of common modeling scenarios, we identify a core limitation of traditional spreadsheets in representing systems that evolve over time, particularly in the context of agent-based modeling and dynamic simulations
 
-		<H3WithID id="participants">Participants</H3WithID>
+    	- **Design and implementation of a time-extended spreadsheet model** \
+    	We introduce an extension to the traditional spreadsheet paradigm that integrates discrete time as a first-class concept. Our prototype allows cells to reference values from previous time steps directly, enabling natural expression of stateful and time-dependent computations.
 
-		The study included four participants. Two had extensive experience with Microsoft Excel and used it regularly in either professional or personal contexts. The other two were university students studying computer science, with limited prior exposure to spreadsheet tools, but with solid foundation in programming concepts.
+    	- **Demonstration through case studies** \
+    	We validate the expressiveness and utility of our time-aware spreadsheet model by implementing three case studies: an agent-based model, a physical system simulation, and a financial process. These examples highlight scenarios that are cumbersome or infeasible to construct using conventional spreadsheet tools like Excel or Google Sheets.
 
-		<H3WithID id="assignment">Assignment</H3WithID>
+    	<H2WithID id="formative-interviews">Formative Interviews</H2WithID>
 
-		The modeling assignment involved simulating a footrace between agents. Each agent had an individual speed and advanced through a one-dimensional space based on that speed. The simulation required agents to update their positions over discrete time steps, and to halt once any agent crossed the finish line — a classic example of an agent-based system with evolving state and conditional behavior over time.
+    	Prior to implementing the system, a series of formative interviews was conducted to discover limitations of the traditional spreadsheet software, such as Microsoft Excel or Google Sheets, when applied to agent-based modeling tasks. Participants were given a simple agent-based modeling scenario and asked to implement it in Microsoft Excel using whatever approach they found most appropriate.
 
-		<H3WithID id="findings">Findings</H3WithID>
+    	<H3WithID id="participants">Participants</H3WithID>
 
-		Interestingly, one participant chose to avoid the time-stepped approach altogether, instead calculating agents' final positions using direct formulas. When asked why they opted to bypass modeling with time steps, they explained:
+    	The study included four participants. Two had extensive experience with Microsoft Excel and used it regularly in either professional or personal contexts. The other two were university students studying computer science, with limited prior exposure to spreadsheet tools, but with solid foundation in programming concepts.
 
-		*"I guess because once you set the rows to time steps, you have lost a dimension of your spreadsheet and so now everything is one-dimensional and everything about the dynamics has to be embedded in a single formula and that can get really complicated, so I was trying to get away from not having to do that for as long as possible. You've only got two dimensions, and if you use one for time, everything else becomes miserable."*
+    	<H3WithID id="assignment">Assignment</H3WithID>
 
-		This feedback directly supports the core hypothesis behind ABM Sheets - that embedding time as a native dimension in spreadsheet environments could alleviate major usability and expressiveness issues in modeling dynamic systems.
+    	The modeling assignment involved simulating a footrace between agents. Each agent had an individual speed and advanced through a one-dimensional space based on that speed. The simulation required agents to update their positions over discrete time steps, and to halt once any agent crossed the finish line — a classic example of an agent-based system with evolving state and conditional behavior over time.
 
-		Another participant offered a valuable reflection on the enduring appeal of spreadsheet software:
+    	<H3WithID id="findings">Findings</H3WithID>
 
-		*"One of the benefits of Excel, as you probably know, is just the whip attitude of it, you know, this kind of interactive, reactive programming environment. The ability to mix data and formulas/programming in the same environment is extremely attractive."*
+    	Interestingly, one participant chose to avoid the time-stepped approach altogether, instead calculating agents' final positions using direct formulas. When asked why they opted to bypass modeling with time steps, they explained:
 
-		This insight underscores the power of spreadsheets as hybrid tools for both data manipulation and lightweight programming. ABM Sheets aims to build on this foundation by preserving the interactivity and flexibility of traditional spreadsheets while extending their capabilities to support time-evolving simulations in a more intuitive and maintainable way.
+    	*"I guess because once you set the rows to time steps, you have lost a dimension of your spreadsheet and so now everything is one-dimensional and everything about the dynamics has to be embedded in a single formula and that can get really complicated, so I was trying to get away from not having to do that for as long as possible. You've only got two dimensions, and if you use one for time, everything else becomes miserable."*
 
-		Both of these insights gave us valuable information that strenghtens the idea of ABM Sheets.
+    	This feedback directly supports the core hypothesis behind ABM Sheets - that embedding time as a native dimension in spreadsheet environments could alleviate major usability and expressiveness issues in modeling dynamic systems.
 
-		<H2WithID id="system-overview">System Overview</H2WithID>
+    	Another participant offered a valuable reflection on the enduring appeal of spreadsheet software:
 
-		ABM Sheets is designed to closely resemble traditional spreadsheet software, particularly Microsoft Excel, in order to minimize the learning curve for existing users. The user interface, formula syntax, and user interaction patterns are intentionally modeled after familiar spreadsheet conventions. This ensures that users can quickly adapt to the system while benefiting from its extended capabilities.
+    	*"One of the benefits of Excel, as you probably know, is just the whip attitude of it, you know, this kind of interactive, reactive programming environment. The ability to mix data and formulas/programming in the same environment is extremely attractive."*
 
-		<H3WithID id="built-in-discrete-time">Built-in Discrete Time</H3WithID>
+    	This insight underscores the power of spreadsheets as hybrid tools for both data manipulation and lightweight programming. ABM Sheets aims to build on this foundation by preserving the interactivity and flexibility of traditional spreadsheets while extending their capabilities to support time-evolving simulations in a more intuitive and maintainable way.
 
-		The core innovation in ABM Sheets is the integration of discrete time as a native feature of the spreadsheet environment. This addition introduces several fundamental changes to how cells behave and how formulas are interpreted.
+    	Both of these insights gave us valuable information that strenghtens the idea of ABM Sheets.
 
-		Most notably, cells in ABM Sheets are allowed to reference themselves within their own formulas. When a cell references itself, the value retrieved corresponds to the previous time step. To enable this behavior, each time-dependent cell must be initialized with a starting value — referred to as the default formula — from which the simulation can evolve over time.
+    	<H2WithID id="system-overview">System Overview</H2WithID>
 
-		Each cell in ABM Sheets can therefore have two formulas:
+    	ABM Sheets is designed to closely resemble traditional spreadsheet software, particularly Microsoft Excel, in order to minimize the learning curve for existing users. The user interface, formula syntax, and user interaction patterns are intentionally modeled after familiar spreadsheet conventions. This ensures that users can quickly adapt to the system while benefiting from its extended capabilities.
 
-		- **default formula** - defines the cell's value at the initial time step (t = 1)
-		- **primary formula** - defines the cell's value in all subsequent time steps (t > 1), potentially referencing its own prior state or the states of other cells 
+    	<H3WithID id="built-in-discrete-time">Built-in Discrete Time</H3WithID>
 
-		If a cell attempts to reference itself without a defined default formula, the evaluation results in an error due to the absence of an initial state.
+    	The core innovation in ABM Sheets is the integration of discrete time as a native feature of the spreadsheet environment. This addition introduces several fundamental changes to how cells behave and how formulas are interpreted.
 
-		To define both formulas within a single cell, ABM Sheets uses a dual-assignment syntax - the first `=` introduces the default formula, and the second `=` introduces the primary formula. If only one formula is provided, it is treated as the primary formula and applies uniformly across all time steps without referencing prior state.
+    	Most notably, cells in ABM Sheets are allowed to reference themselves within their own formulas. When a cell references itself, the value retrieved corresponds to the previous time step. To enable this behavior, each time-dependent cell must be initialized with a starting value — referred to as the default formula — from which the simulation can evolve over time.
 
-		To define a simple counter that starts at `1` and increments by `1` at each time step, the formula in cell `A1` would be `= 1 = A1 + 1`:
+    	Each cell in ABM Sheets can therefore have two formulas:
 
-		- at time step `1`, `A1` evaluates to `1` (the default formula)
-		- at time step `2`, `A1` evaluates to `1 + 1 = 2` (the primary formula)
-		- at time step `3`, `A1` evaluates to `2 + 1 = 3`, and so on
+    	- **default formula** - defines the cell's value at the initial time step (t = 1)
+    	- **primary formula** - defines the cell's value in all subsequent time steps (t > 1), potentially referencing its own prior state or the states of other cells
 
-		<H3WithID id="cell-references">Cell References</H3WithID>
+    	If a cell attempts to reference itself without a defined default formula, the evaluation results in an error due to the absence of an initial state.
 
-		In a spreadsheet model where cells reference themselves arbitrarily, a mechanism to ensure that all cells are evaluated in correct and consistent order must be enforced. For instance, if `A1` references `B1`, the system must make sure to evaluate `B1` prior to `A1` in order for `A1` to have the most up-to-date value of `B1`.
+    	To define both formulas within a single cell, ABM Sheets uses a dual-assignment syntax - the first `=` introduces the default formula, and the second `=` introduces the primary formula. If only one formula is provided, it is treated as the primary formula and applies uniformly across all time steps without referencing prior state.
 
-		To enforce this ordering, ABM Sheets employs a topological sorting algorithm that analyzes cell dependencies and determines a valid evaluation sequence. This guarantees that each cell is computed only after all the cells it depends on have been evaluated.
+    	To define a simple counter that starts at `1` and increments by `1` at each time step, the formula in cell `A1` would be `= 1 = A1 + 1`:
 
-		However, this approach can encounter issues when cyclic dependencies exist — when two or more cells depend on each other either directly or indirectly. For instance:
+    	- at time step `1`, `A1` evaluates to `1` (the default formula)
+    	- at time step `2`, `A1` evaluates to `1 + 1 = 2` (the primary formula)
+    	- at time step `3`, `A1` evaluates to `2 + 1 = 3`, and so on
 
-		- cell `A1` with formula `= B1`
-		- cell `B1` with formula `= A1`
+    	<H3WithID id="cell-references">Cell References</H3WithID>
 
-		This configuration creates a circular dependency, which prevents topological sorting and leads to an evaluation error. ABM Sheets addresses this problem by leveraging default formulas to break dependency cycles across time steps. By providing an initial value through a default formula, a cell can be evaluated independently at the first time step, allowing dependent cells to reference its value without forming an immediate cycle. For instance:
+    	In a spreadsheet model where cells reference themselves arbitrarily, a mechanism to ensure that all cells are evaluated in correct and consistent order must be enforced. For instance, if `A1` references `B1`, the system must make sure to evaluate `B1` prior to `A1` in order for `A1` to have the most up-to-date value of `B1`.
 
-		- `A1` formula is `= 1 = B1`
-		- `B1` formula is `= A1`
+    	To enforce this ordering, ABM Sheets employs a topological sorting algorithm that analyzes cell dependencies and determines a valid evaluation sequence. This guarantees that each cell is computed only after all the cells it depends on have been evaluated.
 
-		In this revised version, `A1` is initialized to `1` at the first time step. As a result, `B1` can safely reference `A1`, and both cells can be evaluated without creating a circular dependency in the current time step. In subsequent time steps, values propagate forward using the established evaluation order, maintaining consistency and correctness.
+    	However, this approach can encounter issues when cyclic dependencies exist — when two or more cells depend on each other either directly or indirectly. For instance:
 
-		This mechanism allows ABM Sheets to support recursive and interdependent cell logic while preserving the integrity of the simulation across discrete time steps.
+    	- cell `A1` with formula `= B1`
+    	- cell `B1` with formula `= A1`
 
-		<H2WithID id="case-studies">Case Studies</H2WithID>
+    	This configuration creates a circular dependency, which prevents topological sorting and leads to an evaluation error. ABM Sheets addresses this problem by leveraging default formulas to break dependency cycles across time steps. By providing an initial value through a default formula, a cell can be evaluated independently at the first time step, allowing dependent cells to reference its value without forming an immediate cycle. For instance:
 
-		<H3WithID id="wolf-sheep-predation">Wolf-sheep Predation</H3WithID>
+    	- `A1` formula is `= 1 = B1`
+    	- `B1` formula is `= A1`
 
-		The wolf-sheep predation model explores the stability of predator-prey ecosystems. It is an agent-based simulation that consists of two types of agents - predators (wolves) and prey (sheep). Wolves attempt to eat the sheep in order to survive. If their energy runs out, they die and respawn only after eating a sheep that crosses their path. On the other hand, if a sheep gets eaten, it dies and respawns after a certain time passes. This simulation aims to observe the changes in the wolf and sheep population over time.
+    	In this revised version, `A1` is initialized to `1` at the first time step. As a result, `B1` can safely reference `A1`, and both cells can be evaluated without creating a circular dependency in the current time step. In subsequent time steps, values propagate forward using the established evaluation order, maintaining consistency and correctness.
 
-		Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=45da2f86-6ea2-40c8-b063-ab66eee61d58).
+    	This mechanism allows ABM Sheets to support recursive and interdependent cell logic while preserving the integrity of the simulation across discrete time steps.
 
-		<Video controls>
-			<source src="/wolf-sheep-predation-showcase.mp4" type="video/mp4"></source>
-		</Video>
+    	<H2WithID id="case-studies">Case Studies</H2WithID>
 
-		We can observe that at first, the population of sheep decreases as the wolves eat the sheep. As there is less sheep for the wolves to eat, their energy runs out shortly, resulting in the decrease of the wolf population. With this decrease, the sheep can regenerate and respawn and with less wolves to eat them, they prosper. However, with more sheep in the area, there is a higher probability of an encounter with the wolves, resulting in the increase of the wolf population.
+    	<H3WithID id="wolf-sheep-predation">Wolf-sheep Predation</H3WithID>
 
-		Both the wolves and the sheep have `X` and `Y` coordinates representing their position in the area. We have a helper column `POSITION` calculated as `CONCAT(X, Y)`, which gives us a unique identifier of their position.
-		
-		Wolves have a column `SHEEP ID` representing the ID of the sheep in the same position as the corresponding wolf. In each step, if a sheep doesn't cross the wolf's position, their `HEALTH` is decremented by `1`. Otherwise their `HEALTH` is regenerated as they eat the sheep. This is modelled as:
+    	The wolf-sheep predation model explores the stability of predator-prey ecosystems. It is an agent-based simulation that consists of two types of agents - predators (wolves) and prey (sheep). Wolves attempt to eat the sheep in order to survive. If their energy runs out, they die and respawn only after eating a sheep that crosses their path. On the other hand, if a sheep gets eaten, it dies and respawns after a certain time passes. This simulation aims to observe the changes in the wolf and sheep population over time.
 
-		`IF(AND(SHEEP_ID != "NONE", SHEEP_STATUS == "ALIVE"), MIN(MAX_HEALTH, HEALTH + 5), MAX(0, HEALTH - 1))`
+    	Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=45da2f86-6ea2-40c8-b063-ab66eee61d58).
 
-		Sheep's logic is implemented in a similar way, however, when they are eaten by a wolf, they are resurrected after a certain period of time passes. The respawn time of the sheep is modelled as:
+    	<Video controls>
+    		<source src="/wolf-sheep-predation-showcase.mp4" type="video/mp4"></source>
+    	</Video>
 
-		`RESPAWN = IF(STATUS == "ALIVE", 0, IF(AND(PREV(STATUS) == "ALIVE", STATUS == "DEAD"), 10, RESPAWN - 1))`
+    	We can observe that at first, the population of sheep decreases as the wolves eat the sheep. As there is less sheep for the wolves to eat, their energy runs out shortly, resulting in the decrease of the wolf population. With this decrease, the sheep can regenerate and respawn and with less wolves to eat them, they prosper. However, with more sheep in the area, there is a higher probability of an encounter with the wolves, resulting in the increase of the wolf population.
 
-		Notice the use of `PREV` in this formula. The `PREV` function takes in a cell reference and returns its value in the previous time step. In this way, we can observe the change of the sheep's `STATUS` in time and respond to the changes by updating the `RESPAWN` accordingly. The sheep's `STATUS` is modelled as follows:
+    	Both the wolves and the sheep have `X` and `Y` coordinates representing their position in the area. We have a helper column `POSITION` calculated as `CONCAT(X, Y)`, which gives us a unique identifier of their position.
 
-		`STATUS = IF(STATUS == "DEAD", IF(RESPAWN > 0, "DEAD", "ALIVE"), IF(WOLF_ID != 0, "DEAD", "ALIVE"))`
+    	Wolves have a column `SHEEP ID` representing the ID of the sheep in the same position as the corresponding wolf. In each step, if a sheep doesn't cross the wolf's position, their `HEALTH` is decremented by `1`. Otherwise their `HEALTH` is regenerated as they eat the sheep. This is modelled as:
 
-		If the sheep is alive and a wolf crosses their way, the sheep becomes dead. If it is dead and the respawn time is greater then zero, it stays dead, otherwise is becomes alive again. The two above formulas inherently use the built-in mechanism of discrete time to observe changes in time and respond to them accordingly.
+    	`IF(AND(SHEEP_ID != "NONE", SHEEP_STATUS == "ALIVE"), MIN(MAX_HEALTH, HEALTH + 5), MAX(0, HEALTH - 1))`
 
-		<H3WithID id="running-race">Running Race</H3WithID>
+    	Sheep's logic is implemented in a similar way, however, when they are eaten by a wolf, they are resurrected after a certain period of time passes. The respawn time of the sheep is modelled as:
 
-		The running race model is a simple agent-based simulation modeling a set of runners competing in a running race. Each runner has a certain speed assigned at the beginning and this speed is randomly incremented/decremented in each time step, not going below 0. If any agent crosses the finish line, the race stops and the winner is displayed.
+    	`RESPAWN = IF(STATUS == "ALIVE", 0, IF(AND(PREV(STATUS) == "ALIVE", STATUS == "DEAD"), 10, RESPAWN - 1))`
 
-		Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=5e09daf0-df10-490a-815c-27a50322cfc2).
+    	Notice the use of `PREV` in this formula. The `PREV` function takes in a cell reference and returns its value in the previous time step. In this way, we can observe the change of the sheep's `STATUS` in time and respond to the changes by updating the `RESPAWN` accordingly. The sheep's `STATUS` is modelled as follows:
 
-		<Video controls>
-			<source src="/running-race-showcase.mp4" type="video/mp4"></source>
-		</Video>
+    	`STATUS = IF(STATUS == "DEAD", IF(RESPAWN > 0, "DEAD", "ALIVE"), IF(WOLF_ID != 0, "DEAD", "ALIVE"))`
 
-		Each runner has a `POSITION`, `SPEED` and an indicator of whether it has crossed the finish line labeled `FINISHED`. The `POSITION` is initially set to `0` and calculated as:
-		
-		`POSITION = POSITION + SPEED`.
-		
-		The `SPEED` is initially set to `RANDBETWEEN(1, 5)` and calculated as:
-		
-		`SPEED = MAX(1, SPEED + (RAND() - 0.5) * 2)`.
+    	If the sheep is alive and a wolf crosses their way, the sheep becomes dead. If it is dead and the respawn time is greater then zero, it stays dead, otherwise is becomes alive again. The two above formulas inherently use the built-in mechanism of discrete time to observe changes in time and respond to them accordingly.
 
-		The speed is randomly incremented/decremented in each new time step, but we make sure it never goes below `1` in order for the agents to always move forward. Then, for each agent we check whether they crossed the finish line using:
+    	<H3WithID id="running-race">Running Race</H3WithID>
 
-		`FINISHED = IF(POSITION >= FINISH_LINE, 1, 0)`
+    	The running race model is a simple agent-based simulation modeling a set of runners competing in a running race. Each runner has a certain speed assigned at the beginning and this speed is randomly incremented/decremented in each time step, not going below 0. If any agent crosses the finish line, the race stops and the winner is displayed.
 
-		Finally, we check if any runner has crossed the finish line by summing all `FINISHED` values and checking if their sum is greater than `0`:
+    	Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=5e09daf0-df10-490a-815c-27a50322cfc2).
 
-		`ANY_FINISHED = IF(SUM(FINISHED_FIRST, FINISHED_LAST) > 0, 1, 0)`
+    	<Video controls>
+    		<source src="/running-race-showcase.mp4" type="video/mp4"></source>
+    	</Video>
 
-		If any agent has finished the race, we stop updating the other agents' positions and speeds and the race has ended.
+    	Each runner has a `POSITION`, `SPEED` and an indicator of whether it has crossed the finish line labeled `FINISHED`. The `POSITION` is initially set to `0` and calculated as:
 
-		<H3WithID id="hotellings-law">Hotelling's Law</H3WithID>
+    	`POSITION = POSITION + SPEED`.
 
-		The Hotelling's Law model examines the optimal pricing of goods that stores sell in order to maximize their profit. In this models, we have stores and customers placed randomly in a one-dimensional space (line). Each store is assigned a random pricing of their goods. In each new time step, each store attempts to increase/decrease the pricing of their goods to see if they can attract more customers. If so, the stores update their prices. In the graph, we can observe the changing prices of the three stores in the model.
+    	The `SPEED` is initially set to `RANDBETWEEN(1, 5)` and calculated as:
 
-		Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=e5777fbb-d03c-4e62-9282-69100f75c6d7).
+    	`SPEED = MAX(1, SPEED + (RAND() - 0.5) * 2)`.
 
-		<Video controls>
-			<source src="/hotellings-law-showcase.mp4" type="video/mp4"></source>
-		</Video>
+    	The speed is randomly incremented/decremented in each new time step, but we make sure it never goes below `1` in order for the agents to always move forward. Then, for each agent we check whether they crossed the finish line using:
 
-		This model is quite complex and difficult to describe using formula pseudocode. The main idea is that we create an interest matrix where rows represent customers and columns represent stores. Each cell in the matrix represents the interest of the given customer for the given store, calculated as:
+    	`FINISHED = IF(POSITION >= FINISH_LINE, 1, 0)`
 
-		`INTEREST = ABS(STORE_POSITION - CUSTOMER_POSITION) + STORE_PRICE`
+    	Finally, we check if any runner has crossed the finish line by summing all `FINISHED` values and checking if their sum is greater than `0`:
 
-		Each store tries to increment or decrement their price to see whether they can gain more customers with their new pricing strategy. For this, we create two new matrices with the same structure as the matrix above, but we count in the new incremented/decremented prices.
+    	`ANY_FINISHED = IF(SUM(FINISHED_FIRST, FINISHED_LAST) > 0, 1, 0)`
 
-		Each customer looks at the interest matrix and chooses to go to the store with the lowest interest value. Each store then sums their total number of customers. This is performed also for the incremented/decremented interest rates. If a store gains more customers by either incrementing or decrementing their price, they update their current price based on the new best strategy. This process is repeated in each step of the simulation.
+    	If any agent has finished the race, we stop updating the other agents' positions and speeds and the race has ended.
 
-		<H2WithID id="limitations-and-future-improvements">Limitations & Future Improvements</H2WithID>
+    	<H3WithID id="hotellings-law">Hotelling's Law</H3WithID>
 
-		While ABM Sheets introduces a novel approach to integrating discrete time into spreadsheets, several limitations and opportunities for improvement remain.
+    	The Hotelling's Law model examines the optimal pricing of goods that stores sell in order to maximize their profit. In this models, we have stores and customers placed randomly in a one-dimensional space (line). Each store is assigned a random pricing of their goods. In each new time step, each store attempts to increase/decrease the pricing of their goods to see if they can attract more customers. If so, the stores update their prices. In the graph, we can observe the changing prices of the three stores in the model.
 
-		<H3WithID id="limitations">Limitations</H3WithID>
+    	Live demo of the model can be found on [this link](https://abm-sheets-web.vercel.app/spreadsheet?projectId=e5777fbb-d03c-4e62-9282-69100f75c6d7).
 
-		- **Limited Spreadsheet Functionality** \
-		ABM Sheets is designed to closely resemble traditional spreadsheet interfaces such as Microsoft Excel and Google Sheets. However, in its current state, the system offers only a core subset of features. As a result, users familiar with more mature spreadsheet software may find certain advanced functionalities missing, which could impact ease of use and overall user experience.
+    	<Video controls>
+    		<source src="/hotellings-law-showcase.mp4" type="video/mp4"></source>
+    	</Video>
 
-		- **Limited Expressiveness for Non-Discrete Time** \
-		The current model assumes a uniform, discrete time progression. Simulations involving continuous time, variable time steps, or asynchronous events are not naturally supported and would require significant workarounds.
+    	This model is quite complex and difficult to describe using formula pseudocode. The main idea is that we create an interest matrix where rows represent customers and columns represent stores. Each cell in the matrix represents the interest of the given customer for the given store, calculated as:
 
-		- **Debugging and Traceability** \
-		While time-based formulas enhance expressiveness, they also introduce complexity in debugging. Tracing the origin of unexpected results across time steps and dependencies is non-trivial and may require better tooling support, which is not provided in the current version.
+    	`INTEREST = ABS(STORE_POSITION - CUSTOMER_POSITION) + STORE_PRICE`
 
-		- **Lack of Built-in Visualization Controls** \
-		Although ABM Sheets provides simple visualization capabilities, it does not suffice for complex time-aware simulations where plotting aggregated results is beneficial for understanding the simulation output. There is limited support for more sophisticated, interactive visualizations, such as heatmaps, spatial plots or agent trajectories.
+    	Each store tries to increment or decrement their price to see whether they can gain more customers with their new pricing strategy. For this, we create two new matrices with the same structure as the matrix above, but we count in the new incremented/decremented prices.
 
-		<H3WithID id="future-improvements">Future Improvements</H3WithID>
+    	Each customer looks at the interest matrix and chooses to go to the store with the lowest interest value. Each store then sums their total number of customers. This is performed also for the incremented/decremented interest rates. If a store gains more customers by either incrementing or decrementing their price, they update their current price based on the new best strategy. This process is repeated in each step of the simulation.
 
-		- **Optimized Evaluation Engine** \
-		In complex simulations with numerous tables and complex formulas across a large number of time steps, the evaluation's performance could get very slow. Incorporating techniques such as incremental re-computation, parallel evaluation, or just-in-time compilation could significantly enhance performance for larger models.
+    	<H2WithID id="limitations-and-future-improvements">Limitations & Future Improvements</H2WithID>
 
-		- **Improved Error Reporting** \
-		A step-through debugger or a visual dependency inspector could help users understand how values evolve over time. Additionally, adding built-in support for richer error messages and reporting would help users debug complex simulations with greater ease.
+    	While ABM Sheets introduces a novel approach to integrating discrete time into spreadsheets, several limitations and opportunities for improvement remain.
 
-		- **Composable Visualization** \
-		We are currently working on integrating composable visualization support, which will enable users to compose custom graphs using the formula language directly in cells, which would provide the users with greater flexibility for custom visualizations.
+    	<H3WithID id="limitations">Limitations</H3WithID>
 
-		- **User-defined Functions** \
-		Introducing custom reusable functions with parameters would help decluttering complex formulas and make the experience with more complex simulations much more comfortable.
+    	- **Limited Spreadsheet Functionality** \
+    	ABM Sheets is designed to closely resemble traditional spreadsheet interfaces such as Microsoft Excel and Google Sheets. However, in its current state, the system offers only a core subset of features. As a result, users familiar with more mature spreadsheet software may find certain advanced functionalities missing, which could impact ease of use and overall user experience.
 
-		<H2WithID id="related-work">Related Work</H2WithID>
+    	- **Limited Expressiveness for Non-Discrete Time** \
+    	The current model assumes a uniform, discrete time progression. Simulations involving continuous time, variable time steps, or asynchronous events are not naturally supported and would require significant workarounds.
 
-		Numerous efforts have been made to extend the traditional spreadsheet paradigm by enhancing its expressive power. In this section, we highlight several of these works and their key contributions. The complete list of references can be found in [this section](#references).
+    	- **Debugging and Traceability** \
+    	While time-based formulas enhance expressiveness, they also introduce complexity in debugging. Tracing the origin of unexpected results across time steps and dependencies is non-trivial and may require better tooling support, which is not provided in the current version.
 
-		There have been attempts to integrate continuous streaming data, such as data from web services, to spreadsheets ([[2]](https://dl.acm.org/doi/pdf/10.1145/2702123.2702587), [[3]](https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf)), enabling the development of analytics applications without requiring formal programming experience. Gneiss [[1]](https://dl.acm.org/doi/10.1145/2642918.2647371) has built upon this idea by presenting a dynamic website builder that utilizes spreadsheets, directly mapping cells with streaming data to GUI elements.
+    	- **Lack of Built-in Visualization Controls** \
+    	Although ABM Sheets provides simple visualization capabilities, it does not suffice for complex time-aware simulations where plotting aggregated results is beneficial for understanding the simulation output. There is limited support for more sophisticated, interactive visualizations, such as heatmaps, spatial plots or agent trajectories.
 
-		The pioneer work on Forms/3 [[4]](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F) shows that it is possible to treat spreadsheets as an end-user programming system, introducing a declarative way of programming together with the notion of built-in time into the spreadsheet model.
+    	<H3WithID id="future-improvements">Future Improvements</H3WithID>
 
-		Mito [[6](https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-)]  takes a different approach by bridging spreadsheets with Python, enhancing spreadsheet expressiveness while simultaneously providing a pathway for users, especially those familiar with tools like Microsoft Excel but lacking formal programming experience, to learn Python.
-		
-		Last but not least, [[11](https://dl.acm.org/doi/pdf/10.1145/2240236.2240260)] proposes extending spreadsheets with user-defined, reusable functions, with an objective to bring more expressive power of modern programming languages to the spreadsheet paradigm.
+    	- **Optimized Evaluation Engine** \
+    	In complex simulations with numerous tables and complex formulas across a large number of time steps, the evaluation's performance could get very slow. Incorporating techniques such as incremental re-computation, parallel evaluation, or just-in-time compilation could significantly enhance performance for larger models.
 
-		<H2WithID id="conclusion">Conclusion</H2WithID>
+    	- **Improved Error Reporting** \
+    	A step-through debugger or a visual dependency inspector could help users understand how values evolve over time. Additionally, adding built-in support for richer error messages and reporting would help users debug complex simulations with greater ease.
 
-		ABM Sheets demonstrates that it is both possible and practical to extend the spreadsheet paradigm with native support for discrete time, opening new possibilities of constructing dynamic, time-aware models without abandoning the intuitiveness and transparency of traditional spreadsheets. By allowing cells to reference their own prior states and by embedding time as a first-class concept, our approach increases the expressive power and unlocks a wide range of applications, from agent-based simulations to physical systems and economic models, that are otherwise difficult to implement in conventional spreadsheet tools.
+    	- **Composable Visualization** \
+    	We are currently working on integrating composable visualization support, which will enable users to compose custom graphs using the formula language directly in cells, which would provide the users with greater flexibility for custom visualizations.
 
-		Through case studies and user feedback, we have shown how this time-aware extension lowers the technical barriers for simulation modeling in spreadsheets, offering a powerful and accessible environment for experimentation, analysis and learning. We see this work as a step toward reimagining spreadsheets not just as static data tools, but as expressive environments for modeling complex, time-aware systems.
+    	- **User-defined Functions** \
+    	Introducing custom reusable functions with parameters would help decluttering complex formulas and make the experience with more complex simulations much more comfortable.
 
-		<H2WithID id="references">References</H2WithID>
+    	<H2WithID id="related-work">Related Work</H2WithID>
 
-		1. Chang, K. S. P., & Myers, B. A. (2014, October). Creating interactive web data applications with spreadsheets. In Proceedings of the 27th annual ACM symposium on User interface software and technology (pp. 87-96)
-			- [https://dl.acm.org/doi/10.1145/2642918.2647371](https://dl.acm.org/doi/10.1145/2642918.2647371)
+    	Numerous efforts have been made to extend the traditional spreadsheet paradigm by enhancing its expressive power. In this section, we highlight several of these works and their key contributions. The complete list of references can be found in [this section](#references).
 
-		2. Chang, K. S. P., & Myers, B. A. (2015, April). A spreadsheet model for handling streaming data. In Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems (pp. 3399-3402).
-			- [https://dl.acm.org/doi/pdf/10.1145/2702123.2702587](https://dl.acm.org/doi/pdf/10.1145/2702123.2702587)
+    	There have been attempts to integrate continuous streaming data, such as data from web services, to spreadsheets ([[2]](https://dl.acm.org/doi/pdf/10.1145/2702123.2702587), [[3]](https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf)), enabling the development of analytics applications without requiring formal programming experience. Gneiss [[1]](https://dl.acm.org/doi/10.1145/2642918.2647371) has built upon this idea by presenting a dynamic website builder that utilizes spreadsheets, directly mapping cells with streaming data to GUI elements.
 
-		3. Vaziri, M., Tardieu, O., Rabbah, R., Suter, P., & Hirzel, M. (2014, July). Stream processing with a spreadsheet. In European Conference on Object-Oriented Programming (pp. 360-384). Berlin, Heidelberg: Springer Berlin Heidelberg.
-			- [https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf](https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf)
+    	The pioneer work on Forms/3 [[4]](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F) shows that it is possible to treat spreadsheets as an end-user programming system, introducing a declarative way of programming together with the notion of built-in time into the spreadsheet model.
 
-		4. Burnett, M., Atwood, J., Djang, R. W., Reichwein, J., Gottfried, H., & Yang, S. (2001). Forms/3: A first-order visual language to explore the boundaries of the spreadsheet paradigm. Journal of functional programming, 11(2), 155-206.
-			- [https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F)
-		
-		5. Bažant, P., & Maršálková, M. (2018, April). A non-tabular spreadsheet with broad applicability. In Companion Proceedings of the 2nd International Conference on the Art, Science, and Engineering of Programming (pp. 161-165).
-			- [https://dl.acm.org/doi/pdf/10.1145/3191697.3214343](https://dl.acm.org/doi/pdf/10.1145/3191697.3214343)
+    	Mito [[6]](https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-)  takes a different approach by bridging spreadsheets with Python, enhancing spreadsheet expressiveness while simultaneously providing a pathway for users, especially those familiar with tools like Microsoft Excel but lacking formal programming experience, to learn Python.
 
-		6. Diamond-Reivich, J. (2020). Mito: Edit a Spreadsheet. Generate Production Ready Python. In LIVE: Workshop on Live Programming.
-			- [https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-](https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-)
+    	Last but not least, [[11]](https://dl.acm.org/doi/pdf/10.1145/2240236.2240260) proposes extending spreadsheets with user-defined, reusable functions, with an objective to bring more expressive power of modern programming languages to the spreadsheet paradigm.
 
-		7. Jarvis, W. (2019). Styling in Espalier: a spreadsheet tool for manipulation of structured data. MSc dissertation, Massachusetts Institute of Technology.
-			- [https://dspace.mit.edu/handle/1721.1/121674](https://dspace.mit.edu/handle/1721.1/121674)
+    	<H2WithID id="conclusion">Conclusion</H2WithID>
 
-		8. Nardi, B. A., & Miller, J. R. (1990). The spreadsheet interface: A basis for end user programming (Vol. 10, No. 647402.725609). Hewlett-Packard Laboratories.
-			- [https://www.miramontes.com/writing/spreadsheet-eup/index.php](https://www.miramontes.com/writing/spreadsheet-eup/index.php)
+    	ABM Sheets demonstrates that it is both possible and practical to extend the spreadsheet paradigm with native support for discrete time, opening new possibilities of constructing dynamic, time-aware models without abandoning the intuitiveness and transparency of traditional spreadsheets. By allowing cells to reference their own prior states and by embedding time as a first-class concept, our approach increases the expressive power and unlocks a wide range of applications, from agent-based simulations to physical systems and economic models, that are otherwise difficult to implement in conventional spreadsheet tools.
 
-		9. Hermans, F., Jansen, B., Roy, S., Aivaloglou, E., Swidan, A., & Hoepelman, D. (2016, March). Spreadsheets are code: An overview of software engineering approaches applied to spreadsheets. In 2016 IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER) (Vol. 5, pp. 56-65). IEEE
-			- [https://ieeexplore.ieee.org/abstract/document/7476773/](https://ieeexplore.ieee.org/abstract/document/7476773/)
+    	Through case studies and user feedback, we have shown how this time-aware extension lowers the technical barriers for simulation modeling in spreadsheets, offering a powerful and accessible environment for experimentation, analysis and learning. We see this work as a step toward reimagining spreadsheets not just as static data tools, but as expressive environments for modeling complex, time-aware systems.
 
-		10. Sarkar, A., Borghouts, J. W., Iyer, A., Khullar, S., Canton, C., Hermans, F., ... & Williams, J. (2020, April). Spreadsheet use and programming experience: An exploratory survey. In Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-9).
-			- [https://dl.acm.org/doi/abs/10.1145/3334480.3382807](https://dl.acm.org/doi/abs/10.1145/3334480.3382807)
-		
-		11. Jones, S. P., Blackwell, A., & Burnett, M. (2003, August). A user-centred approach to functions in Excel. In Proceedings of the eighth ACM SIGPLAN international conference on Functional programming (pp. 165-176).
-			- [https://web.engr.oregonstate.edu/~burnett/Reprints/icfp03.excelFunctions.pdf](https://web.engr.oregonstate.edu/~burnett/Reprints/icfp03.excelFunctions.pdf)
+    	<H2WithID id="references">References</H2WithID>
 
-		12. Gulwani, S., Harris, W. R., & Singh, R. (2012). Spreadsheet data manipulation using examples. Communications of the ACM, 55(8), 97-105.
-			- [https://dl.acm.org/doi/pdf/10.1145/2240236.2240260](https://dl.acm.org/doi/pdf/10.1145/2240236.2240260)
-	</Content>
+    	1. Chang, K. S. P., & Myers, B. A. (2014, October). Creating interactive web data applications with spreadsheets. In Proceedings of the 27th annual ACM symposium on User interface software and technology (pp. 87-96)
+    		- [https://dl.acm.org/doi/10.1145/2642918.2647371](https://dl.acm.org/doi/10.1145/2642918.2647371)
+
+    	2. Chang, K. S. P., & Myers, B. A. (2015, April). A spreadsheet model for handling streaming data. In Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems (pp. 3399-3402).
+    		- [https://dl.acm.org/doi/pdf/10.1145/2702123.2702587](https://dl.acm.org/doi/pdf/10.1145/2702123.2702587)
+
+    	3. Vaziri, M., Tardieu, O., Rabbah, R., Suter, P., & Hirzel, M. (2014, July). Stream processing with a spreadsheet. In European Conference on Object-Oriented Programming (pp. 360-384). Berlin, Heidelberg: Springer Berlin Heidelberg.
+    		- [https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf](https://www.hirzels.com/martin/papers/ecoop14-activesheets.pdf)
+
+    	4. Burnett, M., Atwood, J., Djang, R. W., Reichwein, J., Gottfried, H., & Yang, S. (2001). Forms/3: A first-order visual language to explore the boundaries of the spreadsheet paradigm. Journal of functional programming, 11(2), 155-206.
+    		- [https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/forms3-a-firstorder-visual-language-to-explore-the-boundaries-of-the-spreadsheet-paradigm/66F1ACF22742EA28DD52608A5122E70F)
+
+    	5. Bažant, P., & Maršálková, M. (2018, April). A non-tabular spreadsheet with broad applicability. In Companion Proceedings of the 2nd International Conference on the Art, Science, and Engineering of Programming (pp. 161-165).
+    		- [https://dl.acm.org/doi/pdf/10.1145/3191697.3214343](https://dl.acm.org/doi/pdf/10.1145/3191697.3214343)
+
+    	6. Diamond-Reivich, J. (2020). Mito: Edit a Spreadsheet. Generate Production Ready Python. In LIVE: Workshop on Live Programming.
+    		- [https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-](https://2020.splashcon.org/details/live-2020-papers/10/Mito-Edit-a-spreadsheet-Generate-production-ready-Python-)
+
+    	7. Jarvis, W. (2019). Styling in Espalier: a spreadsheet tool for manipulation of structured data. MSc dissertation, Massachusetts Institute of Technology.
+    		- [https://dspace.mit.edu/handle/1721.1/121674](https://dspace.mit.edu/handle/1721.1/121674)
+
+    	8. Nardi, B. A., & Miller, J. R. (1990). The spreadsheet interface: A basis for end user programming (Vol. 10, No. 647402.725609). Hewlett-Packard Laboratories.
+    		- [https://www.miramontes.com/writing/spreadsheet-eup/index.php](https://www.miramontes.com/writing/spreadsheet-eup/index.php)
+
+    	9. Hermans, F., Jansen, B., Roy, S., Aivaloglou, E., Swidan, A., & Hoepelman, D. (2016, March). Spreadsheets are code: An overview of software engineering approaches applied to spreadsheets. In 2016 IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER) (Vol. 5, pp. 56-65). IEEE
+    		- [https://ieeexplore.ieee.org/abstract/document/7476773/](https://ieeexplore.ieee.org/abstract/document/7476773/)
+
+    	10. Sarkar, A., Borghouts, J. W., Iyer, A., Khullar, S., Canton, C., Hermans, F., ... & Williams, J. (2020, April). Spreadsheet use and programming experience: An exploratory survey. In Extended Abstracts of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-9).
+    		- [https://dl.acm.org/doi/abs/10.1145/3334480.3382807](https://dl.acm.org/doi/abs/10.1145/3334480.3382807)
+
+    	11. Jones, S. P., Blackwell, A., & Burnett, M. (2003, August). A user-centred approach to functions in Excel. In Proceedings of the eighth ACM SIGPLAN international conference on Functional programming (pp. 165-176).
+    		- [https://web.engr.oregonstate.edu/~burnett/Reprints/icfp03.excelFunctions.pdf](https://web.engr.oregonstate.edu/~burnett/Reprints/icfp03.excelFunctions.pdf)
+
+    	12. Gulwani, S., Harris, W. R., & Singh, R. (2012). Spreadsheet data manipulation using examples. Communications of the ACM, 55(8), 97-105.
+    		- [https://dl.acm.org/doi/pdf/10.1145/2240236.2240260](https://dl.acm.org/doi/pdf/10.1145/2240236.2240260)
+    </Content>
+
 </Container>

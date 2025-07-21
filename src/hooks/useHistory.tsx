@@ -1,7 +1,14 @@
 "use client";
 
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from "react";
 
 type HistoryContextType = {
     history: History;
@@ -13,8 +20,12 @@ type HistoryContextType = {
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 
 export const HistoryProvider = ({ children }: { children: ReactNode }) => {
-    const [history, setHistory] = useState<History>(new Map<CellId, string[]>());
-    const [dataHistory, setDataHistory] = useState<History>(new Map<CellId, string[]>());
+    const [history, setHistory] = useState<History>(
+        new Map<CellId, string[]>(),
+    );
+    const [dataHistory, setDataHistory] = useState<History>(
+        new Map<CellId, string[]>(),
+    );
 
     const values = {
         history,
@@ -23,7 +34,11 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
         setDataHistory,
     };
 
-    return <HistoryContext.Provider value={values}>{children}</HistoryContext.Provider>;
+    return (
+        <HistoryContext.Provider value={values}>
+            {children}
+        </HistoryContext.Provider>
+    );
 };
 
 export const useHistory = () => {

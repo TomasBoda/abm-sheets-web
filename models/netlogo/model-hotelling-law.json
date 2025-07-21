@@ -1,662 +1,662 @@
 {
-  "C1": {
-    "formula": "min price",
-    "value": "min price",
-    "color": "rgb(194, 234, 194)"
-  },
-  "D1": {
-    "formula": "max price",
-    "value": "max price",
-    "color": "rgb(194, 234, 194)"
-  },
-  "F1": {
-    "formula": "min position",
-    "value": "min position",
-    "color": "rgb(194, 234, 194)"
-  },
-  "G1": {
-    "formula": "max position",
-    "value": "max position",
-    "color": "rgb(194, 234, 194)"
-  },
-  "I1": {
-    "formula": "min price change",
-    "value": "min price change",
-    "color": "rgb(194, 234, 194)"
-  },
-  "J1": {
-    "formula": "max price change",
-    "value": "max price change",
-    "color": "rgb(194, 234, 194)"
-  },
-  "C2": {
-    "formula": "=10",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D2": {
-    "formula": "=30",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F2": {
-    "formula": "=0",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G2": {
-    "formula": "=30",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "I2": {
-    "formula": "=2",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J2": {
-    "formula": "=15",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C4": {
-    "formula": "stores",
-    "value": "stores",
-    "color": "rgb(240, 198, 198)"
-  },
-  "C5": {
-    "formula": "ID",
-    "value": "ID",
-    "color": "rgb(201, 201, 240)"
-  },
-  "D5": {
-    "formula": "position",
-    "value": "position",
-    "color": "rgb(201, 201, 240)"
-  },
-  "E5": {
-    "formula": "price",
-    "value": "price",
-    "color": "rgb(201, 201, 240)"
-  },
-  "G5": {
-    "formula": "price change up",
-    "value": "price change up",
-    "color": "rgb(201, 201, 240)"
-  },
-  "H5": {
-    "formula": "price change down",
-    "value": "price change down",
-    "color": "rgb(201, 201, 240)"
-  },
-  "J5": {
-    "formula": "customers",
-    "value": "customers",
-    "color": "rgb(201, 201, 240)"
-  },
-  "K5": {
-    "formula": "c. price up",
-    "value": "c. price up",
-    "color": "rgb(201, 201, 240)"
-  },
-  "L5": {
-    "formula": "c. price down",
-    "value": "c. price down",
-    "color": "rgb(201, 201, 240)"
-  },
-  "N5": {
-    "formula": "should change",
-    "value": "should change",
-    "color": "rgb(201, 201, 240)"
-  },
-  "O5": {
-    "formula": "type",
-    "value": "type",
-    "color": "rgb(201, 201, 240)"
-  },
-  "P5": {
-    "formula": "price change",
-    "value": "price change",
-    "color": "rgb(201, 201, 240)"
-  },
-  "C6": {
-    "formula": "=C5+1",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D6": {
-    "formula": "=randbetween($F$2, $G$2)=D6",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "E6": {
-    "formula": "=randbetween($C$2, $D$2)=mmax(1, E6 + P6)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G6": {
-    "formula": "=randbetween($I$2, $J$2)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H6": {
-    "formula": "=randbetween($I$2, $J$2)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J6": {
-    "formula": "=countif(F$13:F$15, $C6)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K6": {
-    "formula": "=countif(G$13:G$15, $C6)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "L6": {
-    "formula": "=countif(H$13:H$15, $C6)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "N6": {
-    "formula": "=if(mmax(K6, L6) gt J6, \"YES\", \"NO\")",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "O6": {
-    "formula": "=if(N6 eq \"YES\", if(K6 ge L6, \"UP\", \"DOWN\"), \"NONE\")",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "P6": {
-    "formula": "=if(O6 eq \"UP\", G6, if(O6 eq \"DOWN\", -H6, 0))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C7": {
-    "formula": "=C6+1",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D7": {
-    "formula": "=randbetween($F$2, $G$2)=D7",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "E7": {
-    "formula": "=randbetween($C$2, $D$2)=mmax(1, E7 + P7)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G7": {
-    "formula": "=randbetween($I$2, $J$2)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H7": {
-    "formula": "=randbetween($I$2, $J$2)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J7": {
-    "formula": "=countif(F$13:F$15, $C7)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K7": {
-    "formula": "=countif(G$13:G$15, $C7)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "L7": {
-    "formula": "=countif(H$13:H$15, $C7)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "N7": {
-    "formula": "=if(mmax(K7, L7) gt J7, \"YES\", \"NO\")",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "O7": {
-    "formula": "=if(N7 eq \"YES\", if(K7 ge L7, \"UP\", \"DOWN\"), \"NONE\")",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "P7": {
-    "formula": "=if(O7 eq \"UP\", G7, if(O7 eq \"DOWN\", -H7, 0))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C8": {
-    "formula": "=C7+1",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D8": {
-    "formula": "=randbetween($F$2, $G$2)=D8",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "E8": {
-    "formula": "=randbetween($C$2, $D$2)=mmax(1, E8 + P8)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G8": {
-    "formula": "=randbetween($I$2, $J$2)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H8": {
-    "formula": "=randbetween($I$2, $J$2)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J8": {
-    "formula": "=countif(F$13:F$15, $C8)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K8": {
-    "formula": "=countif(G$13:G$15, $C8)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "L8": {
-    "formula": "=countif(H$13:H$15, $C8)",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "N8": {
-    "formula": "=if(mmax(K8, L8) gt J8, \"YES\", \"NO\")",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "O8": {
-    "formula": "=if(N8 eq \"YES\", if(K8 ge L8, \"UP\", \"DOWN\"), \"NONE\")",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "P8": {
-    "formula": "=if(O8 eq \"UP\", G8, if(O8 eq \"DOWN\", -H8, 0))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C11": {
-    "formula": "consumers",
-    "value": "consumers",
-    "color": "rgb(240, 198, 198)"
-  },
-  "C12": {
-    "formula": "ID",
-    "value": "ID",
-    "color": "rgb(201, 201, 240)"
-  },
-  "D12": {
-    "formula": "position",
-    "value": "position",
-    "color": "rgb(201, 201, 240)"
-  },
-  "F12": {
-    "formula": "store",
-    "value": "store",
-    "color": "rgb(201, 201, 240)"
-  },
-  "G12": {
-    "formula": "store price up",
-    "value": "store price up",
-    "color": "rgb(201, 201, 240)"
-  },
-  "H12": {
-    "formula": "store price down",
-    "value": "store price down",
-    "color": "rgb(201, 201, 240)"
-  },
-  "C13": {
-    "formula": "=C12+1",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D13": {
-    "formula": "=randbetween($F$2, $G$2)=D13",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F13": {
-    "formula": "=index($D$19:$F$19, match(min(D20:F20), D20:F20))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G13": {
-    "formula": "=index($I$19:$K$19, match(min(I20:K20), I20:K20))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H13": {
-    "formula": "=index($I$25:$K$25, match(min(I26:K26), I26:K26))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C14": {
-    "formula": "=C13+1",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D14": {
-    "formula": "=randbetween($F$2, $G$2)=D14",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F14": {
-    "formula": "=index($D$19:$F$19, match(min(D21:F21), D21:F21))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G14": {
-    "formula": "=index($I$19:$K$19, match(min(I21:K21), I21:K21))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H14": {
-    "formula": "=index($I$25:$K$25, match(min(I27:K27), I27:K27))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C15": {
-    "formula": "=C14+1",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "D15": {
-    "formula": "=randbetween($F$2, $G$2)=D15",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F15": {
-    "formula": "=index($D$19:$F$19, match(min(D22:F22), D22:F22))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "G15": {
-    "formula": "=index($I$19:$K$19, match(min(I22:K22), I22:K22))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H15": {
-    "formula": "=index($I$25:$K$25, match(min(I28:K28), I28:K28))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C18": {
-    "formula": "interest",
-    "value": "interest",
-    "color": "rgb(194, 234, 194)"
-  },
-  "D18": {
-    "formula": "store",
-    "value": "store",
-    "color": "rgb(240, 198, 198)"
-  },
-  "H18": {
-    "formula": "price up",
-    "value": "price up",
-    "color": "rgb(194, 234, 194)"
-  },
-  "I18": {
-    "formula": "store",
-    "value": "",
-    "color": "rgb(240, 198, 198)"
-  },
-  "C19": {
-    "formula": "consumer",
-    "value": "consumer",
-    "color": "rgb(240, 198, 198)"
-  },
-  "D19": {
-    "formula": "=C19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "E19": {
-    "formula": "=D19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "F19": {
-    "formula": "=E19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "H19": {
-    "formula": "consumer",
-    "value": "",
-    "color": "rgb(240, 198, 198)"
-  },
-  "I19": {
-    "formula": "=H19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "J19": {
-    "formula": "=I19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "K19": {
-    "formula": "=J19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "C20": {
-    "formula": "=C19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "D20": {
-    "formula": "=abs(index($D$13:$D$15, match($C20, $C$13:$C$15)) - index($D$6:$D$8, match(D$19, $C$6:$C$8))) + index($E$6:$E$8, match(D$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "E20": {
-    "formula": "=abs(index($D$13:$D$15, match($C20, $C$13:$C$15)) - index($D$6:$D$8, match(E$19, $C$6:$C$8))) + index($E$6:$E$8, match(E$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F20": {
-    "formula": "=abs(index($D$13:$D$15, match($C20, $C$13:$C$15)) - index($D$6:$D$8, match(F$19, $C$6:$C$8))) + index($E$6:$E$8, match(F$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H20": {
-    "formula": "=H19+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "I20": {
-    "formula": "=abs(index($D$13:$D$15, match($H20, $C$13:$C$15)) - index($D$6:$D$8, match(I$19, $C$6:$C$8))) + index($E$6:$E$8, match(I$19, $C$6:$C$8)) + index($G$6:$G$8, match(I$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J20": {
-    "formula": "=abs(index($D$13:$D$15, match($H20, $C$13:$C$15)) - index($D$6:$D$8, match(J$19, $C$6:$C$8))) + index($E$6:$E$8, match(J$19, $C$6:$C$8)) + index($G$6:$G$8, match(J$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K20": {
-    "formula": "=abs(index($D$13:$D$15, match($H20, $C$13:$C$15)) - index($D$6:$D$8, match(K$19, $C$6:$C$8))) + index($E$6:$E$8, match(K$19, $C$6:$C$8)) + index($G$6:$G$8, match(K$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C21": {
-    "formula": "=C20+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "D21": {
-    "formula": "=abs(index($D$13:$D$15, match($C21, $C$13:$C$15)) - index($D$6:$D$8, match(D$19, $C$6:$C$8))) + index($E$6:$E$8, match(D$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "E21": {
-    "formula": "=abs(index($D$13:$D$15, match($C21, $C$13:$C$15)) - index($D$6:$D$8, match(E$19, $C$6:$C$8))) + index($E$6:$E$8, match(E$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F21": {
-    "formula": "=abs(index($D$13:$D$15, match($C21, $C$13:$C$15)) - index($D$6:$D$8, match(F$19, $C$6:$C$8))) + index($E$6:$E$8, match(F$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H21": {
-    "formula": "=H20+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "I21": {
-    "formula": "=abs(index($D$13:$D$15, match($H21, $C$13:$C$15)) - index($D$6:$D$8, match(I$19, $C$6:$C$8))) + index($E$6:$E$8, match(I$19, $C$6:$C$8)) + index($G$6:$G$8, match(I$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J21": {
-    "formula": "=abs(index($D$13:$D$15, match($H21, $C$13:$C$15)) - index($D$6:$D$8, match(J$19, $C$6:$C$8))) + index($E$6:$E$8, match(J$19, $C$6:$C$8)) + index($G$6:$G$8, match(J$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K21": {
-    "formula": "=abs(index($D$13:$D$15, match($H21, $C$13:$C$15)) - index($D$6:$D$8, match(K$19, $C$6:$C$8))) + index($E$6:$E$8, match(K$19, $C$6:$C$8)) + index($G$6:$G$8, match(K$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "C22": {
-    "formula": "=C21+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "D22": {
-    "formula": "=abs(index($D$13:$D$15, match($C22, $C$13:$C$15)) - index($D$6:$D$8, match(D$19, $C$6:$C$8))) + index($E$6:$E$8, match(D$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "E22": {
-    "formula": "=abs(index($D$13:$D$15, match($C22, $C$13:$C$15)) - index($D$6:$D$8, match(E$19, $C$6:$C$8))) + index($E$6:$E$8, match(E$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "F22": {
-    "formula": "=abs(index($D$13:$D$15, match($C22, $C$13:$C$15)) - index($D$6:$D$8, match(F$19, $C$6:$C$8))) + index($E$6:$E$8, match(F$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H22": {
-    "formula": "=H21+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "I22": {
-    "formula": "=abs(index($D$13:$D$15, match($H22, $C$13:$C$15)) - index($D$6:$D$8, match(I$19, $C$6:$C$8))) + index($E$6:$E$8, match(I$19, $C$6:$C$8)) + index($G$6:$G$8, match(I$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J22": {
-    "formula": "=abs(index($D$13:$D$15, match($H22, $C$13:$C$15)) - index($D$6:$D$8, match(J$19, $C$6:$C$8))) + index($E$6:$E$8, match(J$19, $C$6:$C$8)) + index($G$6:$G$8, match(J$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K22": {
-    "formula": "=abs(index($D$13:$D$15, match($H22, $C$13:$C$15)) - index($D$6:$D$8, match(K$19, $C$6:$C$8))) + index($E$6:$E$8, match(K$19, $C$6:$C$8)) + index($G$6:$G$8, match(K$19, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H24": {
-    "formula": "price down",
-    "value": "price down",
-    "color": "rgb(194, 234, 194)"
-  },
-  "I24": {
-    "formula": "store",
-    "value": "",
-    "color": "rgb(240, 198, 198)"
-  },
-  "H25": {
-    "formula": "consumer",
-    "value": "",
-    "color": "rgb(240, 198, 198)"
-  },
-  "I25": {
-    "formula": "=H25+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "J25": {
-    "formula": "=I25+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "K25": {
-    "formula": "=J25+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "H26": {
-    "formula": "=H25+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "I26": {
-    "formula": "=abs(index($D$13:$D$15, match($H26, $C$13:$C$15)) - index($D$6:$D$8, match(I$25, $C$6:$C$8))) + index($E$6:$E$8, match(I$25, $C$6:$C$8)) - index($G$6:$G$8, match(I$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J26": {
-    "formula": "=abs(index($D$13:$D$15, match($H26, $C$13:$C$15)) - index($D$6:$D$8, match(J$25, $C$6:$C$8))) + index($E$6:$E$8, match(J$25, $C$6:$C$8)) - index($G$6:$G$8, match(J$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K26": {
-    "formula": "=abs(index($D$13:$D$15, match($H26, $C$13:$C$15)) - index($D$6:$D$8, match(K$25, $C$6:$C$8))) + index($E$6:$E$8, match(K$25, $C$6:$C$8)) - index($G$6:$G$8, match(K$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H27": {
-    "formula": "=H26+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "I27": {
-    "formula": "=abs(index($D$13:$D$15, match($H27, $C$13:$C$15)) - index($D$6:$D$8, match(I$25, $C$6:$C$8))) + index($E$6:$E$8, match(I$25, $C$6:$C$8)) - index($G$6:$G$8, match(I$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J27": {
-    "formula": "=abs(index($D$13:$D$15, match($H27, $C$13:$C$15)) - index($D$6:$D$8, match(J$25, $C$6:$C$8))) + index($E$6:$E$8, match(J$25, $C$6:$C$8)) - index($G$6:$G$8, match(J$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K27": {
-    "formula": "=abs(index($D$13:$D$15, match($H27, $C$13:$C$15)) - index($D$6:$D$8, match(K$25, $C$6:$C$8))) + index($E$6:$E$8, match(K$25, $C$6:$C$8)) - index($G$6:$G$8, match(K$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "H28": {
-    "formula": "=H27+1",
-    "value": "",
-    "color": "rgb(201, 201, 240)"
-  },
-  "I28": {
-    "formula": "=abs(index($D$13:$D$15, match($H28, $C$13:$C$15)) - index($D$6:$D$8, match(I$25, $C$6:$C$8))) + index($E$6:$E$8, match(I$25, $C$6:$C$8)) - index($G$6:$G$8, match(I$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "J28": {
-    "formula": "=abs(index($D$13:$D$15, match($H28, $C$13:$C$15)) - index($D$6:$D$8, match(J$25, $C$6:$C$8))) + index($E$6:$E$8, match(J$25, $C$6:$C$8)) - index($G$6:$G$8, match(J$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  },
-  "K28": {
-    "formula": "=abs(index($D$13:$D$15, match($H28, $C$13:$C$15)) - index($D$6:$D$8, match(K$25, $C$6:$C$8))) + index($E$6:$E$8, match(K$25, $C$6:$C$8)) - index($G$6:$G$8, match(K$25, $C$6:$C$8))",
-    "value": "",
-    "color": "rgb(230, 230, 230)"
-  }
+    "C1": {
+        "formula": "min price",
+        "value": "min price",
+        "color": "rgb(194, 234, 194)"
+    },
+    "D1": {
+        "formula": "max price",
+        "value": "max price",
+        "color": "rgb(194, 234, 194)"
+    },
+    "F1": {
+        "formula": "min position",
+        "value": "min position",
+        "color": "rgb(194, 234, 194)"
+    },
+    "G1": {
+        "formula": "max position",
+        "value": "max position",
+        "color": "rgb(194, 234, 194)"
+    },
+    "I1": {
+        "formula": "min price change",
+        "value": "min price change",
+        "color": "rgb(194, 234, 194)"
+    },
+    "J1": {
+        "formula": "max price change",
+        "value": "max price change",
+        "color": "rgb(194, 234, 194)"
+    },
+    "C2": {
+        "formula": "=10",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D2": {
+        "formula": "=30",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F2": {
+        "formula": "=0",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G2": {
+        "formula": "=30",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "I2": {
+        "formula": "=2",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J2": {
+        "formula": "=15",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C4": {
+        "formula": "stores",
+        "value": "stores",
+        "color": "rgb(240, 198, 198)"
+    },
+    "C5": {
+        "formula": "ID",
+        "value": "ID",
+        "color": "rgb(201, 201, 240)"
+    },
+    "D5": {
+        "formula": "position",
+        "value": "position",
+        "color": "rgb(201, 201, 240)"
+    },
+    "E5": {
+        "formula": "price",
+        "value": "price",
+        "color": "rgb(201, 201, 240)"
+    },
+    "G5": {
+        "formula": "price change up",
+        "value": "price change up",
+        "color": "rgb(201, 201, 240)"
+    },
+    "H5": {
+        "formula": "price change down",
+        "value": "price change down",
+        "color": "rgb(201, 201, 240)"
+    },
+    "J5": {
+        "formula": "customers",
+        "value": "customers",
+        "color": "rgb(201, 201, 240)"
+    },
+    "K5": {
+        "formula": "c. price up",
+        "value": "c. price up",
+        "color": "rgb(201, 201, 240)"
+    },
+    "L5": {
+        "formula": "c. price down",
+        "value": "c. price down",
+        "color": "rgb(201, 201, 240)"
+    },
+    "N5": {
+        "formula": "should change",
+        "value": "should change",
+        "color": "rgb(201, 201, 240)"
+    },
+    "O5": {
+        "formula": "type",
+        "value": "type",
+        "color": "rgb(201, 201, 240)"
+    },
+    "P5": {
+        "formula": "price change",
+        "value": "price change",
+        "color": "rgb(201, 201, 240)"
+    },
+    "C6": {
+        "formula": "=C5+1",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D6": {
+        "formula": "=randbetween($F$2, $G$2)=D6",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "E6": {
+        "formula": "=randbetween($C$2, $D$2)=mmax(1, E6 + P6)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G6": {
+        "formula": "=randbetween($I$2, $J$2)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H6": {
+        "formula": "=randbetween($I$2, $J$2)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J6": {
+        "formula": "=countif(F$13:F$15, $C6)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K6": {
+        "formula": "=countif(G$13:G$15, $C6)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "L6": {
+        "formula": "=countif(H$13:H$15, $C6)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "N6": {
+        "formula": "=if(mmax(K6, L6) gt J6, \"YES\", \"NO\")",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "O6": {
+        "formula": "=if(N6 eq \"YES\", if(K6 ge L6, \"UP\", \"DOWN\"), \"NONE\")",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "P6": {
+        "formula": "=if(O6 eq \"UP\", G6, if(O6 eq \"DOWN\", -H6, 0))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C7": {
+        "formula": "=C6+1",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D7": {
+        "formula": "=randbetween($F$2, $G$2)=D7",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "E7": {
+        "formula": "=randbetween($C$2, $D$2)=mmax(1, E7 + P7)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G7": {
+        "formula": "=randbetween($I$2, $J$2)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H7": {
+        "formula": "=randbetween($I$2, $J$2)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J7": {
+        "formula": "=countif(F$13:F$15, $C7)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K7": {
+        "formula": "=countif(G$13:G$15, $C7)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "L7": {
+        "formula": "=countif(H$13:H$15, $C7)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "N7": {
+        "formula": "=if(mmax(K7, L7) gt J7, \"YES\", \"NO\")",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "O7": {
+        "formula": "=if(N7 eq \"YES\", if(K7 ge L7, \"UP\", \"DOWN\"), \"NONE\")",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "P7": {
+        "formula": "=if(O7 eq \"UP\", G7, if(O7 eq \"DOWN\", -H7, 0))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C8": {
+        "formula": "=C7+1",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D8": {
+        "formula": "=randbetween($F$2, $G$2)=D8",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "E8": {
+        "formula": "=randbetween($C$2, $D$2)=mmax(1, E8 + P8)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G8": {
+        "formula": "=randbetween($I$2, $J$2)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H8": {
+        "formula": "=randbetween($I$2, $J$2)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J8": {
+        "formula": "=countif(F$13:F$15, $C8)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K8": {
+        "formula": "=countif(G$13:G$15, $C8)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "L8": {
+        "formula": "=countif(H$13:H$15, $C8)",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "N8": {
+        "formula": "=if(mmax(K8, L8) gt J8, \"YES\", \"NO\")",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "O8": {
+        "formula": "=if(N8 eq \"YES\", if(K8 ge L8, \"UP\", \"DOWN\"), \"NONE\")",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "P8": {
+        "formula": "=if(O8 eq \"UP\", G8, if(O8 eq \"DOWN\", -H8, 0))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C11": {
+        "formula": "consumers",
+        "value": "consumers",
+        "color": "rgb(240, 198, 198)"
+    },
+    "C12": {
+        "formula": "ID",
+        "value": "ID",
+        "color": "rgb(201, 201, 240)"
+    },
+    "D12": {
+        "formula": "position",
+        "value": "position",
+        "color": "rgb(201, 201, 240)"
+    },
+    "F12": {
+        "formula": "store",
+        "value": "store",
+        "color": "rgb(201, 201, 240)"
+    },
+    "G12": {
+        "formula": "store price up",
+        "value": "store price up",
+        "color": "rgb(201, 201, 240)"
+    },
+    "H12": {
+        "formula": "store price down",
+        "value": "store price down",
+        "color": "rgb(201, 201, 240)"
+    },
+    "C13": {
+        "formula": "=C12+1",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D13": {
+        "formula": "=randbetween($F$2, $G$2)=D13",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F13": {
+        "formula": "=index($D$19:$F$19, match(min(D20:F20), D20:F20))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G13": {
+        "formula": "=index($I$19:$K$19, match(min(I20:K20), I20:K20))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H13": {
+        "formula": "=index($I$25:$K$25, match(min(I26:K26), I26:K26))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C14": {
+        "formula": "=C13+1",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D14": {
+        "formula": "=randbetween($F$2, $G$2)=D14",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F14": {
+        "formula": "=index($D$19:$F$19, match(min(D21:F21), D21:F21))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G14": {
+        "formula": "=index($I$19:$K$19, match(min(I21:K21), I21:K21))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H14": {
+        "formula": "=index($I$25:$K$25, match(min(I27:K27), I27:K27))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C15": {
+        "formula": "=C14+1",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "D15": {
+        "formula": "=randbetween($F$2, $G$2)=D15",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F15": {
+        "formula": "=index($D$19:$F$19, match(min(D22:F22), D22:F22))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "G15": {
+        "formula": "=index($I$19:$K$19, match(min(I22:K22), I22:K22))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H15": {
+        "formula": "=index($I$25:$K$25, match(min(I28:K28), I28:K28))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C18": {
+        "formula": "interest",
+        "value": "interest",
+        "color": "rgb(194, 234, 194)"
+    },
+    "D18": {
+        "formula": "store",
+        "value": "store",
+        "color": "rgb(240, 198, 198)"
+    },
+    "H18": {
+        "formula": "price up",
+        "value": "price up",
+        "color": "rgb(194, 234, 194)"
+    },
+    "I18": {
+        "formula": "store",
+        "value": "",
+        "color": "rgb(240, 198, 198)"
+    },
+    "C19": {
+        "formula": "consumer",
+        "value": "consumer",
+        "color": "rgb(240, 198, 198)"
+    },
+    "D19": {
+        "formula": "=C19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "E19": {
+        "formula": "=D19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "F19": {
+        "formula": "=E19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "H19": {
+        "formula": "consumer",
+        "value": "",
+        "color": "rgb(240, 198, 198)"
+    },
+    "I19": {
+        "formula": "=H19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "J19": {
+        "formula": "=I19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "K19": {
+        "formula": "=J19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "C20": {
+        "formula": "=C19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "D20": {
+        "formula": "=abs(index($D$13:$D$15, match($C20, $C$13:$C$15)) - index($D$6:$D$8, match(D$19, $C$6:$C$8))) + index($E$6:$E$8, match(D$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "E20": {
+        "formula": "=abs(index($D$13:$D$15, match($C20, $C$13:$C$15)) - index($D$6:$D$8, match(E$19, $C$6:$C$8))) + index($E$6:$E$8, match(E$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F20": {
+        "formula": "=abs(index($D$13:$D$15, match($C20, $C$13:$C$15)) - index($D$6:$D$8, match(F$19, $C$6:$C$8))) + index($E$6:$E$8, match(F$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H20": {
+        "formula": "=H19+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "I20": {
+        "formula": "=abs(index($D$13:$D$15, match($H20, $C$13:$C$15)) - index($D$6:$D$8, match(I$19, $C$6:$C$8))) + index($E$6:$E$8, match(I$19, $C$6:$C$8)) + index($G$6:$G$8, match(I$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J20": {
+        "formula": "=abs(index($D$13:$D$15, match($H20, $C$13:$C$15)) - index($D$6:$D$8, match(J$19, $C$6:$C$8))) + index($E$6:$E$8, match(J$19, $C$6:$C$8)) + index($G$6:$G$8, match(J$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K20": {
+        "formula": "=abs(index($D$13:$D$15, match($H20, $C$13:$C$15)) - index($D$6:$D$8, match(K$19, $C$6:$C$8))) + index($E$6:$E$8, match(K$19, $C$6:$C$8)) + index($G$6:$G$8, match(K$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C21": {
+        "formula": "=C20+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "D21": {
+        "formula": "=abs(index($D$13:$D$15, match($C21, $C$13:$C$15)) - index($D$6:$D$8, match(D$19, $C$6:$C$8))) + index($E$6:$E$8, match(D$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "E21": {
+        "formula": "=abs(index($D$13:$D$15, match($C21, $C$13:$C$15)) - index($D$6:$D$8, match(E$19, $C$6:$C$8))) + index($E$6:$E$8, match(E$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F21": {
+        "formula": "=abs(index($D$13:$D$15, match($C21, $C$13:$C$15)) - index($D$6:$D$8, match(F$19, $C$6:$C$8))) + index($E$6:$E$8, match(F$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H21": {
+        "formula": "=H20+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "I21": {
+        "formula": "=abs(index($D$13:$D$15, match($H21, $C$13:$C$15)) - index($D$6:$D$8, match(I$19, $C$6:$C$8))) + index($E$6:$E$8, match(I$19, $C$6:$C$8)) + index($G$6:$G$8, match(I$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J21": {
+        "formula": "=abs(index($D$13:$D$15, match($H21, $C$13:$C$15)) - index($D$6:$D$8, match(J$19, $C$6:$C$8))) + index($E$6:$E$8, match(J$19, $C$6:$C$8)) + index($G$6:$G$8, match(J$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K21": {
+        "formula": "=abs(index($D$13:$D$15, match($H21, $C$13:$C$15)) - index($D$6:$D$8, match(K$19, $C$6:$C$8))) + index($E$6:$E$8, match(K$19, $C$6:$C$8)) + index($G$6:$G$8, match(K$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "C22": {
+        "formula": "=C21+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "D22": {
+        "formula": "=abs(index($D$13:$D$15, match($C22, $C$13:$C$15)) - index($D$6:$D$8, match(D$19, $C$6:$C$8))) + index($E$6:$E$8, match(D$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "E22": {
+        "formula": "=abs(index($D$13:$D$15, match($C22, $C$13:$C$15)) - index($D$6:$D$8, match(E$19, $C$6:$C$8))) + index($E$6:$E$8, match(E$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "F22": {
+        "formula": "=abs(index($D$13:$D$15, match($C22, $C$13:$C$15)) - index($D$6:$D$8, match(F$19, $C$6:$C$8))) + index($E$6:$E$8, match(F$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H22": {
+        "formula": "=H21+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "I22": {
+        "formula": "=abs(index($D$13:$D$15, match($H22, $C$13:$C$15)) - index($D$6:$D$8, match(I$19, $C$6:$C$8))) + index($E$6:$E$8, match(I$19, $C$6:$C$8)) + index($G$6:$G$8, match(I$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J22": {
+        "formula": "=abs(index($D$13:$D$15, match($H22, $C$13:$C$15)) - index($D$6:$D$8, match(J$19, $C$6:$C$8))) + index($E$6:$E$8, match(J$19, $C$6:$C$8)) + index($G$6:$G$8, match(J$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K22": {
+        "formula": "=abs(index($D$13:$D$15, match($H22, $C$13:$C$15)) - index($D$6:$D$8, match(K$19, $C$6:$C$8))) + index($E$6:$E$8, match(K$19, $C$6:$C$8)) + index($G$6:$G$8, match(K$19, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H24": {
+        "formula": "price down",
+        "value": "price down",
+        "color": "rgb(194, 234, 194)"
+    },
+    "I24": {
+        "formula": "store",
+        "value": "",
+        "color": "rgb(240, 198, 198)"
+    },
+    "H25": {
+        "formula": "consumer",
+        "value": "",
+        "color": "rgb(240, 198, 198)"
+    },
+    "I25": {
+        "formula": "=H25+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "J25": {
+        "formula": "=I25+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "K25": {
+        "formula": "=J25+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "H26": {
+        "formula": "=H25+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "I26": {
+        "formula": "=abs(index($D$13:$D$15, match($H26, $C$13:$C$15)) - index($D$6:$D$8, match(I$25, $C$6:$C$8))) + index($E$6:$E$8, match(I$25, $C$6:$C$8)) - index($G$6:$G$8, match(I$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J26": {
+        "formula": "=abs(index($D$13:$D$15, match($H26, $C$13:$C$15)) - index($D$6:$D$8, match(J$25, $C$6:$C$8))) + index($E$6:$E$8, match(J$25, $C$6:$C$8)) - index($G$6:$G$8, match(J$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K26": {
+        "formula": "=abs(index($D$13:$D$15, match($H26, $C$13:$C$15)) - index($D$6:$D$8, match(K$25, $C$6:$C$8))) + index($E$6:$E$8, match(K$25, $C$6:$C$8)) - index($G$6:$G$8, match(K$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H27": {
+        "formula": "=H26+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "I27": {
+        "formula": "=abs(index($D$13:$D$15, match($H27, $C$13:$C$15)) - index($D$6:$D$8, match(I$25, $C$6:$C$8))) + index($E$6:$E$8, match(I$25, $C$6:$C$8)) - index($G$6:$G$8, match(I$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J27": {
+        "formula": "=abs(index($D$13:$D$15, match($H27, $C$13:$C$15)) - index($D$6:$D$8, match(J$25, $C$6:$C$8))) + index($E$6:$E$8, match(J$25, $C$6:$C$8)) - index($G$6:$G$8, match(J$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K27": {
+        "formula": "=abs(index($D$13:$D$15, match($H27, $C$13:$C$15)) - index($D$6:$D$8, match(K$25, $C$6:$C$8))) + index($E$6:$E$8, match(K$25, $C$6:$C$8)) - index($G$6:$G$8, match(K$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "H28": {
+        "formula": "=H27+1",
+        "value": "",
+        "color": "rgb(201, 201, 240)"
+    },
+    "I28": {
+        "formula": "=abs(index($D$13:$D$15, match($H28, $C$13:$C$15)) - index($D$6:$D$8, match(I$25, $C$6:$C$8))) + index($E$6:$E$8, match(I$25, $C$6:$C$8)) - index($G$6:$G$8, match(I$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "J28": {
+        "formula": "=abs(index($D$13:$D$15, match($H28, $C$13:$C$15)) - index($D$6:$D$8, match(J$25, $C$6:$C$8))) + index($E$6:$E$8, match(J$25, $C$6:$C$8)) - index($G$6:$G$8, match(J$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    },
+    "K28": {
+        "formula": "=abs(index($D$13:$D$15, match($H28, $C$13:$C$15)) - index($D$6:$D$8, match(K$25, $C$6:$C$8))) + index($E$6:$E$8, match(K$25, $C$6:$C$8)) - index($G$6:$G$8, match(K$25, $C$6:$C$8))",
+        "value": "",
+        "color": "rgb(230, 230, 230)"
+    }
 }

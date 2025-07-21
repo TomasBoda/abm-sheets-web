@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/button/button.component";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,7 +13,6 @@ interface Props {
 }
 
 export const SaveProjectModal = ({ hideModal }: Props) => {
-
     const router = useRouter();
 
     const spreadsheet = useSpreadsheet();
@@ -36,45 +35,58 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
 
         const data = spreadsheet.exportData();
 
-        const projectId = await projects.saveProject({ title, text, data: JSON.stringify(data) });
+        const projectId = await projects.saveProject({
+            title,
+            text,
+            data: JSON.stringify(data),
+        });
 
         setLoading(false);
 
         if (projectId) {
-            router.replace(`/spreadsheet?projectId=${projectId}`)
+            router.replace(`/spreadsheet?projectId=${projectId}`);
             hideModal();
         }
-    }
+    };
 
     const saveExistingProject = async () => {
         setLoading(true);
 
         const data = spreadsheet.exportData();
 
-        const projectId = await projects.updateProject({ id: projects.project.id, title, text, data: JSON.stringify(data) });
+        const projectId = await projects.updateProject({
+            id: projects.project.id,
+            title,
+            text,
+            data: JSON.stringify(data),
+        });
 
         setLoading(false);
 
         if (projectId) {
-            router.replace(`/spreadsheet?projectId=${projectId}`)
+            router.replace(`/spreadsheet?projectId=${projectId}`);
             hideModal();
         }
-    }
+    };
 
     const cloneExistingProject = async () => {
         setLoading(true);
 
         const data = spreadsheet.exportData();
 
-        const projectId = await projects.saveProject({ title, text, data: JSON.stringify(data) })
+        const projectId = await projects.saveProject({
+            title,
+            text,
+            data: JSON.stringify(data),
+        });
 
         setLoading(false);
 
         if (projectId) {
-            router.replace(`/spreadsheet?projectId=${projectId}`)
+            router.replace(`/spreadsheet?projectId=${projectId}`);
             hideModal();
         }
-    }
+    };
 
     const saveProject = async () => {
         if (!projects.project) {
@@ -86,7 +98,7 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
                 await cloneExistingProject();
             }
         }
-    }
+    };
 
     const modalHeading = useMemo(() => {
         if (!projects.project) return "Create project";
@@ -96,7 +108,8 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
 
     const modalText = useMemo(() => {
         if (!projects.project) return "Create a new project.";
-        if (projects.project.user_id === auth.userId) return "Update your existing project.";
+        if (projects.project.user_id === auth.userId)
+            return "Update your existing project.";
         return "Clone this existing project.";
     }, [projects.project, auth.userId]);
 
@@ -108,15 +121,11 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
 
     return (
         <Container>
-            <Heading>
-                {modalHeading}
-            </Heading>
+            <Heading>{modalHeading}</Heading>
 
             <Spacing />
 
-            <Text>
-                {modalText}
-            </Text>
+            <Text>{modalText}</Text>
 
             <Spacing />
             <Spacing />
@@ -124,7 +133,7 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
             <TextField
                 type="text"
                 value={title}
-                onChange={e => setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Project name..."
             />
 
@@ -132,7 +141,7 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
 
             <TextArea
                 value={text}
-                onChange={e => setText(e.target.value)}
+                onChange={(e) => setText(e.target.value)}
                 placeholder="Description..."
                 rows={6}
             />
@@ -140,12 +149,17 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
             <Spacing />
             <Spacing />
 
-            <Button variant="primary" onClick={saveProject} stretch loading={loading}>
+            <Button
+                variant="primary"
+                onClick={saveProject}
+                stretch
+                loading={loading}
+            >
                 {modalButton}
             </Button>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;

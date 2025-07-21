@@ -1,9 +1,19 @@
-"use client"
+"use client";
 
 import { Utils } from "@/utils/utils";
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
+import {
+    createContext,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useState,
+} from "react";
 import { data } from "../components/spreadsheet/data";
-import { CellCoords, CellId } from "../components/spreadsheet/spreadsheet.model";
+import {
+    CellCoords,
+    CellId,
+} from "../components/spreadsheet/spreadsheet.model";
 
 type SelectionContextType = {
     selectedCells: Set<CellId>;
@@ -18,11 +28,12 @@ type SelectionContextType = {
     };
     dragWithCopy: boolean;
 };
-  
-const SelectionContext = createContext<SelectionContextType | undefined>(undefined);
 
-export const SelectionProvider = ({ children }: { children: ReactNode; }) => {
-  
+const SelectionContext = createContext<SelectionContextType | undefined>(
+    undefined,
+);
+
+export const SelectionProvider = ({ children }: { children: ReactNode }) => {
     const [selectedCells, setSelectedCells] = useState(new Set<CellId>(["A1"]));
     const [dragging, setDragging] = useState(false);
     const [startPos, setStartPos] = useState({ ri: null, ci: null });
@@ -63,25 +74,30 @@ export const SelectionProvider = ({ children }: { children: ReactNode; }) => {
         setDragging(false);
     };
 
-    const isCellSelected = ({ ri, ci }: CellCoords) => selectedCells.has(Utils.cellCoordsToId({ ri, ci }));
+    const isCellSelected = ({ ri, ci }: CellCoords) =>
+        selectedCells.has(Utils.cellCoordsToId({ ri, ci }));
 
     const selectAllCells = (): void => {
         const newSelectedCells = new Set<CellId>();
 
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
-                newSelectedCells.add(Utils.cellCoordsToId({ ri, ci }));                
+                newSelectedCells.add(Utils.cellCoordsToId({ ri, ci }));
             }
         }
 
         setSelectedCells(newSelectedCells);
-    }
+    };
 
     const deselectAllCells = (): void => {
         setSelectedCells(new Set<CellId>());
-    }
+    };
 
-    const selectionListeners = { handleMouseDown, handleMouseMove, handleMouseUp };
+    const selectionListeners = {
+        handleMouseDown,
+        handleMouseMove,
+        handleMouseUp,
+    };
 
     const values = {
         selectedCells,
@@ -91,7 +107,7 @@ export const SelectionProvider = ({ children }: { children: ReactNode; }) => {
         isCellSelected,
         selectionListeners,
         dragWithCopy,
-    }
+    };
 
     return (
         <SelectionContext.Provider value={values}>
@@ -104,8 +120,8 @@ export const useSelection = () => {
     const context = useContext(SelectionContext);
 
     if (!context) {
-      throw new Error("useSelection must be used within a SelectionContext");
+        throw new Error("useSelection must be used within a SelectionContext");
     }
-    
+
     return context;
 };

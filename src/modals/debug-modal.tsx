@@ -6,16 +6,11 @@ interface Props {
 }
 
 export const DebugModal = ({ values }: Props) => {
-
     return (
         <Container>
-            <Heading>
-                Debug
-            </Heading>
+            <Heading>Debug</Heading>
 
-            <Text>
-                Display history of a given cell.
-            </Text>
+            <Text>Display history of a given cell.</Text>
 
             <Content>
                 <Table>
@@ -35,8 +30,8 @@ export const DebugModal = ({ values }: Props) => {
                 </Table>
             </Content>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;

@@ -1,15 +1,21 @@
-"use client"
+"use client";
 
-import styled from "styled-components";
-import React, { PureComponent, ReactNode, useMemo, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Button } from "./button/button.component";
-import { CellId } from "./spreadsheet/spreadsheet.model";
 import { useCellInfo } from "@/hooks/useCells";
 import { useHistory } from "@/hooks/useHistory";
 import { useStepper } from "@/hooks/useStepper";
-import { useSidebar } from "./sidebar.provider";
 import { X } from "lucide-react";
+import { useMemo } from "react";
+import {
+    Legend,
+    Line,
+    LineChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
+import styled from "styled-components";
+import { useSidebar } from "./sidebar.provider";
 
 const colors: string[] = [
     "#e6194b", // vivid red
@@ -21,11 +27,10 @@ const colors: string[] = [
     "#46f0f0", // cyan
     "#f032e6", // magenta
     "#bcf60c", // lime
-    "#fabebe"  // light pink
+    "#fabebe", // light pink
 ];
 
 export const GraphSidebar = () => {
-
     const { graphCells, xGraphCell } = useCellInfo();
     const { history } = useHistory();
     const { step } = useStepper();
@@ -35,8 +40,8 @@ export const GraphSidebar = () => {
         const cells = Array.from(graphCells);
 
         const cellHistories = cells
-            .filter(cellId => history.get(cellId) !== undefined)
-            .map(cellId => {
+            .filter((cellId) => history.get(cellId) !== undefined)
+            .map((cellId) => {
                 const data = history.get(cellId)!;
                 const sliced = data.slice(0, step + 1);
                 return {
@@ -45,9 +50,10 @@ export const GraphSidebar = () => {
                 };
             });
 
-        const xHistory = xGraphCell && history.get(xGraphCell)
-            ? history.get(xGraphCell)!.slice(0, step + 1)
-            : null;
+        const xHistory =
+            xGraphCell && history.get(xGraphCell)
+                ? history.get(xGraphCell)!.slice(0, step + 1)
+                : null;
 
         const data = [];
 
@@ -84,52 +90,42 @@ export const GraphSidebar = () => {
 
             <Spacing />
 
-            <P1>
-                Render graphs based on your spreadsheet.
-            </P1>
+            <P1>Render graphs based on your spreadsheet.</P1>
 
             <AddedCellsContainer>
-                {Array.from(graphCells).map(cellId => (
-                    <CellTag key={cellId}>
-                        {cellId}
-                    </CellTag>
+                {Array.from(graphCells).map((cellId) => (
+                    <CellTag key={cellId}>{cellId}</CellTag>
                 ))}
             </AddedCellsContainer>
 
             <Graph>
                 {graphCells.size > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                            data={data}
-                        >
+                        <LineChart data={data}>
+                            <XAxis dataKey="x" />
+                            <YAxis domain={["dataMin - 10", "dataMax + 10"]} />
 
-                        <XAxis dataKey="x" />
-                        <YAxis domain={['dataMin - 10', 'dataMax + 10']} />
+                            <Tooltip />
+                            <Legend />
 
-                        <Tooltip />
-                        <Legend />
-
-                        {Array.from(graphCells).map((cellId, index) => (
-                            <Line
-                                type="monotone"
-                                dataKey={cellId}
-                                stroke={colors[index % colors.length]}
-                                isAnimationActive={false}
-                                key={cellId}
-                            />
-                        ))}
-
+                            {Array.from(graphCells).map((cellId, index) => (
+                                <Line
+                                    type="monotone"
+                                    dataKey={cellId}
+                                    stroke={colors[index % colors.length]}
+                                    isAnimationActive={false}
+                                    key={cellId}
+                                />
+                            ))}
                         </LineChart>
                     </ResponsiveContainer>
                 ) : (
-                    <NoGraphData>
-                        No data to show...
-                    </NoGraphData>
+                    <NoGraphData>No data to show...</NoGraphData>
                 )}
             </Graph>
         </Container>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     flex: 1;
@@ -197,37 +193,6 @@ const NoGraphData = styled.div`
     font-size: 14px;
     font-weight: 400;
     line-height: 100%;
-`;
-
-const InputContainer = styled.div`
-    width: 100%;
-
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-
-    margin: 15px 0px;
-`;
-
-const TextField = styled.input`
-    color: var(--text-1);
-    font-size: 12px;
-    font-weight: 400;
-
-    width: 100%;
-
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-
-    outline: none;
-
-    padding: 10px;
-
-    background-color: rgba(0, 0, 0, 0.05);
-
-    &::placeholder {
-        font-weight: 400;
-    }
 `;
 
 const AddedCellsContainer = styled.div`

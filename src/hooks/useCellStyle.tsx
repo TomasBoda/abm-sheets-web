@@ -1,7 +1,14 @@
 "use client";
 
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    createContext,
+    useContext,
+    useState,
+} from "react";
 
 type CellStyleMap = Map<CellId, string>;
 
@@ -15,7 +22,9 @@ type CellStyleContextType = {
     setCellItalics: Dispatch<SetStateAction<CellStyleMap>>;
 };
 
-const CellStyleContext = createContext<CellStyleContextType | undefined>(undefined);
+const CellStyleContext = createContext<CellStyleContextType | undefined>(
+    undefined,
+);
 
 export const CellStyleProvider = ({ children }: { children: ReactNode }) => {
     const [cellColors, setCellColors] = useState<CellStyleMap>(new Map());
@@ -32,7 +41,11 @@ export const CellStyleProvider = ({ children }: { children: ReactNode }) => {
         setCellItalics,
     };
 
-    return <CellStyleContext.Provider value={values}>{children}</CellStyleContext.Provider>;
+    return (
+        <CellStyleContext.Provider value={values}>
+            {children}
+        </CellStyleContext.Provider>
+    );
 };
 
 export const useCellStyle = () => {

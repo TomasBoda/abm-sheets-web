@@ -17,13 +17,24 @@ import styled from "styled-components";
 import { Button } from "../button/button.component";
 import { TextField } from "../text-field/text-field.component";
 import { data } from "./data";
-import { CellCoords, CellId, SpreadsheetCell, SpreadsheetRow } from "./spreadsheet.model";
-import { CornerUpLeftIcon } from "lucide-react";
+import {
+    CellCoords,
+    CellId,
+    SpreadsheetCell,
+    SpreadsheetRow,
+} from "./spreadsheet.model";
 
 export function Spreadsheet() {
     // hooks
 
-    const { selectedCells, setSelectedCells, selectAllCells, isCellSelected, selectionListeners, dragWithCopy } = useSelection();
+    const {
+        selectedCells,
+        setSelectedCells,
+        selectAllCells,
+        isCellSelected,
+        selectionListeners,
+        dragWithCopy,
+    } = useSelection();
 
     const { project } = useProjects();
     const spreadsheet = useSpreadsheet();
@@ -39,13 +50,23 @@ export function Spreadsheet() {
 
     const { step, setStep, steps } = useStepper();
     const { cellColors, cellBolds, cellItalics } = useCellStyle();
-    const { usedCells, setUsedCells, graphCells, addGraphCell, removeGraphCell, xGraphCell, setXGraphCell } = useCellInfo();
+    const {
+        usedCells,
+        setUsedCells,
+        graphCells,
+        addGraphCell,
+        removeGraphCell,
+    } = useCellInfo();
 
     const { history, setHistory, dataHistory } = useHistory();
 
-    const [copiedCells, setCopiedCells] = useState<Set<CellId>>(new Set<CellId>());
+    const [copiedCells, setCopiedCells] = useState<Set<CellId>>(
+        new Set<CellId>(),
+    );
 
-    const [referencedCells, setReferencedCells] = useState<Set<CellId>>(new Set<CellId>());
+    const [referencedCells, setReferencedCells] = useState<Set<CellId>>(
+        new Set<CellId>(),
+    );
 
     const [cmdKey, setCmdKey] = useState<boolean>(false);
 
@@ -63,7 +84,7 @@ export function Spreadsheet() {
                 getCellSpan(coords).innerText = values[step];
             }
         },
-        [dataHistory, step]
+        [dataHistory, step],
     );
 
     useEffect(
@@ -73,7 +94,7 @@ export function Spreadsheet() {
                 getCellSpan(coords).innerText = values[step];
             }
         },
-        [step]
+        [step],
     );
 
     useEffect(() => evaluateUsedCells(), [usedCells]);
@@ -84,7 +105,7 @@ export function Spreadsheet() {
                 setFormulaValue("");
             }
         },
-        [selectedCells]
+        [selectedCells],
     );
 
     useEffect(function subscribeToCmdKey() {
@@ -123,7 +144,7 @@ export function Spreadsheet() {
                 window.removeEventListener("keydown", handleKey);
             };
         },
-        [cmdKey]
+        [cmdKey],
     );
 
     useEffect(
@@ -139,7 +160,7 @@ export function Spreadsheet() {
                 data[ri][ci].color = color;
             }
         },
-        [cellColors]
+        [cellColors],
     );
 
     useEffect(
@@ -147,8 +168,10 @@ export function Spreadsheet() {
             for (let ri = 0; ri < data.length; ri++) {
                 for (let ci = 0; ci < data[ri].length; ci++) {
                     if (data[ri][ci].font !== undefined) {
-                        data[ri][ci].font = data[ri][ci].font.filter(e => e !== "bold");
-                    }  
+                        data[ri][ci].font = data[ri][ci].font.filter(
+                            (e) => e !== "bold",
+                        );
+                    }
                 }
             }
 
@@ -156,14 +179,12 @@ export function Spreadsheet() {
                 const { ri, ci } = Utils.cellIdToCoords(cellId);
                 if (data[ri][ci].font === undefined) {
                     data[ri][ci].font = [boldFont];
-                }
-                else {
+                } else {
                     data[ri][ci].font.push(boldFont);
                 }
-                
             }
         },
-        [cellBolds]
+        [cellBolds],
     );
 
     useEffect(
@@ -171,8 +192,10 @@ export function Spreadsheet() {
             for (let ri = 0; ri < data.length; ri++) {
                 for (let ci = 0; ci < data[ri].length; ci++) {
                     if (data[ri][ci].font !== undefined) {
-                        data[ri][ci].font = data[ri][ci].font.filter(e => e !== "italic");
-                    }  
+                        data[ri][ci].font = data[ri][ci].font.filter(
+                            (e) => e !== "italic",
+                        );
+                    }
                 }
             }
 
@@ -180,14 +203,12 @@ export function Spreadsheet() {
                 const { ri, ci } = Utils.cellIdToCoords(cellId);
                 if (data[ri][ci].font === undefined) {
                     data[ri][ci].font = [italicFont];
-                }
-                else {
+                } else {
                     data[ri][ci].font.push(italicFont);
                 }
-                
             }
         },
-        [cellItalics]
+        [cellItalics],
     );
 
     useEffect(
@@ -200,11 +221,11 @@ export function Spreadsheet() {
 
             for (const cellId of graphCells) {
                 const { ri, ci } = Utils.cellIdToCoords(cellId);
-                 data[ri][ci].isInGraph = true;
+                data[ri][ci].isInGraph = true;
             }
         },
-        [graphCells]
-    )
+        [graphCells],
+    );
     // formula
 
     const getFormulaElement = () => {
@@ -230,7 +251,10 @@ export function Spreadsheet() {
         }
 
         // move to one cell below on enter click
-        const newCoords = { ri: Math.min(coords.ri + 1, data.length), ci: coords.ci };
+        const newCoords = {
+            ri: Math.min(coords.ri + 1, data.length),
+            ci: coords.ci,
+        };
         setSelectedCells(new Set([Utils.cellCoordsToId(newCoords)]));
         setFormulaValue(data[newCoords.ri][newCoords.ci].formula);
     };
@@ -319,8 +343,12 @@ export function Spreadsheet() {
     };
 
     const onCellPaste = () => {
-        const currentCellCoors = Utils.cellIdToCoords(Array.from(selectedCells)[0]);
-        const copiedCellCoors = Utils.cellIdToCoords(Array.from(copiedCells)[0]);
+        const currentCellCoors = Utils.cellIdToCoords(
+            Array.from(selectedCells)[0],
+        );
+        const copiedCellCoors = Utils.cellIdToCoords(
+            Array.from(copiedCells)[0],
+        );
 
         const rowOffset = currentCellCoors.ri - copiedCellCoors.ri;
         const colOffset = currentCellCoors.ci - copiedCellCoors.ci;
@@ -340,7 +368,12 @@ export function Spreadsheet() {
             let newRowNumber = parseInt(rowNumber, 10);
 
             if (!colDollar) {
-                const currentColIndex = colLetters.split("").reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
+                const currentColIndex = colLetters
+                    .split("")
+                    .reduce(
+                        (acc, char) => acc * 26 + (char.charCodeAt(0) - 64),
+                        0,
+                    );
                 const newColIndex = currentColIndex + colOffset;
 
                 newColLetters = "";
@@ -348,7 +381,8 @@ export function Spreadsheet() {
 
                 while (index > 0) {
                     const charCode = ((index - 1) % 26) + 65;
-                    newColLetters = String.fromCharCode(charCode) + newColLetters;
+                    newColLetters =
+                        String.fromCharCode(charCode) + newColLetters;
                     index = Math.floor((index - 1) / 26);
                 }
             }
@@ -364,9 +398,14 @@ export function Spreadsheet() {
             const cellRow = Utils.cellIdToCoords(copiedCell).ri + rowOffset;
             const cellCol = Utils.cellIdToCoords(copiedCell).ci + colOffset;
 
-            const copiedCellFormula = data[Utils.cellIdToCoords(copiedCell).ri][Utils.cellIdToCoords(copiedCell).ci].formula;
+            const copiedCellFormula =
+                data[Utils.cellIdToCoords(copiedCell).ri][
+                    Utils.cellIdToCoords(copiedCell).ci
+                ].formula;
 
-            const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
+            const newFormula = copiedCellFormula.replace(regex, (match) =>
+                shiftCellReference(match),
+            );
 
             data[cellRow][cellCol].formula = newFormula;
             const cellId = Utils.cellCoordsToId({ ri: cellRow, ci: cellCol });
@@ -458,7 +497,12 @@ export function Spreadsheet() {
                 let newRowNumber = parseInt(rowNumber, 10);
 
                 if (!colDollar) {
-                    const currentColIndex = colLetters.split("").reduce((acc, char) => acc * 26 + (char.charCodeAt(0) - 64), 0);
+                    const currentColIndex = colLetters
+                        .split("")
+                        .reduce(
+                            (acc, char) => acc * 26 + (char.charCodeAt(0) - 64),
+                            0,
+                        );
                     const newColIndex = currentColIndex + colOffset;
 
                     newColLetters = "";
@@ -466,7 +510,8 @@ export function Spreadsheet() {
 
                     while (index > 0) {
                         const charCode = ((index - 1) % 26) + 65;
-                        newColLetters = String.fromCharCode(charCode) + newColLetters;
+                        newColLetters =
+                            String.fromCharCode(charCode) + newColLetters;
                         index = Math.floor((index - 1) / 26);
                     }
                 }
@@ -478,9 +523,12 @@ export function Spreadsheet() {
                 return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
             };
 
-            const copiedCellFormula = data[baseCellCoors.ri][baseCellCoors.ci].formula;
+            const copiedCellFormula =
+                data[baseCellCoors.ri][baseCellCoors.ci].formula;
 
-            const newFormula = copiedCellFormula.replace(regex, (match) => shiftCellReference(match));
+            const newFormula = copiedCellFormula.replace(regex, (match) =>
+                shiftCellReference(match),
+            );
 
             data[currentCellCoors.ri][currentCellCoors.ci].formula = newFormula;
             const cellId = Utils.cellCoordsToId(currentCellCoors);
@@ -509,14 +557,18 @@ export function Spreadsheet() {
                 const { ri, ci } = Utils.cellIdToCoords(cellId);
                 const formula = data[ri][ci].formula;
                 return { id: cellId, formula };
-            })
+            }),
         ).filter((cellId) => {
             const { ri, ci } = Utils.cellIdToCoords(cellId);
             const formula = data[ri][ci].formula;
             return formula.startsWith("=");
         });
 
-        const history = new Evaluator().evaluateCells(sortedCells, steps, dataHistory);
+        const history = new Evaluator().evaluateCells(
+            sortedCells,
+            steps,
+            dataHistory,
+        );
 
         for (const [cellId, values] of history.entries()) {
             const coords = Utils.cellIdToCoords(cellId);
@@ -577,7 +629,9 @@ export function Spreadsheet() {
     };
 
     const setCellIndicatorText = ({ ri, ci }: CellCoords) => {
-        const currentCell = document.getElementById("current-cell") as HTMLDivElement;
+        const currentCell = document.getElementById(
+            "current-cell",
+        ) as HTMLDivElement;
 
         const cellCol = Utils.columnIndexToText(ci);
         const cellRow = ri + 1;
@@ -629,19 +683,10 @@ export function Spreadsheet() {
     const toggleGraphCell = () => {
         if (isCellInGraph) {
             removeGraphCell(selectedCell);
-            
         } else {
             addGraphCell(selectedCell);
         }
     };
-
-    const toggleYGraphCell = () => {
-        if (xGraphCell === selectedCell) {
-            setXGraphCell(undefined);
-        } else {
-            setXGraphCell(selectedCell);
-        }
-    }
 
     return (
         <Container id="container">
@@ -656,58 +701,124 @@ export function Spreadsheet() {
                 <Button variant="primary" onClick={toggleGraphCell}>
                     {isCellInGraph ? "Remove from graph" : "Add to graph"}
                 </Button>
-
-                {/* <Button variant="primary" onClick={toggleYGraphCell}>
-                    {xGraphCell === selectedCell ? "Remove X graph cell" : "Add X graph cell"}
-                </Button> */}
             </Header>
 
             <TableContainer>
                 <TableWrapper>
                     <Table id="table">
                         <ColumnRow $entries={data[0].length + 1}>
-                            <TopLeftCell id="current-cell" $selected={false} $referenced={false} $special={true} />
+                            <TopLeftCell
+                                id="current-cell"
+                                $selected={false}
+                                $referenced={false}
+                                $special={true}
+                            />
 
-                            {data[0].map((cell: SpreadsheetCell, ci: number) => (
-                                <ColCell $selected={selectedCols.has(ci)} $referenced={false} $special={true} key={ci}>
-                                    {Utils.columnIndexToText(ci)}
-                                </ColCell>
-                            ))}
+                            {data[0].map(
+                                (cell: SpreadsheetCell, ci: number) => (
+                                    <ColCell
+                                        $selected={selectedCols.has(ci)}
+                                        $referenced={false}
+                                        $special={true}
+                                        key={ci}
+                                    >
+                                        {Utils.columnIndexToText(ci)}
+                                    </ColCell>
+                                ),
+                            )}
                         </ColumnRow>
 
                         <Wrapper onMouseUp={selectionListeners.handleMouseUp}>
                             {data.map((row: SpreadsheetRow, ri: number) => (
                                 <Row $entries={row.length + 1} key={ri}>
-                                    <RowCell $selected={selectedRows.has(ri)} $referenced={false} $special={true}>
+                                    <RowCell
+                                        $selected={selectedRows.has(ri)}
+                                        $referenced={false}
+                                        $special={true}
+                                    >
                                         {ri + 1}
                                     </RowCell>
 
-                                    {row.map((cell: SpreadsheetCell, ci: number) => (
-                                        <Cell
-                                            key={ci}
-                                            id={Utils.cellCoordsToId({ ri, ci })}
-                                            onClick={() => onCellClick({ ri, ci })}
-                                            onDoubleClick={() => onCellDoubleClick({ ri, ci })}
-                                            tabIndex={-1}
-                                            onKeyDown={onCellKeyDown}
-                                            onMouseDown={() => (!cmdKey ? selectionListeners.handleMouseDown({ ri, ci }) : {})}
-                                            onMouseEnter={() => selectionListeners.handleMouseMove({ ri, ci })}
-                                            onMouseUp={() => (!cmdKey ? onMouseUp() : {})}
-                                            $selected={isCellSelected({ ri, ci })}
-                                            $referenced={referencedCells.has(Utils.cellCoordsToId({ ri, ci }))}
-                                            $background={cellColors.get(Utils.cellCoordsToId({ ri, ci }))}
-                                            $isBold={cellBolds.get(Utils.cellCoordsToId({ ri, ci })) !== undefined}
-                                            $isItalic={cellItalics.get(Utils.cellCoordsToId({ ri, ci })) !== undefined}
-                                        >
-                                            <span>{""}</span>
-                                            <CellDrag
-                                                onMouseDown={(e) => {
-                                                    e.stopPropagation();
-                                                    selectionListeners.handleMouseDown({ ri, ci }, true);
-                                                }}
-                                            />
-                                        </Cell>
-                                    ))}
+                                    {row.map(
+                                        (cell: SpreadsheetCell, ci: number) => (
+                                            <Cell
+                                                key={ci}
+                                                id={Utils.cellCoordsToId({
+                                                    ri,
+                                                    ci,
+                                                })}
+                                                onClick={() =>
+                                                    onCellClick({ ri, ci })
+                                                }
+                                                onDoubleClick={() =>
+                                                    onCellDoubleClick({
+                                                        ri,
+                                                        ci,
+                                                    })
+                                                }
+                                                tabIndex={-1}
+                                                onKeyDown={onCellKeyDown}
+                                                onMouseDown={() =>
+                                                    !cmdKey
+                                                        ? selectionListeners.handleMouseDown(
+                                                              { ri, ci },
+                                                          )
+                                                        : {}
+                                                }
+                                                onMouseEnter={() =>
+                                                    selectionListeners.handleMouseMove(
+                                                        { ri, ci },
+                                                    )
+                                                }
+                                                onMouseUp={() =>
+                                                    !cmdKey ? onMouseUp() : {}
+                                                }
+                                                $selected={isCellSelected({
+                                                    ri,
+                                                    ci,
+                                                })}
+                                                $referenced={referencedCells.has(
+                                                    Utils.cellCoordsToId({
+                                                        ri,
+                                                        ci,
+                                                    }),
+                                                )}
+                                                $background={cellColors.get(
+                                                    Utils.cellCoordsToId({
+                                                        ri,
+                                                        ci,
+                                                    }),
+                                                )}
+                                                $isBold={
+                                                    cellBolds.get(
+                                                        Utils.cellCoordsToId({
+                                                            ri,
+                                                            ci,
+                                                        }),
+                                                    ) !== undefined
+                                                }
+                                                $isItalic={
+                                                    cellItalics.get(
+                                                        Utils.cellCoordsToId({
+                                                            ri,
+                                                            ci,
+                                                        }),
+                                                    ) !== undefined
+                                                }
+                                            >
+                                                <span>{""}</span>
+                                                <CellDrag
+                                                    onMouseDown={(e) => {
+                                                        e.stopPropagation();
+                                                        selectionListeners.handleMouseDown(
+                                                            { ri, ci },
+                                                            true,
+                                                        );
+                                                    }}
+                                                />
+                                            </Cell>
+                                        ),
+                                    )}
                                 </Row>
                             ))}
                         </Wrapper>
@@ -854,9 +965,11 @@ const Cell = styled.div<{
 
     user-select: none;
 
-    background-color: ${({ $special, $selected }) => ($selected ? "var(--bg-2)" : $special ? "var(--bg-0)" : "var(--bg-1)")};
+    background-color: ${({ $special, $selected }) =>
+        $selected ? "var(--bg-2)" : $special ? "var(--bg-0)" : "var(--bg-1)"};
     background-color: ${({ $background }) => $background ?? ""};
-    background-color: ${({ $special, $selected }) => $special && $selected && "var(--color-1)"};
+    background-color: ${({ $special, $selected }) =>
+        $special && $selected && "var(--color-1)"};
 
     border: ${({ $special }) => $special && "1px solid transparent"};
 

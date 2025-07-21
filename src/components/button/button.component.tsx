@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Href } from "@/components/href";
 import { ReactNode } from "react";
@@ -18,10 +18,21 @@ interface Props {
     disabled?: boolean;
 }
 
-export const Button = ({ children, variant, disabled = false, onClick, icon, href, stretch, loading = false, }: Props) => {
-
+export const Button = ({
+    children,
+    variant,
+    disabled = false,
+    onClick,
+    icon,
+    href,
+    stretch,
+    loading = false,
+}: Props) => {
     return (
-        <Href href={disabled ? null : href} style={stretch && { width: "100%" }}>
+        <Href
+            href={disabled ? null : href}
+            style={stretch && { width: "100%" }}
+        >
             <Container
                 onClick={disabled || loading ? null : onClick}
                 $disabled={disabled}
@@ -38,10 +49,10 @@ export const Button = ({ children, variant, disabled = false, onClick, icon, hre
                 </Loading>
             </Container>
         </Href>
-    )
-}
+    );
+};
 
-const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean; }>`
+const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean }>`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -61,32 +72,42 @@ const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean; }>`
     text-align: center;
 
     border-radius: 10px;
-    border: 1px solid ${({ $variant }) => $variant === "primary" && "var(--color-2)"};
-    border: 1px solid ${({ $variant }) => $variant === "secondary" && "var(--bg-3)"};
+    border: 1px solid
+        ${({ $variant }) => $variant === "primary" && "var(--color-2)"};
+    border: 1px solid
+        ${({ $variant }) => $variant === "secondary" && "var(--bg-3)"};
 
-    background-color: ${({ $variant }) => $variant === "primary" && "var(--color-1)"};
-    background-color: ${({ $variant }) => $variant === "secondary" && "var(--bg-2)"};
+    background-color: ${({ $variant }) =>
+        $variant === "primary" && "var(--color-1)"};
+    background-color: ${({ $variant }) =>
+        $variant === "secondary" && "var(--bg-2)"};
 
     cursor: pointer;
-    & * { cursor: pointer; }
+    & * {
+        cursor: pointer;
+    }
 
     transition: all 150ms;
 
     white-space: nowrap;
 
     &:hover {
-        //background-color: ${({ $disabled }) => !$disabled && "var(--color-2)"};
+        //background-color: ${({ $disabled }) =>
+            !$disabled && "var(--color-2)"};
 
-        background-color: ${({ $variant }) => $variant === "primary" && "var(--color-2)"};
-        background-color: ${({ $variant }) => $variant === "secondary" && "var(--bg-3)"};
+        background-color: ${({ $variant }) =>
+            $variant === "primary" && "var(--color-2)"};
+        background-color: ${({ $variant }) =>
+            $variant === "secondary" && "var(--bg-3)"};
 
-        border: 1px solid ${({ $variant }) => $variant === "secondary" && "var(--bg-4)"};
+        border: 1px solid
+            ${({ $variant }) => $variant === "secondary" && "var(--bg-4)"};
     }
 
     opacity: ${({ $disabled }) => $disabled && "0.5"};
 
     & * {
-        cursor: ${({ $disabled }) => $disabled && "not-allowed"}
+        cursor: ${({ $disabled }) => $disabled && "not-allowed"};
     }
 `;
 
