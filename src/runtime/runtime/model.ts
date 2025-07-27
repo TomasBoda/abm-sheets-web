@@ -1,4 +1,4 @@
-import { History } from "@/components/spreadsheet/spreadsheet.model";
+import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 
 export enum ValueType {
     Number,
@@ -6,6 +6,7 @@ export enum ValueType {
     String,
     CellLiteral,
     CellRange,
+    GraphValue,
 }
 
 export interface Value {
@@ -38,11 +39,21 @@ export interface CellRangeValue {
     value: number[];
 }
 
+export type GraphId = `${string} - ${CellId}`;
+
+export interface GraphValue {
+    type: ValueType.GraphValue;
+    value: CompostObject;
+}
+
+export type CompostObject = any;
+
 export type FuncProps = {
     args: Value[];
     step: number;
     history: History;
     dataHistory: History;
+    cellId: CellId;
 };
 
 export type FuncCall = (props: FuncProps) => Value;

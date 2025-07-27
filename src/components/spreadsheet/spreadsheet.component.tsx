@@ -226,6 +226,7 @@ export function Spreadsheet() {
         },
         [graphCells],
     );
+
     // formula
 
     const getFormulaElement = () => {
@@ -625,7 +626,13 @@ export function Spreadsheet() {
 
         const newUsedCells = new Set<CellId>(usedCells);
         newUsedCells.delete(cellId);
+        removeCompostObjectFromCell(coords);
         setUsedCells(newUsedCells);
+    };
+
+    const removeCompostObjectFromCell = (coords: CellCoords) => {
+        const { ri, ci } = coords;
+        delete data[ri][ci].compostGraphValue;
     };
 
     const setCellIndicatorText = ({ ri, ci }: CellCoords) => {

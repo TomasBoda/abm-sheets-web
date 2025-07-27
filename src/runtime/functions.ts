@@ -3,14 +3,18 @@ import {
     BooleanValue,
     CellLiteralValue,
     CellRangeValue,
+    CompostObject,
     FuncProps,
+    GraphId,
+    GraphValue,
     NumberValue,
     StringValue,
     Value,
     ValueType,
 } from "./runtime";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
-
+import { scale as s, compost as c } from "compostjs";
+import { data } from "@/components/spreadsheet/data";
 // utils
 
 const createNumber = (value: number): NumberValue => ({
@@ -28,10 +32,26 @@ const createString = (value: string): StringValue => ({
     value,
 });
 
+const createGraphId = (
+    descriptionText: string,
+    value: CellId,
+): StringValue => ({
+    type: ValueType.String,
+    value: `${descriptionText} - ${value}`,
+});
+
+const createGraphValue = (value: CompostObject): GraphValue => ({
+    type: ValueType.GraphValue,
+    value,
+});
 // expect
 
 const expectNumber = (args: Value[], index: number): NumberValue => {
     return expectArg(args, index, ValueType.Number) as NumberValue;
+};
+
+const expectString = (args: Value[], index: number): StringValue => {
+    return expectArg(args, index, ValueType.String) as StringValue;
 };
 
 const expectBoolean = (args: Value[], index: number): BooleanValue => {
@@ -52,6 +72,7 @@ const expectArg = (args: Value[], index: number, type: ValueType): Value => {
     }
 
     if (args[index].type !== type) {
+        console.log(args);
         throw new Error("Function argument type mismatch");
     }
 
@@ -76,6 +97,28 @@ const getHistoryValue = (
     }
 
     return undefined;
+};
+
+// local graph "utils" functions
+
+const getGraphValue = (cellId: CellId): GraphValue => {
+    const { ri, ci } = Utils.cellIdToCoords(cellId);
+    return data[ri][ci].compostGraphValue;
+};
+
+const saveGraphValue = (value: GraphValue, cellId: CellId): void => {
+    const { ri, ci } = Utils.cellIdToCoords(cellId);
+    data[ri][ci].compostGraphValue = value;
+};
+
+export const getCoordsFromGraphId = (id: GraphId): CellId => {
+    const cellId = id.split("-")[1].trim() as CellId;
+    return cellId;
+};
+
+const getGraphValueFromGraphId = (id: GraphId): GraphValue => {
+    const cellId = getCoordsFromGraphId(id);
+    return getGraphValue(cellId);
 };
 
 export namespace Functions {
@@ -682,5 +725,74 @@ export namespace Functions {
 
     export const step = ({ step }: FuncProps): Value => {
         return createNumber(step);
+    };
+
+    // graph functions
+
+    export const column = ({ args, cellId }: FuncProps): Value => {
+        const name = expectString(args, 0).value;
+        const value = expectNumber(args, 1).value;
+
+        const result = c.column(name, value) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("column", cellId);
+    };
+
+    export const axes = ({ args, cellId }: FuncProps): Value => {
+        const axesSpecifications = expectString(args, 0).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 1).value as GraphId,
+        ).value;
+        const result = c.axes(axesSpecifications, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("axes", cellId);
+    };
+
+    export const fillColor = ({ args, cellId }: FuncProps): Value => {
+        const color = expectString(args, 0).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 1).value as GraphId,
+        ).value;
+
+        const result = c.fillColor(color, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("fillColor", cellId);
+    };
+
+    export const overlay = ({ args, cellId }: FuncProps): Value => {
+        const shapes: CompostObject[] = [];
+        for (let i = 0; i < args.length; i++) {
+            const shape = getGraphValueFromGraphId(
+                expectString(args, i).value as GraphId,
+            ).value;
+            shapes.push(shape);
+        }
+        const result = c.overlay(shapes) as CompostObject;
+        const output = createGraphValue(result);
+        saveGraphValue(output, cellId);
+        return createGraphId("overlay", cellId);
+    };
+
+    export const render = ({ args }: FuncProps): Value => {
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 0).value as GraphId,
+        ).value;
+
+        let result = "graph is rendered";
+
+        // this is just a wip workaround
+        try {
+            c.render("graphDisplay", shape);
+        } catch {
+            result = "click graph first";
+        }
+
+        return createString(result);
     };
 }

@@ -92,37 +92,7 @@ export const GraphSidebar = () => {
 
             <P1>Render graphs based on your spreadsheet.</P1>
 
-            <AddedCellsContainer>
-                {Array.from(graphCells).map((cellId) => (
-                    <CellTag key={cellId}>{cellId}</CellTag>
-                ))}
-            </AddedCellsContainer>
-
-            <Graph>
-                {graphCells.size > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data}>
-                            <XAxis dataKey="x" />
-                            <YAxis domain={["dataMin - 10", "dataMax + 10"]} />
-
-                            <Tooltip />
-                            <Legend />
-
-                            {Array.from(graphCells).map((cellId, index) => (
-                                <Line
-                                    type="monotone"
-                                    dataKey={cellId}
-                                    stroke={colors[index % colors.length]}
-                                    isAnimationActive={false}
-                                    key={cellId}
-                                />
-                            ))}
-                        </LineChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <NoGraphData>No data to show...</NoGraphData>
-                )}
-            </Graph>
+            <GraphCanvas id="graphDisplay"></GraphCanvas>
         </Container>
     );
 };
@@ -188,38 +158,8 @@ const Graph = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.05);
 `;
 
-const NoGraphData = styled.div`
-    color: var(--text-1);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 100%;
-`;
-
-const AddedCellsContainer = styled.div`
+const GraphCanvas = styled.div`
+    margin-top: 20px;
     width: 100%;
-
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-
-    margin: 15px 0px;
-`;
-
-const CellTag = styled.div`
-    color: var(--text-1);
-    font-size: 10px;
-    font-weight: 400;
-    line-height: 100%;
-
-    padding: 8px 12px;
-
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-
-    background-color: rgba(0, 0, 0, 0.05);
-
-    cursor: pointer;
-
-    transition: all 100ms;
+    height: 90%;
 `;
