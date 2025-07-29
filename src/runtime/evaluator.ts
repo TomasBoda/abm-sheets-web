@@ -26,7 +26,13 @@ export class Evaluator {
         const formula =
             step === 0 ? (defaultFormula ?? primaryFormula) : primaryFormula;
 
-        return this.evaluateFormula(formula, step, history, dataHistory);
+        return this.evaluateFormula(
+            formula,
+            step,
+            history,
+            dataHistory,
+            cellId,
+        );
     }
 
     private evaluateFormula(
@@ -34,6 +40,7 @@ export class Evaluator {
         step: number,
         history: History,
         dataHistory: History,
+        cellId: CellId,
     ): string {
         try {
             const expression = new Parser().parse(formula);
@@ -42,6 +49,7 @@ export class Evaluator {
                 step,
                 history,
                 dataHistory,
+                cellId,
             );
             return result;
         } catch (e) {

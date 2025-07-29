@@ -25,11 +25,13 @@ import {
     Value,
     ValueType,
 } from "./model";
+import { data } from "@/components/spreadsheet/data";
 
 export class Runtime {
     private step: number;
     private history: History;
     private dataHistory: History;
+    private cellId: CellId;
 
     private inCallExpression: boolean = false;
 
@@ -68,6 +70,18 @@ export class Runtime {
         ["PREV", Functions.prev],
         ["HISTORY", Functions.history],
         ["STEP", Functions.step],
+
+        ["COLUMN", Functions.column],
+        ["RENDER", Functions.render],
+        ["OVERLAY", Functions.overlay],
+        ["AXES", Functions.axes],
+        ["FILLCOLOR", Functions.fillColor],
+        ["BUBBLE", Functions.bubble],
+
+        ["SCALECONTINUOUS", Functions.scalecontinuous],
+        ["SCALEY", Functions.scaleY],
+        ["SCALEX", Functions.scaleX],
+        ["SCALE", Functions.scale],
     ]);
 
     public run(
@@ -75,17 +89,18 @@ export class Runtime {
         step: number,
         history: History,
         dataHistory: History,
+        cellId: CellId,
     ) {
         this.step = step;
         this.history = history;
         this.dataHistory = dataHistory;
+        this.cellId = cellId;
 
         return this.runFormula(expression);
     }
 
     public runFormula(expression: Expression): string {
         const result = this.runExpression(expression);
-
         switch (result.type) {
             case ValueType.Number: {
                 const { value } = result as NumberValue;
@@ -169,6 +184,7 @@ export class Runtime {
             step: this.step,
             history: this.history,
             dataHistory: this.dataHistory,
+            cellId: this.cellId,
         });
     }
 

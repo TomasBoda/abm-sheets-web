@@ -3,6 +3,7 @@ import {
     CellId,
     SpreadsheetData,
 } from "@/components/spreadsheet/spreadsheet.model";
+import { GraphId } from "@/runtime/runtime";
 
 export namespace Utils {
     export const getCellIdsFromFormula = (formula: string): CellId[] => {

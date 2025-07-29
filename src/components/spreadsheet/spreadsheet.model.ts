@@ -1,9 +1,11 @@
+import { GraphValue, Value } from "@/runtime/runtime";
 export type SpreadsheetCell = {
     formula: string;
     value: string;
     color?: string;
     font?: string[];
     isInGraph?: boolean;
+    compostGraphValue?: GraphValue;
 };
 
 export type SpreadsheetRow = SpreadsheetCell[];
