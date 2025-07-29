@@ -727,6 +727,66 @@ export namespace Functions {
         return createNumber(step);
     };
 
+    // graph scale functions
+
+    export const scalecontinuous = ({ args, cellId }: FuncProps): Value => {
+        const min = expectNumber(args, 0).value;
+        const max = expectNumber(args, 1).value;
+
+        const result = s.continuous(min, max) as CompostObject;
+        const output = createGraphValue(result);
+        saveGraphValue(output, cellId);
+        return createGraphId("continuous scale", cellId);
+    };
+
+    export const scale = ({ args, cellId }: FuncProps): Value => {
+        const scale1 = getGraphValueFromGraphId(
+            expectString(args, 0).value as GraphId,
+        ).value;
+        const scale2 = getGraphValueFromGraphId(
+            expectString(args, 1).value as GraphId,
+        ).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 2).value as GraphId,
+        ).value;
+
+        const result = c.scale(scale1, scale2, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("scale", cellId);
+    };
+
+    export const scaleY = ({ args, cellId }: FuncProps): Value => {
+        const scale = getGraphValueFromGraphId(
+            expectString(args, 0).value as GraphId,
+        ).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 1).value as GraphId,
+        ).value;
+
+        const result = c.scaleY(scale, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("scaleY", cellId);
+    };
+
+    export const scaleX = ({ args, cellId }: FuncProps): Value => {
+        const scale = getGraphValueFromGraphId(
+            expectString(args, 0).value as GraphId,
+        ).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 1).value as GraphId,
+        ).value;
+
+        const result = c.scaleX(scale, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("scaleX", cellId);
+    };
+
     // graph functions
 
     export const column = ({ args, cellId }: FuncProps): Value => {
@@ -738,6 +798,19 @@ export namespace Functions {
 
         saveGraphValue(output, cellId);
         return createGraphId("column", cellId);
+    };
+
+    export const bubble = ({ args, cellId }: FuncProps): Value => {
+        const x = expectNumber(args, 0).value;
+        const y = expectNumber(args, 1).value;
+        const width = expectNumber(args, 2).value;
+        const height = expectNumber(args, 3).value;
+
+        const result = c.bubble(x, y, width, height) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId);
+        return createGraphId("bubble", cellId);
     };
 
     export const axes = ({ args, cellId }: FuncProps): Value => {

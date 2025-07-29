@@ -244,7 +244,7 @@ export function Spreadsheet() {
     const onFormulaEnter = () => {
         const coords = getFirstSelectedCell();
         const { formula } = data[coords.ri][coords.ci];
-
+        removeCompostObjectFromCell(coords);
         if (formula.trim() !== "") {
             addUsedCell(coords);
         } else {

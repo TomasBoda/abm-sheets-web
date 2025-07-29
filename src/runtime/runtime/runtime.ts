@@ -76,6 +76,12 @@ export class Runtime {
         ["OVERLAY", Functions.overlay],
         ["AXES", Functions.axes],
         ["FILLCOLOR", Functions.fillColor],
+        ["BUBBLE", Functions.bubble],
+
+        ["SCALECONTINUOUS", Functions.scalecontinuous],
+        ["SCALEY", Functions.scaleY],
+        ["SCALEX", Functions.scaleX],
+        ["SCALE", Functions.scale],
     ]);
 
     public run(
