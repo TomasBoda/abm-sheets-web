@@ -5,7 +5,7 @@ export type SpreadsheetCell = {
     color?: string;
     font?: string[];
     isInGraph?: boolean;
-    compostGraphValue?: GraphValue;
+    compostGraphValue?: GraphValue[];
 };
 
 export type SpreadsheetRow = SpreadsheetCell[];

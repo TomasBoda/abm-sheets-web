@@ -72,7 +72,6 @@ const expectArg = (args: Value[], index: number, type: ValueType): Value => {
     }
 
     if (args[index].type !== type) {
-        console.log(args);
         throw new Error("Function argument type mismatch");
     }
 
@@ -101,14 +100,29 @@ const getHistoryValue = (
 
 // local graph "utils" functions
 
-const getGraphValue = (cellId: CellId): GraphValue => {
+const getGraphValue = (cellId: CellId, step: number): GraphValue => {
     const { ri, ci } = Utils.cellIdToCoords(cellId);
-    return data[ri][ci].compostGraphValue;
+    try {
+        return data[ri][ci].compostGraphValue[step];
+    } catch {
+        throw new Error("Referencing empty graph cell.");
+    }
 };
 
-const saveGraphValue = (value: GraphValue, cellId: CellId): void => {
+const saveGraphValue = (
+    value: GraphValue,
+    cellId: CellId,
+    step: number,
+): void => {
     const { ri, ci } = Utils.cellIdToCoords(cellId);
-    data[ri][ci].compostGraphValue = value;
+    if (!data[ri][ci].compostGraphValue) {
+        data[ri][ci].compostGraphValue = [];
+    }
+    if (data[ri][ci].compostGraphValue.length >= step + 1) {
+        data[ri][ci].compostGraphValue[step] = value;
+    } else {
+        data[ri][ci].compostGraphValue.push(value);
+    }
 };
 
 export const getCoordsFromGraphId = (id: GraphId): CellId => {
@@ -116,9 +130,9 @@ export const getCoordsFromGraphId = (id: GraphId): CellId => {
     return cellId;
 };
 
-const getGraphValueFromGraphId = (id: GraphId): GraphValue => {
+const getGraphValueFromGraphId = (id: GraphId, step): GraphValue => {
     const cellId = getCoordsFromGraphId(id);
-    return getGraphValue(cellId);
+    return getGraphValue(cellId, step);
 };
 
 export namespace Functions {
@@ -729,78 +743,88 @@ export namespace Functions {
 
     // graph scale functions
 
-    export const scalecontinuous = ({ args, cellId }: FuncProps): Value => {
+    export const scalecontinuous = ({
+        args,
+        cellId,
+        step,
+    }: FuncProps): Value => {
         const min = expectNumber(args, 0).value;
         const max = expectNumber(args, 1).value;
 
         const result = s.continuous(min, max) as CompostObject;
         const output = createGraphValue(result);
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("continuous scale", cellId);
     };
 
-    export const scale = ({ args, cellId }: FuncProps): Value => {
+    export const scale = ({ args, cellId, step }: FuncProps): Value => {
         const scale1 = getGraphValueFromGraphId(
             expectString(args, 0).value as GraphId,
+            step,
         ).value;
         const scale2 = getGraphValueFromGraphId(
             expectString(args, 1).value as GraphId,
+            step,
         ).value;
         const shape = getGraphValueFromGraphId(
             expectString(args, 2).value as GraphId,
+            step,
         ).value;
 
         const result = c.scale(scale1, scale2, shape) as CompostObject;
         const output = createGraphValue(result);
 
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("scale", cellId);
     };
 
-    export const scaleY = ({ args, cellId }: FuncProps): Value => {
+    export const scaleY = ({ args, cellId, step }: FuncProps): Value => {
         const scale = getGraphValueFromGraphId(
             expectString(args, 0).value as GraphId,
+            step,
         ).value;
         const shape = getGraphValueFromGraphId(
             expectString(args, 1).value as GraphId,
+            step,
         ).value;
 
         const result = c.scaleY(scale, shape) as CompostObject;
         const output = createGraphValue(result);
 
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("scaleY", cellId);
     };
 
-    export const scaleX = ({ args, cellId }: FuncProps): Value => {
+    export const scaleX = ({ args, cellId, step }: FuncProps): Value => {
         const scale = getGraphValueFromGraphId(
             expectString(args, 0).value as GraphId,
+            step,
         ).value;
         const shape = getGraphValueFromGraphId(
             expectString(args, 1).value as GraphId,
+            step,
         ).value;
 
         const result = c.scaleX(scale, shape) as CompostObject;
         const output = createGraphValue(result);
 
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("scaleX", cellId);
     };
 
     // graph functions
 
-    export const column = ({ args, cellId }: FuncProps): Value => {
+    export const column = ({ args, cellId, step }: FuncProps): Value => {
         const name = expectString(args, 0).value;
         const value = expectNumber(args, 1).value;
 
         const result = c.column(name, value) as CompostObject;
         const output = createGraphValue(result);
-
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("column", cellId);
     };
 
-    export const bubble = ({ args, cellId }: FuncProps): Value => {
+    export const bubble = ({ args, cellId, step }: FuncProps): Value => {
         const x = expectNumber(args, 0).value;
         const y = expectNumber(args, 1).value;
         const width = expectNumber(args, 2).value;
@@ -809,63 +833,64 @@ export namespace Functions {
         const result = c.bubble(x, y, width, height) as CompostObject;
         const output = createGraphValue(result);
 
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("bubble", cellId);
     };
 
-    export const axes = ({ args, cellId }: FuncProps): Value => {
+    export const axes = ({ args, cellId, step }: FuncProps): Value => {
         const axesSpecifications = expectString(args, 0).value;
         const shape = getGraphValueFromGraphId(
             expectString(args, 1).value as GraphId,
+            step,
         ).value;
         const result = c.axes(axesSpecifications, shape) as CompostObject;
         const output = createGraphValue(result);
 
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("axes", cellId);
     };
 
-    export const fillColor = ({ args, cellId }: FuncProps): Value => {
+    export const fillColor = ({ args, cellId, step }: FuncProps): Value => {
         const color = expectString(args, 0).value;
         const shape = getGraphValueFromGraphId(
             expectString(args, 1).value as GraphId,
+            step,
         ).value;
 
         const result = c.fillColor(color, shape) as CompostObject;
         const output = createGraphValue(result);
 
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("fillColor", cellId);
     };
 
-    export const overlay = ({ args, cellId }: FuncProps): Value => {
+    export const overlay = ({ args, cellId, step }: FuncProps): Value => {
         const shapes: CompostObject[] = [];
         for (let i = 0; i < args.length; i++) {
             const shape = getGraphValueFromGraphId(
                 expectString(args, i).value as GraphId,
+                step,
             ).value;
             shapes.push(shape);
         }
         const result = c.overlay(shapes) as CompostObject;
         const output = createGraphValue(result);
-        saveGraphValue(output, cellId);
+        saveGraphValue(output, cellId, step);
         return createGraphId("overlay", cellId);
     };
 
-    export const render = ({ args }: FuncProps): Value => {
+    export const render = ({ args, cellId, step }: FuncProps): Value => {
         const shape = getGraphValueFromGraphId(
             expectString(args, 0).value as GraphId,
+            step,
         ).value;
 
-        let result = "graph is rendered";
+        const output = createGraphValue(shape);
+        saveGraphValue(output, cellId, step);
 
-        // this is just a wip workaround
-        try {
-            c.render("graphDisplay", shape);
-        } catch {
-            result = "click graph first";
-        }
+        const { ri, ci } = Utils.cellIdToCoords(cellId);
+        data[ri][ci].isInGraph = true;
 
-        return createString(result);
+        return createString("render graph");
     };
 }

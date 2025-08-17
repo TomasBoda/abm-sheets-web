@@ -56,6 +56,7 @@ export function Spreadsheet() {
         graphCells,
         addGraphCell,
         removeGraphCell,
+        setGraphCells,
     } = useCellInfo();
 
     const { history, setHistory, dataHistory } = useHistory();
@@ -227,6 +228,20 @@ export function Spreadsheet() {
         [graphCells],
     );
 
+    useEffect(
+        function getGraphCells() {
+            const newGraphCells = new Set<CellId>();
+            for (const cellId of usedCells) {
+                const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
+                if (data[ri][ci].isInGraph === true) {
+                    newGraphCells.add(cellId as CellId);
+                }
+            }
+            setGraphCells(newGraphCells);
+        },
+        [usedCells],
+    );
+
     // formula
 
     const getFormulaElement = () => {
@@ -325,6 +340,7 @@ export function Spreadsheet() {
 
             data[ri][ci].formula = "";
             data[ri][ci].value = "";
+            data[ri][ci].isInGraph = false;
 
             getCellSpan({ ri, ci }).innerText = "";
             removeUsedCell({ ri, ci });
@@ -451,6 +467,7 @@ export function Spreadsheet() {
         }
 
         const { formula } = data[ri][ci];
+
         setFormulaValue(formula);
 
         setCellIndicatorText({ ri, ci });

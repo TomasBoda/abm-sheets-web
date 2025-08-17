@@ -104,7 +104,6 @@ export class Runtime {
         switch (result.type) {
             case ValueType.Number: {
                 const { value } = result as NumberValue;
-
                 if (Math.round(value) === value) {
                     return Math.round(value).toString();
                 }

@@ -416,14 +416,7 @@ const ImportExportTab = () => {
         for (let ri = 0; ri < data.length; ri++) {
             for (let ci = 0; ci < data[ri].length; ci++) {
                 const cellId = Utils.cellCoordsToId({ ri, ci });
-                const {
-                    formula,
-                    value,
-                    color,
-                    font,
-                    isInGraph,
-                    compostGraphValue,
-                } = data[ri][ci];
+                const { formula, value, color, font, isInGraph } = data[ri][ci];
 
                 if (formula.trim() === "" && value.trim() === "") {
                     continue;
@@ -436,7 +429,6 @@ const ImportExportTab = () => {
                     font,
                     isInGraph,
                     history,
-                    compostGraphValue,
                 };
             }
         }
@@ -482,14 +474,7 @@ const ImportExportTab = () => {
         const newDataHistory = new Map(dataHistory);
 
         for (const [cellId, cellData] of Object.entries(importedData)) {
-            const {
-                formula,
-                value,
-                color,
-                font,
-                isInGraph,
-                compostGraphValue,
-            } = cellData as any;
+            const { formula, value, color, font, isInGraph } = cellData as any;
             const { ri, ci } = Utils.cellIdToCoords(cellId as CellId);
 
             data[ri][ci].formula = formula;
@@ -497,7 +482,6 @@ const ImportExportTab = () => {
             data[ri][ci].color = color;
             data[ri][ci].font = font;
             data[ri][ci].isInGraph = isInGraph;
-            data[ri][ci].compostGraphValue = compostGraphValue;
 
             if (color) {
                 newCellColors.set(cellId as CellId, color);

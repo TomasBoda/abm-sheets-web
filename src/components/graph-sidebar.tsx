@@ -4,18 +4,15 @@ import { useCellInfo } from "@/hooks/useCells";
 import { useHistory } from "@/hooks/useHistory";
 import { useStepper } from "@/hooks/useStepper";
 import { X } from "lucide-react";
-import { useMemo } from "react";
-import {
-    Legend,
-    Line,
-    LineChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from "recharts";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useSidebar } from "./sidebar.provider";
+import { Button } from "./button/button.component";
+import { CellId } from "./spreadsheet/spreadsheet.model";
+import { scale as s, compost as c } from "compostjs";
+import { Utils } from "@/utils/utils";
+import { data } from "./spreadsheet/data";
+import { getgroups } from "node:process";
 
 const colors: string[] = [
     "#e6194b", // vivid red
@@ -31,50 +28,67 @@ const colors: string[] = [
 ];
 
 export const GraphSidebar = () => {
-    const { graphCells, xGraphCell } = useCellInfo();
+    const { graphCells, setGraphCells, xGraphCell, usedCells } = useCellInfo();
     const { history } = useHistory();
     const { step } = useStepper();
     const { toggle } = useSidebar();
+    const [currentGraphDisplay, setCurrentGraphDisplay] = useState<
+        CellId | undefined
+    >();
 
-    const data = useMemo(() => {
-        const cells = Array.from(graphCells);
+    const graphCellsArray = [...graphCells];
+    const listGraphCells = graphCellsArray.map((cell) => (
+        <GraphButtonWrapper key={cell}>
+            <Button onClick={() => changeCurrentGraph(cell)} variant="primary">
+                Graph - {cell}
+            </Button>
+        </GraphButtonWrapper>
+    ));
 
-        const cellHistories = cells
-            .filter((cellId) => history.get(cellId) !== undefined)
-            .map((cellId) => {
-                const data = history.get(cellId)!;
-                const sliced = data.slice(0, step + 1);
-                return {
-                    cellId,
-                    history: sliced,
-                };
-            });
-
-        const xHistory =
-            xGraphCell && history.get(xGraphCell)
-                ? history.get(xGraphCell)!.slice(0, step + 1)
-                : null;
-
-        const data = [];
-
-        for (let i = 0; i <= step; i++) {
-            const entry: Record<string, any> = {};
-
-            if (xHistory) {
-                entry.x = xHistory[i];
-            } else {
-                entry.x = i;
-            }
-
-            for (const cell of cellHistories) {
-                entry[cell.cellId] = cell.history[i];
-            }
-
-            data.push(entry);
+    const tryRenderGraph = () => {
+        const { ri, ci } = Utils.cellIdToCoords(currentGraphDisplay);
+        if (data[ri][ci].compostGraphValue) {
+            const graphValue = data[ri][ci].compostGraphValue[step].value;
+            c.render("graphDisplay", graphValue);
+            return true;
         }
+        return false;
+    };
 
-        return data;
-    }, [graphCells, xGraphCell, history, step]);
+    const handleReplaceGraph = () => {
+        if (graphCells.size > 0) {
+            setCurrentGraphDisplay([...graphCells].at(-1));
+            const currentGraph = [...graphCells].at(-1);
+            const { ri, ci } = Utils.cellIdToCoords(currentGraph);
+            if (data[ri][ci].compostGraphValue) {
+                const graphValue = data[ri][ci].compostGraphValue[step].value;
+                c.render("graphDisplay", graphValue);
+            } else {
+                document.getElementById("graphDisplay").innerHTML = "";
+                setCurrentGraphDisplay(undefined);
+            }
+        } else {
+            document.getElementById("graphDisplay").innerHTML = "";
+            setCurrentGraphDisplay(undefined);
+        }
+    };
+
+    useEffect(
+        function updateGraphDisplay() {
+            if (currentGraphDisplay) {
+                if (!tryRenderGraph()) {
+                    handleReplaceGraph();
+                }
+            } else {
+                handleReplaceGraph();
+            }
+        },
+        [graphCells, currentGraphDisplay, step],
+    );
+
+    const changeCurrentGraph = (value: string) => {
+        setCurrentGraphDisplay(value as CellId);
+    };
 
     return (
         <Container>
@@ -90,9 +104,16 @@ export const GraphSidebar = () => {
 
             <Spacing />
 
-            <P1>Render graphs based on your spreadsheet.</P1>
+            <P1>
+                Render graphs based on your spreadsheet.
+                <br />
+                {currentGraphDisplay
+                    ? ""
+                    : " You have currently no graphs to display."}
+            </P1>
 
             <GraphCanvas id="graphDisplay"></GraphCanvas>
+            <GraphList>{listGraphCells}</GraphList>
         </Container>
     );
 };
@@ -103,7 +124,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
     padding: 30px;
 
     transition: right 300ms;
@@ -156,6 +176,19 @@ const Graph = styled.div`
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(0, 0, 0, 0.05);
+`;
+
+const GraphButtonWrapper = styled.div`
+    width: 100px;
+    margin: 5px;
+`;
+
+const GraphList = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
 `;
 
 const GraphCanvas = styled.div`
