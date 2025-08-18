@@ -866,13 +866,29 @@ export namespace Functions {
 
     export const overlay = ({ args, cellId, step }: FuncProps): Value => {
         const shapes: CompostObject[] = [];
+
         for (let i = 0; i < args.length; i++) {
-            const shape = getGraphValueFromGraphId(
-                expectString(args, i).value as GraphId,
-                step,
-            ).value;
-            shapes.push(shape);
+            if (args[i].type == ValueType.String) {
+                const shape = getGraphValueFromGraphId(
+                    expectString(args, i).value as GraphId,
+                    step,
+                ).value;
+                shapes.push(shape);
+            } else if (args[i].type == ValueType.CellRange) {
+                const range = expectCellRange(args, i).value;
+                const [c1, r1, c2, r2] = range;
+                for (let ri = r1; ri <= r2; ri++) {
+                    for (let ci = c1; ci <= c2; ci++) {
+                        const shape =
+                            data[ri][ci].compostGraphValue[step].value;
+                        shapes.push(shape);
+                    }
+                }
+            } else {
+                throw new Error("Function argument type mismatch.");
+            }
         }
+
         const result = c.overlay(shapes) as CompostObject;
         const output = createGraphValue(result);
         saveGraphValue(output, cellId, step);
