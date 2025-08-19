@@ -812,8 +812,22 @@ export namespace Functions {
         return createGraphId("scaleX", cellId);
     };
 
-    // graph functions
+    // graph shapes functions
 
+    export const point = ({ args }: FuncProps): Value => {
+        let result;
+        if (args[0].type == ValueType.String) {
+            const area = expectString(args, 0).value;
+            const value = expectNumber(args, 1).value;
+            result = `[${area}, ${value}]`;
+        } else {
+            const x = expectNumber(args, 0).value;
+            const y = expectNumber(args, 1).value;
+            result = `[${x}, ${y}]`;
+        }
+
+        return createString(result);
+    };
     export const column = ({ args, cellId, step }: FuncProps): Value => {
         const name = expectString(args, 0).value;
         const value = expectNumber(args, 1).value;
@@ -836,6 +850,58 @@ export namespace Functions {
         saveGraphValue(output, cellId, step);
         return createGraphId("bubble", cellId);
     };
+
+    // handle point function
+
+    const pointToXY = (value: string) => {
+        const [x, y] = value.replace("[", "").replace("]", "").split(",");
+
+        if (/^[0-9]*$/.test(x)) {
+            return [Number(x), Number(y)];
+        }
+        return [x, Number(y)];
+    };
+
+    export const line = ({
+        args,
+        cellId,
+        step,
+        dataHistory,
+        history,
+    }: FuncProps): Value => {
+        const points = [];
+        for (let i = 0; i < args.length; i++) {
+            if (args[i].type == ValueType.String) {
+                const point = pointToXY(expectString(args, i).value);
+                points.push(point);
+            } else if (args[i].type == ValueType.CellRange) {
+                const range = expectCellRange(args, i).value;
+                const [c1, r1, c2, r2] = range;
+                for (let ri = r1; ri <= r2; ri++) {
+                    for (let ci = c1; ci <= c2; ci++) {
+                        const cellId = Utils.cellCoordsToId({ ri, ci });
+                        const value = getHistoryValue(
+                            cellId,
+                            step,
+                            history,
+                            dataHistory,
+                        );
+                        const point = pointToXY(value);
+                        points.push(point);
+                    }
+                }
+            } else {
+                throw new Error("Function argument type mismatch.");
+            }
+        }
+        const result = c.line(points) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId, step);
+        return createGraphId("line", cellId);
+    };
+
+    // graph other functions
 
     export const axes = ({ args, cellId, step }: FuncProps): Value => {
         const axesSpecifications = expectString(args, 0).value;

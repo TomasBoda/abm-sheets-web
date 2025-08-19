@@ -77,7 +77,9 @@ export class Runtime {
         ["AXES", Functions.axes],
         ["FILLCOLOR", Functions.fillColor],
         ["BUBBLE", Functions.bubble],
+        ["LINE", Functions.line],
 
+        ["POINT", Functions.point],
         ["SCALECONTINUOUS", Functions.scalecontinuous],
         ["SCALEY", Functions.scaleY],
         ["SCALEX", Functions.scaleX],
