@@ -26,6 +26,7 @@ import {
     ValueType,
 } from "./model";
 import { data } from "@/components/spreadsheet/data";
+import { FunnelChart } from "recharts";
 
 export class Runtime {
     private step: number;
@@ -78,12 +79,18 @@ export class Runtime {
         ["FILLCOLOR", Functions.fillColor],
         ["BUBBLE", Functions.bubble],
         ["LINE", Functions.line],
+        ["SHAPE", Functions.shape],
+        ["STROKECOLOR", Functions.strokeColor],
+        ["BAR", Functions.bar],
 
         ["POINT", Functions.point],
+        ["CATEGORICALCOORD", Functions.categoricalcoord],
         ["SCALECONTINUOUS", Functions.scalecontinuous],
         ["SCALEY", Functions.scaleY],
         ["SCALEX", Functions.scaleX],
         ["SCALE", Functions.scale],
+
+        ["TEST", Functions.test],
     ]);
 
     public run(

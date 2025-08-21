@@ -15,6 +15,8 @@ import {
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { scale as s, compost as c } from "compostjs";
 import { data } from "@/components/spreadsheet/data";
+import { validateHeaderName } from "http";
+import { AlignEndHorizontal } from "lucide-react";
 // utils
 
 const createNumber = (value: number): NumberValue => ({
@@ -812,22 +814,63 @@ export namespace Functions {
         return createGraphId("scaleX", cellId);
     };
 
-    // graph shapes functions
-
     export const point = ({ args }: FuncProps): Value => {
-        let result;
-        if (args[0].type == ValueType.String) {
-            const area = expectString(args, 0).value;
-            const value = expectNumber(args, 1).value;
-            result = `[${area}, ${value}]`;
+        let x;
+        let y;
+        if (args[0].type == ValueType.Number) {
+            x = expectNumber(args, 0).value;
         } else {
-            const x = expectNumber(args, 0).value;
-            const y = expectNumber(args, 1).value;
-            result = `[${x}, ${y}]`;
+            x = expectString(args, 0).value;
         }
-
+        if (args[1].type == ValueType.Number) {
+            y = expectNumber(args, 1).value;
+        } else {
+            y = expectString(args, 1).value;
+        }
+        const result = `[${x}, ${y}]`;
         return createString(result);
     };
+
+    export const categoricalcoord = ({ args }: FuncProps): Value => {
+        let x;
+        let y;
+        if (args[0].type == ValueType.Number) {
+            x = expectNumber(args, 0).value;
+            y = expectString(args, 1).value;
+        } else if (args[0].type == ValueType.String) {
+            x = expectString(args, 0).value;
+            y = expectNumber(args, 1).value;
+        } else {
+            throw new Error("Function type mismatch.");
+        }
+        const result = `[${x}, ${y}]`;
+        return createString(result);
+    };
+
+    const pointToXY = (value: string) => {
+        const arr = JSON.parse(value.replace(/([a-zA-Z_]\w*)/g, '"$1"'));
+        let x;
+        let y;
+        const a = arr[0];
+        const b = arr[1];
+        console.log(a);
+        console.log(b);
+        if (/^[0-9]*$/.test(a)) {
+            x = Number(a);
+        } else {
+            x = a;
+        }
+
+        if (/^[0-9]*$/.test(b)) {
+            y = Number(b);
+        } else {
+            y = b;
+        }
+
+        return [x, y];
+    };
+    // graph shapes functions
+
     export const column = ({ args, cellId, step }: FuncProps): Value => {
         const name = expectString(args, 0).value;
         const value = expectNumber(args, 1).value;
@@ -851,18 +894,47 @@ export namespace Functions {
         return createGraphId("bubble", cellId);
     };
 
-    // handle point function
+    export const line = ({
+        args,
+        cellId,
+        step,
+        dataHistory,
+        history,
+    }: FuncProps): Value => {
+        const points = [];
+        for (let i = 0; i < args.length; i++) {
+            if (args[i].type == ValueType.String) {
+                const point = pointToXY(expectString(args, i).value);
+                points.push(point);
+            } else if (args[i].type == ValueType.CellRange) {
+                const range = expectCellRange(args, i).value;
+                const [c1, r1, c2, r2] = range;
+                for (let ri = r1; ri <= r2; ri++) {
+                    for (let ci = c1; ci <= c2; ci++) {
+                        const cellId = Utils.cellCoordsToId({ ri, ci });
+                        const value = getHistoryValue(
+                            cellId,
+                            step,
+                            history,
+                            dataHistory,
+                        );
 
-    const pointToXY = (value: string) => {
-        const [x, y] = value.replace("[", "").replace("]", "").split(",");
-
-        if (/^[0-9]*$/.test(x)) {
-            return [Number(x), Number(y)];
+                        const point = pointToXY(value);
+                        points.push(point);
+                    }
+                }
+            } else {
+                throw new Error("Function argument type mismatch.");
+            }
         }
-        return [x, Number(y)];
+
+        const result = c.line(points) as CompostObject;
+        const output = createGraphValue(result);
+        saveGraphValue(output, cellId, step);
+        return createGraphId("line", cellId);
     };
 
-    export const line = ({
+    export const shape = ({
         args,
         cellId,
         step,
@@ -894,11 +966,20 @@ export namespace Functions {
                 throw new Error("Function argument type mismatch.");
             }
         }
-        const result = c.line(points) as CompostObject;
-        const output = createGraphValue(result);
 
+        const result = c.shape(points) as CompostObject;
+        const output = createGraphValue(result);
         saveGraphValue(output, cellId, step);
-        return createGraphId("line", cellId);
+        return createGraphId("shape", cellId);
+    };
+
+    export const bar = ({ args, cellId, step }: FuncProps): Value => {
+        const width = expectNumber(args, 0).value;
+        const name = expectString(args, 1).value;
+        const result = c.bar(width, name) as CompostObject;
+        const output = createGraphValue(result);
+        saveGraphValue(output, cellId, step);
+        return createGraphId("bar", cellId);
     };
 
     // graph other functions
@@ -928,6 +1009,20 @@ export namespace Functions {
 
         saveGraphValue(output, cellId, step);
         return createGraphId("fillColor", cellId);
+    };
+
+    export const strokeColor = ({ args, cellId, step }: FuncProps): Value => {
+        const color = expectString(args, 0).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 1).value as GraphId,
+            step,
+        ).value;
+
+        const result = c.strokeColor(color, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId, step);
+        return createGraphId("strokeColor", cellId);
     };
 
     export const overlay = ({ args, cellId, step }: FuncProps): Value => {
@@ -974,5 +1069,10 @@ export namespace Functions {
         data[ri][ci].isInGraph = true;
 
         return createString("render graph");
+    };
+
+    export const test = ({ args, cellId, step }: FuncProps): Value => {
+        c.render("graphDisplay", shape);
+        return createString("test");
     };
 }
