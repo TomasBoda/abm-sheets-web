@@ -72,25 +72,30 @@ export class Runtime {
         ["HISTORY", Functions.history],
         ["STEP", Functions.step],
 
-        ["COLUMN", Functions.column],
         ["RENDER", Functions.render],
         ["OVERLAY", Functions.overlay],
         ["AXES", Functions.axes],
-        ["FILLCOLOR", Functions.fillColor],
+
+        ["COLUMN", Functions.column],
         ["BUBBLE", Functions.bubble],
         ["LINE", Functions.line],
         ["SHAPE", Functions.shape],
-        ["STROKECOLOR", Functions.strokeColor],
         ["BAR", Functions.bar],
+        ["TEXT", Functions.text],
+
+        ["STROKECOLOR", Functions.strokeColor],
+        ["FONT", Functions.font],
+        ["FILLCOLOR", Functions.fillColor],
+        ["PADDING", Functions.padding],
 
         ["POINT", Functions.point],
         ["CATEGORICALCOORD", Functions.categoricalcoord],
         ["SCALECONTINUOUS", Functions.scalecontinuous],
+        ["SCALECATEGORICAL", Functions.scalecategorical],
         ["SCALEY", Functions.scaleY],
         ["SCALEX", Functions.scaleX],
         ["SCALE", Functions.scale],
-
-        ["TEST", Functions.test],
+        ["NEST", Functions.nest],
     ]);
 
     public run(

@@ -15,8 +15,8 @@ import {
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { scale as s, compost as c } from "compostjs";
 import { data } from "@/components/spreadsheet/data";
-import { validateHeaderName } from "http";
-import { AlignEndHorizontal } from "lucide-react";
+import { isPartOfTypeOnlyImportOrExportDeclaration } from "typescript";
+
 // utils
 
 const createNumber = (value: number): NumberValue => ({
@@ -759,6 +759,24 @@ export namespace Functions {
         return createGraphId("continuous scale", cellId);
     };
 
+    export const scalecategorical = ({
+        args,
+        cellId,
+        step,
+    }: FuncProps): Value => {
+        const strs = [];
+
+        for (let i = 0; i < args.length; i++) {
+            const value = expectString(args, i).value;
+            strs.push(value);
+        }
+
+        const result = s.categorical(strs) as CompostObject;
+        const output = createGraphValue(result);
+        saveGraphValue(output, cellId, step);
+        return createGraphId("categorical scale", cellId);
+    };
+
     export const scale = ({ args, cellId, step }: FuncProps): Value => {
         const scale1 = getGraphValueFromGraphId(
             expectString(args, 0).value as GraphId,
@@ -853,8 +871,6 @@ export namespace Functions {
         let y;
         const a = arr[0];
         const b = arr[1];
-        console.log(a);
-        console.log(b);
         if (/^[0-9]*$/.test(a)) {
             x = Number(a);
         } else {
@@ -982,7 +998,64 @@ export namespace Functions {
         return createGraphId("bar", cellId);
     };
 
+    export const text = ({ args, cellId, step }: FuncProps): Value => {
+        const value = expectString(args, 0).value;
+        const point = pointToXY(value);
+        const str = expectString(args, 1).value;
+
+        let result;
+
+        if (args.length >= 3) {
+            const alignment = expectString(args, 2).value;
+            result = c.text(
+                point[0],
+                point[1],
+                str,
+                alignment,
+            ) as CompostObject;
+        } else if (args.length >= 4) {
+            const alignment = expectString(args, 2).value;
+            const rotation = expectNumber(args, 3).value;
+            result = c.text(
+                point[0],
+                point[1],
+                str,
+                alignment,
+                rotation,
+            ) as CompostObject;
+        } else {
+            result = c.text(point[0], point[1], str) as CompostObject;
+        }
+
+        const output = createGraphValue(result);
+        saveGraphValue(output, cellId, step);
+        return createGraphId("text", cellId);
+    };
     // graph other functions
+
+    export const nest = ({ args, cellId, step }: FuncProps): Value => {
+        const xPoint = expectString(args, 0).value;
+        const yPoint = expectString(args, 1).value;
+
+        const start = pointToXY(xPoint);
+        const end = pointToXY(yPoint);
+
+        const x1 = start[0];
+        const x2 = end[0];
+        const y1 = start[1];
+        const y2 = end[1];
+
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 2).value as GraphId,
+            step,
+        ).value;
+
+        const result = c.nest(x1, x2, y1, y2, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId, step);
+        return createGraphId("nest", cellId);
+    };
 
     export const axes = ({ args, cellId, step }: FuncProps): Value => {
         const axesSpecifications = expectString(args, 0).value;
@@ -1023,6 +1096,45 @@ export namespace Functions {
 
         saveGraphValue(output, cellId, step);
         return createGraphId("strokeColor", cellId);
+    };
+
+    export const font = ({ args, cellId, step }: FuncProps): Value => {
+        const fontSpec = expectString(args, 0).value;
+        const color = expectString(args, 1).value;
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 2).value as GraphId,
+            step,
+        ).value;
+
+        const result = c.font(fontSpec, color, shape) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId, step);
+        return createGraphId("font", cellId);
+    };
+
+    export const padding = ({ args, cellId, step }: FuncProps): Value => {
+        const top = expectNumber(args, 0).value;
+        const right = expectNumber(args, 1).value;
+        const bottom = expectNumber(args, 2).value;
+        const left = expectNumber(args, 3).value;
+
+        const shape = getGraphValueFromGraphId(
+            expectString(args, 4).value as GraphId,
+            step,
+        ).value;
+
+        const result = c.padding(
+            top,
+            right,
+            bottom,
+            left,
+            shape,
+        ) as CompostObject;
+        const output = createGraphValue(result);
+
+        saveGraphValue(output, cellId, step);
+        return createGraphId("padding", cellId);
     };
 
     export const overlay = ({ args, cellId, step }: FuncProps): Value => {
@@ -1069,10 +1181,5 @@ export namespace Functions {
         data[ri][ci].isInGraph = true;
 
         return createString("render graph");
-    };
-
-    export const test = ({ args, cellId, step }: FuncProps): Value => {
-        c.render("graphDisplay", shape);
-        return createString("test");
     };
 }
