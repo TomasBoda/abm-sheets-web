@@ -1,4 +1,3 @@
-import { Logger } from "@/utils/logger";
 import { ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Logo } from "../logo";
@@ -9,13 +8,18 @@ export interface Tab {
     onClick?: () => void;
 }
 
-interface Props {
+interface TabsProps {
     tabs?: Tab[];
+    defaultTab?: number;
     rightContent?: ReactNode;
 }
 
-export const Tabs = ({ tabs = [], rightContent }: Props) => {
-    const [current, setCurrent] = useState<number>(0);
+export const Tabs = ({
+    tabs = [],
+    defaultTab = 0,
+    rightContent,
+}: TabsProps) => {
+    const [current, setCurrent] = useState<number>(defaultTab);
 
     useEffect(() => {
         const tabElement = document.getElementById(`tab-${current}`);
@@ -34,15 +38,11 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
     }, [current]);
 
     const onTabClick = (index: number) => {
-        if (tabs[index].onClick) {
-            tabs[index].onClick();
-        }
+        tabs[index]?.onClick?.();
 
         if (tabs[index].component) {
             setCurrent(index);
         }
-
-        Logger.log("click-tab", tabs[index].label);
     };
 
     return (

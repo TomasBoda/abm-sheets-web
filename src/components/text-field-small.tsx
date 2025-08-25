@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface Props {
+interface TextFieldSmallProps {
     id?: string;
     value?: string;
     onChange?: (value: string) => void;
@@ -18,7 +18,7 @@ export const TextFieldSmall = ({
     placeholder = "Enter text",
     disabled = false,
     onBlur,
-}: Props) => {
+}: TextFieldSmallProps) => {
     return (
         <Input
             id={id}

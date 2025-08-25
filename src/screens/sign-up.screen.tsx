@@ -3,6 +3,7 @@
 import { Button } from "@/components/button/button.component";
 import { Href } from "@/components/href";
 import { Logo } from "@/components/logo";
+import { useMessage } from "@/hooks/useMessage";
 import { createClientClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +11,7 @@ import styled from "styled-components";
 
 export const SignUpScreen = () => {
     const router = useRouter();
+    const message = useMessage();
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -17,7 +19,7 @@ export const SignUpScreen = () => {
 
     const signUp = async () => {
         if (email.trim() === "" || password.trim() === "") {
-            alert("Fields cannot be empty");
+            message.showMessage("error", "Fields cannot be empty");
             return;
         }
 
@@ -29,7 +31,7 @@ export const SignUpScreen = () => {
 
         if (response.error) {
             setLoading(false);
-            alert("ERROR: " + response.error.message);
+            message.showMessage("error", response.error.message);
             return;
         }
 

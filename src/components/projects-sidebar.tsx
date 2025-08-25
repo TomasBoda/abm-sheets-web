@@ -1,73 +1,56 @@
 "use client";
 
+import { useModal } from "@/hooks/useModal";
 import { useProjects } from "@/hooks/useProjects";
-import { useSpreadsheet } from "@/hooks/useSpreadsheet";
-import { createClientClient } from "@/utils/supabase/client";
-import { X } from "lucide-react";
+import { DeleteProjectModal } from "@/modals/delete-project.modal";
+import { ExternalLink, Trash2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
-import { useSidebar } from "./sidebar.provider";
+import { useSidebar } from "../hooks/useSidebar";
+import { StatusIcon } from "./status-icon";
 
 export const ProjectsSidebar = () => {
-    const { toggle } = useSidebar();
-    const { projects, loadProjects } = useProjects();
-    const spreadsheet = useSpreadsheet();
-
     const router = useRouter();
     const searchParams = useSearchParams();
+    const modal = useModal();
+    const sidebar = useSidebar();
+    const projects = useProjects();
 
     const openProject = (id: string) => {
         const params = new URLSearchParams(searchParams);
         params.set("projectId", id);
-
         router.replace(`?${params.toString()}`);
-
-        spreadsheet.clear();
+        sidebar.toggle("projects");
     };
 
-    const deleteProject = async (event: any, id: string) => {
-        event.stopPropagation();
-
-        const supabase = createClientClient();
-
-        const request = await supabase.from("projects").delete().eq("id", id);
-
-        if (request.error) {
-            return alert("Error: cannot delete project");
-        }
-
-        loadProjects();
+    const deleteProject = async (projectId: string) => {
+        modal.showModal(({ hideModal }) => (
+            <DeleteProjectModal hideModal={hideModal} projectId={projectId} />
+        ));
     };
 
     return (
         <Container>
-            <H1>
-                Projects
-                <X
-                    onClick={() => toggle()}
-                    color="rgba(0, 0, 0, 0.4)"
-                    size={16}
-                    style={{ cursor: "pointer" }}
-                />
-            </H1>
+            <Heading>Projects</Heading>
+            <Text>Browse through your projects.</Text>
 
-            <Spacing />
-
-            <P1>Browse through your projects</P1>
-
-            <Spacing />
-            <Spacing />
-            <Spacing />
-
-            {projects.length > 0 ? (
+            {projects.projects.length > 0 ? (
                 <ProjectList>
                     <ProjectWrapper>
-                        {projects.map(({ id, title, text }) => (
+                        {projects.projects.map(({ id, title, text }) => (
                             <Project
                                 onClick={() => openProject(id)}
                                 $selected={id === searchParams.get("projectId")}
                                 key={id}
                             >
+                                <StatusIcon
+                                    type={
+                                        projects.project?.id === id
+                                            ? "success"
+                                            : "info"
+                                    }
+                                />
+
                                 <Title
                                     $selected={
                                         id === searchParams.get("projectId")
@@ -75,25 +58,26 @@ export const ProjectsSidebar = () => {
                                 >
                                     {title}
                                 </Title>
-                                <Text
+                                <Description
                                     $selected={
                                         id === searchParams.get("projectId")
                                     }
                                 >
                                     {text}
-                                </Text>
+                                </Description>
 
-                                <Actions>
-                                    <Button>Open</Button>
+                                <IconContainer>
+                                    <ExternalLink color="black" size={16} />
+                                </IconContainer>
 
-                                    <Button
-                                        onClick={(event) =>
-                                            deleteProject(event, id)
-                                        }
-                                    >
-                                        Delete
-                                    </Button>
-                                </Actions>
+                                <IconContainer
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        deleteProject(id);
+                                    }}
+                                >
+                                    <Trash2 color="black" size={16} />
+                                </IconContainer>
                             </Project>
                         ))}
                     </ProjectWrapper>
@@ -106,55 +90,43 @@ export const ProjectsSidebar = () => {
 };
 
 const Container = styled.div`
-    flex: 1;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 
-    padding: 30px;
-
-    transition: right 300ms;
-
-    background-color: white;
-
-    * {
-        font-family: "Poppins", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-    }
+    padding: 25px;
 `;
 
-const H1 = styled.h1`
-    color: var(--text-1);
+const Heading = styled.h2`
+    color: black;
     font-size: 22px;
-    font-weight: 600;
-    line-height: 120%;
+    font-weight: 700;
+    line-height: 100%;
 
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    margin-bottom: 10px;
 `;
 
-const P1 = styled.p`
-    color: var(--text-1);
+const Text = styled.div`
+    color: black;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 150%;
     opacity: 0.6;
-`;
 
-const Spacing = styled.div`
-    height: 10px;
+    margin-bottom: 15px;
 `;
-
 const ProjectList = styled.div`
     width: 100%;
     height: 100%;
 
     overflow: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 const ProjectWrapper = styled.div`
@@ -162,35 +134,24 @@ const ProjectWrapper = styled.div`
 
     display: flex;
     flex-direction: column;
-    gap: 10px;
 `;
 
 const Project = styled.div<{ $selected: boolean }>`
     width: 100%;
 
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: auto 150px 1fr auto auto;
+    align-items: center;
+    gap: 15px;
 
-    padding: 15px;
-
-    border-radius: 5px;
-
-    background-color: var(--bg-0);
-    border: 1px solid var(--bg-2);
+    padding: 10px;
+    border-bottom: 1px solid rgb(220, 220, 220);
 
     cursor: pointer;
-    transition: all 100ms;
+    transition: all 150ms;
 
     &:hover {
-        background-color: var(--bg-1);
-    }
-
-    background-color: ${({ $selected }) => $selected && "var(--color-2)"};
-    border-color: ${({ $selected }) => $selected && "var(--color-2)"};
-
-    &:hover {
-        background-color: ${({ $selected }) => $selected && "var(--color-2)"};
+        background-color: rgba(0, 0, 0, 0.03);
     }
 `;
 
@@ -200,54 +161,27 @@ const Title = styled.div<{ $selected: boolean }>`
     font-weight: 600;
     line-height: 100%;
 
-    color: ${({ $selected }) => $selected && "white"};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
-const Text = styled.div<{ $selected: boolean }>`
+const Description = styled.div<{ $selected: boolean }>`
     color: var(--text-);
     font-size: 12px;
-    font-weight: 300;
-    line-height: 150%;
-
-    color: ${({ $selected }) => $selected && "rgba(255, 255, 255, 0.5)"};
-`;
-
-const Actions = styled.div`
-    width: 100%;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-`;
-
-const Button = styled.div`
-    color: white;
-    font-size: 11px;
     font-weight: 400;
+    line-height: 100%;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
-
-    cursor: pointer;
-
-    padding: 5px 12px;
-    border-radius: 5px;
-
-    border: 1px solid var(--color-2);
-
-    background-color: var(--color-1);
-
-    transition: all 100ms;
-
-    &:hover {
-        background-color: var(--color-2);
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
-const P1Panel = styled(P1)`
+const IconContainer = styled.div`
+    cursor: pointer;
+`;
+
+const P1Panel = styled(Text)`
     width: 100%;
     height: 100%;
 

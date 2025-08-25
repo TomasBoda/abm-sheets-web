@@ -1,48 +1,108 @@
 import { History } from "@/components/spreadsheet/spreadsheet.model";
 
 export enum ValueType {
-    Number,
-    Boolean,
-    String,
-    CellLiteral,
-    CellRange,
+    Number = "Number",
+    Boolean = "Boolean",
+    String = "String",
+    CellLiteral = "CellLiteral",
+    CellRange = "CellRange",
+
+    Point = "Point",
+    Shape = "Shape",
+    Graph = "Graph",
+
+    Error = "Error",
 }
+
+export type NumberType = number;
+
+export type BooleanType = boolean;
+
+export type StringType = string;
+
+export type CellLiteralType = {
+    ri: number;
+    ci: number;
+};
+
+export type CellRangeType = {
+    start: CellLiteralType;
+    end: CellLiteralType;
+};
+
+export type PointType = { x: number; y: number };
+
+export type ShapeType = any;
+
+export type GraphType = ShapeType;
+
+export type ErrorType = string;
 
 export interface Value {
     type: ValueType;
-    value: number | boolean | string | number[];
+    value:
+        | NumberType
+        | BooleanType
+        | StringType
+        | CellLiteralType
+        | CellRangeType
+        | PointType
+        | ShapeType
+        | GraphType
+        | ErrorType;
 }
 
-export interface NumberValue {
+export interface NumberValue extends Value {
     type: ValueType.Number;
-    value: number;
+    value: NumberType;
 }
 
-export interface BooleanValue {
+export interface BooleanValue extends Value {
     type: ValueType.Boolean;
-    value: boolean;
+    value: BooleanType;
 }
 
-export interface StringValue {
+export interface StringValue extends Value {
     type: ValueType.String;
-    value: string;
+    value: StringType;
 }
 
-export interface CellLiteralValue {
+export interface CellLiteralValue extends Value {
     type: ValueType.CellLiteral;
-    value: number[];
+    value: CellLiteralType;
 }
 
-export interface CellRangeValue {
+export interface CellRangeValue extends Value {
     type: ValueType.CellRange;
-    value: number[];
+    value: CellRangeType;
+}
+
+export interface PointValue extends Value {
+    type: ValueType.Point;
+    value: PointType;
+}
+
+export interface ShapeValue extends Value {
+    type: ValueType.Shape;
+    value: ShapeType;
+    label: string;
+}
+
+export interface GraphValue extends Value {
+    type: ValueType.Graph;
+    value: GraphType;
+}
+
+export interface ErrorValue extends Value {
+    type: ValueType.Error;
+    value: ErrorType;
 }
 
 export type FuncProps = {
     args: Value[];
-    step: number;
     history: History;
-    dataHistory: History;
+    step: number;
+    steps: number;
 };
 
 export type FuncCall = (props: FuncProps) => Value;

@@ -1,23 +1,23 @@
-import { data } from "@/components/spreadsheet/data";
+import { SPREADSHEET_DATA } from "@/components/spreadsheet/spreadsheet.constants";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
-import { Utils } from "@/utils/utils";
+import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 import { Parser } from "./parser";
-import { Runtime } from "./runtime";
+import { Runtime, Value, ValueType } from "./runtime";
 
 export class Evaluator {
     private evaluateCell(
         cellId: CellId,
-        step: number,
         history: History,
-        dataHistory: History,
-    ): string | undefined {
-        const { ri, ci } = Utils.cellIdToCoords(cellId);
-        const cell = data[ri][ci];
+        step: number,
+        steps: number,
+    ): Value | undefined {
+        const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
+        const cell = SPREADSHEET_DATA[ri][ci];
 
         const formulaWithoutFixes = cell.formula.replaceAll("$", "");
 
         const { defaultFormula, primaryFormula } =
-            Utils.getFormula(formulaWithoutFixes);
+            SpreadsheetUtils.getFormula(formulaWithoutFixes);
 
         if (!defaultFormula && !primaryFormula) {
             return undefined;
@@ -26,39 +26,30 @@ export class Evaluator {
         const formula =
             step === 0 ? (defaultFormula ?? primaryFormula) : primaryFormula;
 
-        return this.evaluateFormula(formula, step, history, dataHistory);
+        return this.evaluateFormula(formula, history, step, steps);
     }
 
     private evaluateFormula(
         formula: string,
-        step: number,
         history: History,
-        dataHistory: History,
-    ): string {
+        step: number,
+        steps: number,
+    ): Value {
         try {
             const expression = new Parser().parse(formula);
-            const result = new Runtime().run(
-                expression,
-                step,
-                history,
-                dataHistory,
-            );
+            const result = new Runtime().run(expression, history, step, steps);
             return result;
         } catch (e) {
-            return "ERROR " + e;
+            return { type: ValueType.Error, value: e.toString() };
         }
     }
 
-    public evaluateCells(cells: CellId[], steps: number, dataHistory: History) {
+    public evaluateCells(cells: CellId[], steps: number) {
         const history: History = new Map();
+
         for (let step = 0; step < steps; step++) {
             for (const cellId of cells) {
-                const result = this.evaluateCell(
-                    cellId,
-                    step,
-                    history,
-                    dataHistory,
-                );
+                const result = this.evaluateCell(cellId, history, step, steps);
 
                 if (!result) {
                     continue;
