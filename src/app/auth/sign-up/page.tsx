@@ -4,7 +4,7 @@ import { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-    title: "Sign up",
+    title: "Sign up | ABM Sheets",
 };
 
 export default function SignUpPage() {

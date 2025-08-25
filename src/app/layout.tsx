@@ -1,15 +1,19 @@
-import StyledComponentsRegistry from "@/lib/registry";
+import { ReactNode } from "react";
 import "./globals.css";
+import { MessageProvider } from "@/hooks/useMessage";
+import StyledComponentsRegistry from "./registry";
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+interface RootLayoutProps {
+    children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="en">
             <body>
-                <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+                <StyledComponentsRegistry>
+                    <MessageProvider>{children}</MessageProvider>
+                </StyledComponentsRegistry>
             </body>
         </html>
     );

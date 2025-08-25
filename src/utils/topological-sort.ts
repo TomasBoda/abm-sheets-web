@@ -1,12 +1,12 @@
 import { CellCoords, CellId } from "@/components/spreadsheet/spreadsheet.model";
-import { Utils } from "./utils";
+import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 
-export interface CellItem {
+interface CellItem {
     id: CellId;
     formula: string;
 }
 
-export interface CellDependencyItem {
+interface CellDependencyItem {
     id: CellId;
     dependencies: CellId[];
 }
@@ -16,25 +16,35 @@ const getNormalDependencies = (formula: string): CellId[] => {
     const matches = [...formula.matchAll(regex)].map((match) => {
         return {
             ri: parseInt(match[2]) - 1,
-            ci: Utils.columnTextToIndex(match[1]),
+            ci: SpreadsheetUtils.columnTextToIndex(match[1]),
         };
     });
-    return matches.map((match) => Utils.cellCoordsToId(match));
+    return matches.map((match) => SpreadsheetUtils.cellCoordsToId(match));
 };
 
-export const getRangeDependencies = (formula: string): CellId[] => {
+const getRangeDependencies = (formula: string): CellId[] => {
     const rangeRegex = /\$?([A-Z]+)\$?(\d+):\$?([A-Z]+)\$?(\d+)/g;
-    let matches: any;
+    let matches: RegExpExecArray | null;
     const cells: CellId[] = [];
 
     while ((matches = rangeRegex.exec(formula)) !== null) {
         const [, startCol, startRow, endCol, endRow] = matches;
         const startRowNum = parseInt(startRow, 10);
         const endRowNum = parseInt(endRow, 10);
+        const startColNum = SpreadsheetUtils.columnTextToIndex(startCol);
+        const endColNum = SpreadsheetUtils.columnTextToIndex(endCol);
 
-        if (startCol === endCol && startRowNum <= endRowNum) {
-            for (let i = startRowNum; i <= endRowNum; i++) {
-                cells.push(`${startCol}${i}`);
+        for (
+            let ri = Math.min(startRowNum, endRowNum);
+            ri <= Math.max(startRowNum, endRowNum);
+            ri++
+        ) {
+            for (
+                let ci = Math.min(startColNum, endColNum);
+                ci <= Math.max(startColNum, endColNum);
+                ci++
+            ) {
+                cells.push(SpreadsheetUtils.cellCoordsToId({ ri: ri - 1, ci }));
             }
         }
     }
@@ -52,11 +62,13 @@ const getCellFormulaDependencies = (formula: string): CellCoords[] => {
     ]);
     const dependencies = Array.from(dependencySet);
 
-    return dependencies.map((dependency) => Utils.cellIdToCoords(dependency));
+    return dependencies.map((dependency) =>
+        SpreadsheetUtils.cellIdToCoords(dependency),
+    );
 };
 
 const getPrunedFormula = (formula: string): string => {
-    const parts = formula.split("=");
+    const parts = formula.split(/(?<![<>=])=(?![=])/);
     return parts[1];
 };
 
@@ -69,7 +81,7 @@ const buildCellDependencies = (cells: CellItem[]): CellDependencyItem[] => {
         const cellReferences = getCellFormulaDependencies(prunedFormula);
 
         for (const reference of cellReferences) {
-            dependencies.push(Utils.cellCoordsToId(reference));
+            dependencies.push(SpreadsheetUtils.cellCoordsToId(reference));
         }
 
         dependencyItems.push({ id, dependencies });
@@ -78,7 +90,7 @@ const buildCellDependencies = (cells: CellItem[]): CellDependencyItem[] => {
     return dependencyItems;
 };
 
-export const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
+const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
     const sorted: CellId[] = [];
     const visited = new Map<CellId, boolean>();
     const visiting = new Map<CellId, boolean>();
@@ -115,6 +127,5 @@ export const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
 
 export const getSortedCells = (cells: CellItem[]) => {
     const dependencies = buildCellDependencies(cells);
-    const sortedCells = topologicalSort(dependencies);
-    return sortedCells;
+    return topologicalSort(dependencies);
 };

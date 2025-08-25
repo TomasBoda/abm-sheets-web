@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
     compiler: {
         styledComponents: true,

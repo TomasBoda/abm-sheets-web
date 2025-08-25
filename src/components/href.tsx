@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -23,13 +22,12 @@ export const Href = ({ href, children, style, newTab = false }: Props) => {
     }
 
     return (
-        <Link
+        <a
             href={href}
-            passHref
             target={newTab ? "blank" : undefined}
             style={{ all: "unset", cursor: "pointer", display: "contents" }}
         >
             {children}
-        </Link>
+        </a>
     );
 };

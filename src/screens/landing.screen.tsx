@@ -46,7 +46,7 @@ export const LandingScreen = () => {
                         </Button>
                     </ButtonPanel>
 
-                    <Image src="/preview.png" alt="preview" />
+                    <Image src="/preview-2.png" alt="preview" />
                 </View>
             </Content>
         </Container>
@@ -60,7 +60,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--bg-1);
 
     * {
         font-family: "Poppins", sans-serif;
@@ -124,4 +124,5 @@ const Image = styled.img`
     width: 100%;
     margin-top: 75px;
     border-radius: 10px;
+    border: 1px solid rgb(230, 230, 230);
 `;
