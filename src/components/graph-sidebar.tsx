@@ -1,225 +1,133 @@
 "use client";
 
-import { useCellInfo } from "@/hooks/useCells";
-import { useHistory } from "@/hooks/useHistory";
+import { useGraph } from "@/hooks/useGraph";
+import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 import { useStepper } from "@/hooks/useStepper";
-import { X } from "lucide-react";
-import { useMemo } from "react";
-import {
-    Legend,
-    Line,
-    LineChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from "recharts";
+import { GraphValue, ValueType } from "@/runtime/runtime";
+import { compost as c } from "compostjs";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useSidebar } from "./sidebar.provider";
+import { CellId } from "./spreadsheet/spreadsheet.model";
 
-const colors: string[] = [
-    "#e6194b", // vivid red
-    "#3cb44b", // bright green
-    "#ffe119", // yellow
-    "#4363d8", // strong blue
-    "#f58231", // orange
-    "#911eb4", // purple
-    "#46f0f0", // cyan
-    "#f032e6", // magenta
-    "#bcf60c", // lime
-    "#fabebe", // light pink
-];
+const GRAPH_RENDERER_ID = "graph-renderer";
 
 export const GraphSidebar = () => {
-    const { graphCells, xGraphCell } = useCellInfo();
-    const { history } = useHistory();
-    const { step } = useStepper();
-    const { toggle } = useSidebar();
+    const graph = useGraph();
+    const spreadsheet = useSpreadsheet();
+    const stepper = useStepper();
 
-    const data = useMemo(() => {
-        const cells = Array.from(graphCells);
+    const [graphCellId, setGraphCellId] = useState<CellId>(graph.cells[0]?.id);
 
-        const cellHistories = cells
-            .filter((cellId) => history.get(cellId) !== undefined)
-            .map((cellId) => {
-                const data = history.get(cellId)!;
-                const sliced = data.slice(0, step + 1);
-                return {
-                    cellId,
-                    history: sliced,
-                };
-            });
+    useEffect(() => {
+        document.getElementById(GRAPH_RENDERER_ID).innerHTML = "";
 
-        const xHistory =
-            xGraphCell && history.get(xGraphCell)
-                ? history.get(xGraphCell)!.slice(0, step + 1)
-                : null;
+        const value =
+            spreadsheet.history.history.get(graphCellId)?.[stepper.step];
 
-        const data = [];
+        if (!value || value.type !== ValueType.Graph) return;
 
-        for (let i = 0; i <= step; i++) {
-            const entry: Record<string, any> = {};
+        const graph = value as GraphValue;
 
-            if (xHistory) {
-                entry.x = xHistory[i];
-            } else {
-                entry.x = i;
-            }
-
-            for (const cell of cellHistories) {
-                entry[cell.cellId] = cell.history[i];
-            }
-
-            data.push(entry);
-        }
-
-        return data;
-    }, [graphCells, xGraphCell, history, step]);
+        c.render(GRAPH_RENDERER_ID, graph.value);
+    }, [graphCellId, spreadsheet.history.history, stepper.step]);
 
     return (
         <Container>
-            <H1>
-                Visualisation
-                <X
-                    onClick={() => toggle()}
-                    color="rgba(0, 0, 0, 0.4)"
-                    size={16}
-                    style={{ cursor: "pointer" }}
-                />
-            </H1>
+            <Heading>Graph</Heading>
+            <Text>Render a graph and observe the results.</Text>
 
-            <Spacing />
-
-            <P1>Render graphs based on your spreadsheet.</P1>
-
-            <AddedCellsContainer>
-                {Array.from(graphCells).map((cellId) => (
-                    <CellTag key={cellId}>{cellId}</CellTag>
+            <List>
+                {graph.cells.map((cell) => (
+                    <Item
+                        onClick={() => setGraphCellId(cell.id)}
+                        $selected={cell.id === graphCellId}
+                        key={cell.id}
+                    >
+                        {cell.id}
+                    </Item>
                 ))}
-            </AddedCellsContainer>
+            </List>
 
-            <Graph>
-                {graphCells.size > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data}>
-                            <XAxis dataKey="x" />
-                            <YAxis domain={["dataMin - 10", "dataMax + 10"]} />
-
-                            <Tooltip />
-                            <Legend />
-
-                            {Array.from(graphCells).map((cellId, index) => (
-                                <Line
-                                    type="monotone"
-                                    dataKey={cellId}
-                                    stroke={colors[index % colors.length]}
-                                    isAnimationActive={false}
-                                    key={cellId}
-                                />
-                            ))}
-                        </LineChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <NoGraphData>No data to show...</NoGraphData>
-                )}
-            </Graph>
+            <Content id={GRAPH_RENDERER_ID} />
         </Container>
     );
 };
 
 const Container = styled.div`
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    padding: 30px;
-
-    transition: right 300ms;
-
-    background-color: white;
-
-    * {
-        font-family: "Poppins", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-    }
-`;
-
-const H1 = styled.h1`
-    color: var(--text-1);
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 120%;
-
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-`;
-
-const P1 = styled.p`
-    color: var(--text-1);
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 150%;
-    opacity: 0.6;
-`;
-
-const Spacing = styled.div`
-    height: 10px;
-`;
-
-const Graph = styled.div`
     width: 100%;
     height: 100%;
 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
 
-    padding: 0px;
-
-    border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.02);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 25px;
 `;
 
-const NoGraphData = styled.div`
-    color: var(--text-1);
+const Heading = styled.h2`
+    color: black;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 100%;
+
+    margin-bottom: 10px;
+`;
+
+const Text = styled.div`
+    color: black;
     font-size: 14px;
     font-weight: 400;
-    line-height: 100%;
+    line-height: 150%;
+    opacity: 0.6;
+
+    margin-bottom: 15px;
 `;
 
-const AddedCellsContainer = styled.div`
+const List = styled.div`
     width: 100%;
 
     display: flex;
     flex-direction: row;
+    gap: 5px;
     flex-wrap: wrap;
-    gap: 10px;
 
-    margin: 15px 0px;
+    margin-bottom: 25px;
 `;
 
-const CellTag = styled.div`
-    color: var(--text-1);
-    font-size: 10px;
-    font-weight: 400;
+const Item = styled.div<{ $selected: boolean }>`
+    color: black;
+    font-size: 12px;
+    font-weight: 500;
     line-height: 100%;
 
-    padding: 8px 12px;
+    padding: 6px 12px;
 
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgb(245, 245, 245);
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 5px;
 
     cursor: pointer;
-
     transition: all 100ms;
+
+    &:hover {
+        background-color: rgb(235, 235, 235);
+    }
+
+    ${({ $selected }) =>
+        $selected &&
+        `
+            color: white;
+            background-color: var(--color-1);
+            border-color: var(--color-2); 
+
+            &:hover {
+                background-color: var(--color-2); 
+            }
+    `};
+`;
+
+const Content = styled.div`
+    flex: 1;
+    width: 100%;
+    height: 100%;
 `;

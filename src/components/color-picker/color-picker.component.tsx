@@ -1,21 +1,25 @@
 import styled from "styled-components";
 
+export const COLOR_PICKER_COLORS = [
+    "rgb(245, 245, 245)",
+    "#FA9189",
+    "#FCAE7C",
+    "#FFE699",
+    "#F9FFB5",
+    "#B3F5BC",
+    "#9ae1f5",
+    "#E2CBF7",
+    "#D1BDFF",
+];
+
 interface Props {
     onChange: (color: string) => void;
 }
 
 export const ColorPicker = ({ onChange }: Props) => {
-    const colors = [
-        "",
-        "rgb(230, 230, 230)",
-        "rgb(240, 198, 198)",
-        "rgb(201, 201, 240)",
-        "rgb(194, 234, 194)",
-    ];
-
     return (
         <Container>
-            {colors.map((color) => (
+            {COLOR_PICKER_COLORS.map((color) => (
                 <ColorItem key={color}>
                     <Color $color={color} onClick={() => onChange(color)} />
                 </ColorItem>

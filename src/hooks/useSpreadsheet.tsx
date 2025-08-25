@@ -1,107 +1,219 @@
 "use client";
 
-import { ReactNode, createContext, useContext } from "react";
-import { useCellInfo } from "./useCells";
-import { data } from "@/components/spreadsheet/data";
-import { Utils } from "@/utils/utils";
-import { CellId } from "@/components/spreadsheet/spreadsheet.model";
-import { useCellStyle } from "./useCellStyle";
+import {
+    SPREADSHEET_DATA,
+    SPREADSHEET_SIZE,
+} from "@/components/spreadsheet/spreadsheet.constants";
+import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
+import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
+import { Value } from "@/runtime/runtime";
+import {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
+
+interface CellStyle {
+    color?: string;
+    bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+}
+
+type CellStyleMap = Map<CellId, CellStyle>;
 
 type SpreadsheetContextType = {
+    cells: {
+        usedCells: Set<CellId>;
+        setUsedCells: (usedCells: Set<CellId>) => void;
+        addUsedCell: (cellId: CellId) => void;
+        removeUsedCell: (cellId: CellId) => void;
+
+        style: {
+            cellStyles: CellStyleMap;
+            setCellStyles: (cellStyles: CellStyleMap) => void;
+            getCellStyle: <K extends keyof CellStyle>(
+                cellId: CellId,
+                key: K,
+            ) => CellStyle[K] | undefined;
+            setCellStyle: <K extends keyof CellStyle>(
+                cellId: CellId,
+                key: K,
+                value: CellStyle[K],
+            ) => void;
+            clearCellStyle: (cellId: CellId) => void;
+        };
+    };
+
+    history: {
+        history: History;
+        setHistory: (history: History) => void;
+    };
+
+    file: {
+        getExportedData: () => object;
+        loadImportedData: (data: object) => void;
+    };
+
     clear: () => void;
-    exportData: () => object;
-    loadData: (data: object) => void;
 };
 
 const SpreadsheetContext = createContext<SpreadsheetContextType | undefined>(
     undefined,
 );
 
+const useCells = () => {
+    const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set());
+
+    const addUsedCell = (cellId: CellId) => {
+        const newUsedCells = new Set(usedCells);
+        newUsedCells.add(cellId);
+        setUsedCells(newUsedCells);
+    };
+
+    const removeUsedCell = (cellId: CellId) => {
+        const newUsedCells = new Set(usedCells);
+        newUsedCells.delete(cellId);
+        setUsedCells(newUsedCells);
+    };
+
+    return { usedCells, setUsedCells, addUsedCell, removeUsedCell };
+};
+
+const useStyle = () => {
+    const [cellStyles, setCellStyles] = useState<CellStyleMap>(new Map());
+
+    useEffect(() => {
+        for (const [cellId, styles] of cellStyles.entries()) {
+            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
+            SPREADSHEET_DATA[ri][ci] = {
+                ...SPREADSHEET_DATA[ri][ci],
+                ...styles,
+            };
+        }
+    }, [cellStyles]);
+
+    const getCellStyle = <K extends keyof CellStyle>(
+        cellId: CellId,
+        key: K,
+    ) => {
+        const cellStyle = cellStyles.get(cellId);
+        return cellStyle?.[key];
+    };
+
+    const setCellStyle = <K extends keyof CellStyle>(
+        cellId: CellId,
+        key: K,
+        value: CellStyle[K],
+    ) => {
+        setCellStyles((prev) => {
+            const newCellStyles = new Map(prev);
+            const current = newCellStyles.get(cellId) ?? {};
+            newCellStyles.set(cellId, { ...current, [key]: value });
+            return newCellStyles;
+        });
+    };
+
+    const clearCellStyle = (cellId: CellId) => {
+        setCellStyles((prev) => {
+            const newCellStyles = new Map(prev);
+            newCellStyles.delete(cellId);
+            return newCellStyles;
+        });
+    };
+
+    return {
+        cellStyles,
+        setCellStyles,
+        getCellStyle,
+        setCellStyle,
+        clearCellStyle,
+    };
+};
+
+const useHistory = () => {
+    const [history, setHistory] = useState<History>(new Map<CellId, Value[]>());
+
+    return { history, setHistory };
+};
+
 export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
-    const { setUsedCells, setGraphCells } = useCellInfo();
-    const { setCellColors, setCellBolds, setCellItalics } = useCellStyle();
+    const cells = useCells();
+    const style = useStyle();
+    const history = useHistory();
 
     const clear = () => {
-        for (let ri = 0; ri < data.length; ri++) {
-            for (let ci = 0; ci < data[ri].length; ci++) {
-                data[ri][ci] = { value: "", formula: "" };
-                Utils.getCellSpan({ ri, ci }).innerText = "";
+        for (let ri = 0; ri < SPREADSHEET_SIZE; ri++) {
+            for (let ci = 0; ci < SPREADSHEET_SIZE; ci++) {
+                const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
+                SPREADSHEET_DATA[ri][ci] = { formula: "" };
+                SpreadsheetUtils.updateCellText(cellId, "");
             }
         }
 
-        setUsedCells(new Set());
-        setGraphCells(new Set());
-
-        setCellColors(new Map());
-        setCellBolds(new Map());
-        setCellItalics(new Map());
+        cells.setUsedCells(new Set());
+        style.setCellStyles(new Map());
+        history.setHistory(new Map());
     };
 
-    const exportData = (): object => {
+    const getExportedData = (): object => {
         const object = {};
 
-        for (let ri = 0; ri < data.length; ri++) {
-            for (let ci = 0; ci < data[ri].length; ci++) {
-                const cellId = Utils.cellCoordsToId({ ri, ci });
-                const { formula, value, color, font, isInGraph } = data[ri][ci];
+        for (let ri = 0; ri < SPREADSHEET_DATA.length; ri++) {
+            for (let ci = 0; ci < SPREADSHEET_DATA[ri].length; ci++) {
+                const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
 
-                if (formula.trim() === "" && value.trim() === "") {
+                if (SPREADSHEET_DATA[ri][ci].formula.trim() === "") {
                     continue;
                 }
 
-                object[cellId] = { formula, value, color, font, isInGraph };
+                object[cellId] = { ...SPREADSHEET_DATA[ri][ci] };
             }
         }
 
         return object;
     };
 
-    const loadData = (object: object) => {
+    const loadImportedData = (importedData: object) => {
+        clear();
+
         const newUsedCells = new Set<CellId>();
-        const newCellColors = new Map<CellId, string>();
-        const newCellBolds = new Map<CellId, string>();
-        const newCellItalics = new Map<CellId, string>();
-        const newGraphCells = new Set<CellId>();
 
-        for (const [key, _value] of Object.entries(object)) {
+        for (const [key, value] of Object.entries(importedData)) {
             const cellId = key as CellId;
-            const { ri, ci } = Utils.cellIdToCoords(cellId);
-            const { formula, value, color, font, isInGraph } = _value;
+            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
 
-            data[ri][ci] = { formula, value, color, font, isInGraph };
+            const { formula, color, bold, italic, underline } = value;
+
+            SPREADSHEET_DATA[ri][ci] = {
+                formula,
+                color,
+                bold,
+                italic,
+                underline,
+            };
+
+            style.setCellStyle(cellId, "color", color);
+            style.setCellStyle(cellId, "bold", bold);
+            style.setCellStyle(cellId, "italic", italic);
+            style.setCellStyle(cellId, "underline", underline);
 
             newUsedCells.add(cellId);
-
-            if (color) {
-                newCellColors.set(cellId, color);
-            }
-
-            if (font) {
-                for (let i = 0; i < font.length; i++) {
-                    if (font[i] === "bold") {
-                        newCellBolds.set(cellId, "bold");
-                    } else if (font[i] === "italic") {
-                        newCellItalics.set(cellId, "italic");
-                    }
-                }
-            }
-
-            if (isInGraph) {
-                newGraphCells.add(cellId);
-            }
         }
 
-        setUsedCells(newUsedCells);
-        setCellColors(newCellColors);
-        setCellBolds(newCellBolds);
-        setCellItalics(newCellItalics);
-        setGraphCells(newGraphCells);
+        cells.setUsedCells(newUsedCells);
     };
 
     const values = {
+        cells: { ...cells, style },
+        history,
+        file: {
+            getExportedData,
+            loadImportedData,
+        },
         clear,
-        exportData,
-        loadData,
     };
 
     return (

@@ -1,6 +1,6 @@
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
-import { Utils } from "@/utils/utils";
-import { Functions } from "../functions";
+import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
+import { FunctionName, Functions, GraphFunctions } from "../functions";
 import {
     BinaryExpression,
     BooleanLiteral,
@@ -18,6 +18,7 @@ import {
 import {
     BooleanValue,
     CellLiteralValue,
+    CellRangeType,
     CellRangeValue,
     FuncCall,
     NumberValue,
@@ -29,25 +30,22 @@ import {
 export class Runtime {
     private step: number;
     private history: History;
-    private dataHistory: History;
 
     private inCallExpression: boolean = false;
 
-    private functions: Map<string, FuncCall> = new Map([
+    private functions: Map<FunctionName, FuncCall> = new Map([
         ["IF", Functions.conditional],
         ["AND", Functions.and],
         ["OR", Functions.or],
-
         ["INDEX", Functions.index],
         ["MATCH", Functions.match],
         ["MIN", Functions.min],
         ["MAX", Functions.max],
         ["SUM", Functions.sum],
+        ["PRODUCT", Functions.product],
         ["AVERAGE", Functions.average],
         ["COUNT", Functions.count],
         ["COUNTIF", Functions.countif],
-        ["SUMHISTORY", Functions.sumhistory],
-
         ["ABS", Functions.abs],
         ["FLOOR", Functions.floor],
         ["CEILING", Functions.ceiling],
@@ -59,58 +57,32 @@ export class Runtime {
         ["COS", Functions.cos],
         ["TAN", Functions.tan],
         ["RADIANS", Functions.radians],
-
         ["RAND", Functions.rand],
         ["RANDBETWEEN", Functions.randbetween],
         ["CHOICE", Functions.choice],
         ["CONCAT", Functions.concat],
-
+        ["LEFT", Functions.left],
+        ["RIGHT", Functions.right],
+        ["MID", Functions.mid],
+        ["LEN", Functions.len],
+        ["ROUND", Functions.round],
         ["PREV", Functions.prev],
-        ["HISTORY", Functions.history],
         ["STEP", Functions.step],
+        ["POINT", GraphFunctions.point],
+        ["LINE", GraphFunctions.line],
+        ["AXES", GraphFunctions.axes],
+        ["RENDER", GraphFunctions.render],
     ]);
 
-    public run(
-        expression: Expression,
-        step: number,
-        history: History,
-        dataHistory: History,
-    ) {
+    public run(expression: Expression, step: number, history: History) {
         this.step = step;
         this.history = history;
-        this.dataHistory = dataHistory;
 
         return this.runFormula(expression);
     }
 
-    public runFormula(expression: Expression): string {
-        const result = this.runExpression(expression);
-
-        switch (result.type) {
-            case ValueType.Number: {
-                const { value } = result as NumberValue;
-
-                if (Math.round(value) === value) {
-                    return Math.round(value).toString();
-                }
-
-                for (let i = 1; i <= 3; i++) {
-                    if (parseFloat(value.toFixed(i)) === value) {
-                        return value.toFixed(i).toString();
-                    }
-                }
-
-                return value.toFixed(3).toString();
-            }
-            case ValueType.Boolean: {
-                const { value } = result as BooleanValue;
-                return value ? "TRUE" : "FALSE";
-            }
-            case ValueType.String: {
-                const { value } = result as StringValue;
-                return value;
-            }
-        }
+    public runFormula(expression: Expression): Value {
+        return this.runExpression(expression);
     }
 
     public runExpression(expression: Expression): Value {
@@ -139,7 +111,7 @@ export class Runtime {
                 return this.runCellRangeLiteral(expression as CellRangeLiteral);
             default:
                 throw new Error(
-                    `Unsupported expression '${NodeType[expression.type]}' in runExpression()`,
+                    `Unsupported expression '${NodeType[expression.type]}' during runtime`,
                 );
         }
     }
@@ -147,17 +119,13 @@ export class Runtime {
     private runCallExpression(expression: CallExpression): Value {
         const { identifier, args } = expression;
 
-        const func = this.functions.get(identifier);
+        const func = this.functions.get(identifier as FunctionName);
 
         if (func === undefined) {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        if (
-            identifier === "PREV" ||
-            identifier === "HISTORY" ||
-            identifier === "SUMHISTORY"
-        ) {
+        if (identifier === "PREV") {
             this.inCallExpression = true;
         }
 
@@ -168,7 +136,6 @@ export class Runtime {
             args: evaluatedArgs,
             step: this.step,
             history: this.history,
-            dataHistory: this.dataHistory,
         });
     }
 
@@ -200,7 +167,7 @@ export class Runtime {
 
             if (!func) {
                 throw new Error(
-                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                    `Unsupported relational operator '${operator}'`,
                 );
             }
 
@@ -225,7 +192,7 @@ export class Runtime {
 
             if (!func) {
                 throw new Error(
-                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                    `Unsupported relational operator '${operator}'`,
                 );
             }
 
@@ -250,51 +217,7 @@ export class Runtime {
 
             if (!func) {
                 throw new Error(
-                    `Unsupported operator '${operator}' in runRelationalExpression()`,
-                );
-            }
-
-            const result: boolean = func(lhs, rhs);
-
-            return { type: ValueType.Boolean, value: result };
-        }
-
-        if (rightValue.type === ValueType.String) {
-            const lhs = leftValue.value.toString();
-            const rhs = (rightValue as StringValue).value;
-
-            const operators = {
-                "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
-                "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
-            };
-
-            const func = operators[operator];
-
-            if (!func) {
-                throw new Error(
-                    `Unsupported operator '${operator}' in runRelationalExpression()`,
-                );
-            }
-
-            const result: boolean = func(lhs, rhs);
-
-            return { type: ValueType.Boolean, value: result };
-        }
-
-        if (leftValue.type === ValueType.String) {
-            const lhs = (rightValue as StringValue).value;
-            const rhs = rightValue.value.toString();
-
-            const operators = {
-                "==": (lhs: boolean, rhs: boolean) => lhs === rhs,
-                "!=": (lhs: boolean, rhs: boolean) => lhs !== rhs,
-            };
-
-            const func = operators[operator];
-
-            if (!func) {
-                throw new Error(
-                    `Unsupported operator '${operator}' in runRelationalExpression()`,
+                    `Unsupported relational operator '${operator}'`,
                 );
             }
 
@@ -304,7 +227,7 @@ export class Runtime {
         }
 
         throw new Error(
-            "LHS and RHS types do not match in relational expression",
+            `Unsupported relational expression operands '${leftValue.type} ${operator} ${rightValue.type}'`,
         );
     }
 
@@ -314,52 +237,31 @@ export class Runtime {
         const leftValue = this.runExpression(left);
         const rightValue = this.runExpression(right);
 
-        if (leftValue.type !== ValueType.Number) {
-            throw new Error("LHS of binary expression must be a number");
+        if (
+            leftValue.type !== ValueType.Number ||
+            rightValue.type !== ValueType.Number
+        ) {
+            throw new Error("LHS and RHS of binary expression must be numbers");
         }
 
-        if (rightValue.type !== ValueType.Number) {
-            throw new Error("RHS of binary expression must be a number");
+        const { value: lhs } = leftValue as NumberValue;
+        const { value: rhs } = rightValue as NumberValue;
+
+        const operators = {
+            "+": (lhs: number, rhs: number) => lhs + rhs,
+            "-": (lhs: number, rhs: number) => lhs - rhs,
+            "*": (lhs: number, rhs: number) => lhs * rhs,
+            "/": (lhs: number, rhs: number) => lhs / rhs,
+            "%": (lhs: number, rhs: number) => lhs % rhs,
+        };
+
+        const func = operators[operator];
+
+        if (!func) {
+            throw new Error(`Unsupported binary operator '${operator}'`);
         }
 
-        const lhs = leftValue as NumberValue;
-        const rhs = rightValue as NumberValue;
-
-        let result: number;
-
-        switch (operator) {
-            case "+":
-                result = lhs.value + rhs.value;
-                break;
-            case "-":
-                result = lhs.value - rhs.value;
-                break;
-            case "*":
-                result = lhs.value * rhs.value;
-                break;
-            case "/": {
-                if (rhs.value === 0) {
-                    result = lhs.value / 1;
-                } else {
-                    result = lhs.value / rhs.value;
-                }
-
-                break;
-            }
-            case "%": {
-                if (rhs.value === 0) {
-                    result = lhs.value % 1;
-                } else {
-                    result = lhs.value % rhs.value;
-                }
-
-                break;
-            }
-            default:
-                throw new Error(
-                    `Unsupported operator '${operator}' in runBinaryExpression()`,
-                );
-        }
+        const result: number = func(lhs, rhs);
 
         return { type: ValueType.Number, value: result };
     }
@@ -413,18 +315,18 @@ export class Runtime {
     }
 
     private runIdentifier(expression: Identifier): Value {
-        throw new Error(`Variable ${expression.value} does not exist`);
+        throw new Error(`Variable '${expression.value}' does not exist`);
     }
 
     private runCellLiteral(expression: CellLiteral): Value {
         const ri = expression.row.index;
         const ci = expression.col.index;
-        const cellId = Utils.cellCoordsToId({ ri, ci });
+        const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
 
         if (this.inCallExpression) {
             return {
                 type: ValueType.CellLiteral,
-                value: [ri, ci],
+                value: { ri, ci },
             } as CellLiteralValue;
         }
 
@@ -434,26 +336,22 @@ export class Runtime {
             return { type: ValueType.Number, value: 0 };
         }
 
-        if (isNaN(parseFloat(cellValue))) {
-            if (["TRUE", "FALSE"].includes(cellValue)) {
-                return { type: ValueType.Boolean, value: cellValue === "TRUE" };
-            }
-
-            return { type: ValueType.String, value: cellValue };
-        } else {
-            return { type: ValueType.Number, value: parseFloat(cellValue) };
-        }
+        return cellValue;
     }
 
     private runCellRangeLiteral(expression: CellRangeLiteral): Value {
         const { left, right } = expression;
 
-        const value = [
-            left.col.index,
-            left.row.index,
-            right.col.index,
-            right.row.index,
-        ];
+        const value: CellRangeType = {
+            start: {
+                ri: left.row.index,
+                ci: left.col.index,
+            },
+            end: {
+                ri: right.row.index,
+                ci: right.col.index,
+            },
+        };
 
         return { type: ValueType.CellRange, value } as CellRangeValue;
     }
@@ -462,14 +360,9 @@ export class Runtime {
 
     private getHistoryValue(cellId: CellId) {
         const historyValue = this.history.get(cellId);
-        const dataHistoryValue = this.dataHistory.get(cellId);
 
         if (historyValue !== undefined) {
             return historyValue[historyValue.length - 1];
-        }
-
-        if (dataHistoryValue !== undefined) {
-            return dataHistoryValue[this.step];
         }
 
         return undefined;

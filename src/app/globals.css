@@ -37,15 +37,25 @@
     --color-red-text: light-dark(rgb(243, 97, 98), rgb(235, 90, 91));
     --color-yellow-text: light-dark(#fcba03, #fcba03);
 
+    --color-0: rgb(28, 39, 35);
     --color-1: rgb(46, 65, 58);
     --color-2: rgb(58, 81, 72);
+
+    --info-bg: #f1f1f1;
+    --info-text: #bcbcbc;
+    --success-bg: #e1fae8;
+    --success-text: #37c25d;
+    --warning-bg: #fdf4dc;
+    --warning-text: #e6961f;
+    --error-bg: #feefee;
+    --error-text: #ed6e5e;
+    --progress-bg: #e5f3fe;
+    --progress-text: #008dff;
 }
 
 html {
     width: 100vw;
     height: 100vh;
-
-    /* overflow: hidden; */
 }
 
 body {

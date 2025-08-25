@@ -1,4 +1,3 @@
-import { Logger } from "@/utils/logger";
 import { ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Logo } from "../logo";
@@ -11,11 +10,12 @@ export interface Tab {
 
 interface Props {
     tabs?: Tab[];
+    defaultTab?: number;
     rightContent?: ReactNode;
 }
 
-export const Tabs = ({ tabs = [], rightContent }: Props) => {
-    const [current, setCurrent] = useState<number>(0);
+export const Tabs = ({ tabs = [], defaultTab = 0, rightContent }: Props) => {
+    const [current, setCurrent] = useState<number>(defaultTab);
 
     useEffect(() => {
         const tabElement = document.getElementById(`tab-${current}`);
@@ -41,8 +41,6 @@ export const Tabs = ({ tabs = [], rightContent }: Props) => {
         if (tabs[index].component) {
             setCurrent(index);
         }
-
-        Logger.log("click-tab", tabs[index].label);
     };
 
     return (

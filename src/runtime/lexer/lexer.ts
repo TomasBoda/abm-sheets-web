@@ -1,17 +1,18 @@
 import { Token, TokenType } from "./model";
+import { LexerUtils } from "./utils";
 
 export class Lexer {
-    private static formula: string[] = [];
-    private static tokens: Token[] = [];
+    private formula: string[] = [];
+    private tokens: Token[] = [];
 
-    public static tokenize(formula: string): Token[] {
+    public tokenize(formula: string): Token[] {
         this.formula = formula.split("");
         this.tokens = [];
 
         while (this.at()) {
             const value = this.at();
 
-            if (this.isSkippable(value)) {
+            if (LexerUtils.isSkippable(value)) {
                 this.next();
                 continue;
             }
@@ -60,7 +61,7 @@ export class Lexer {
                         break;
                     }
 
-                    throw new Error("Expected = sign after = sign.");
+                    throw new Error("Expected '==', got '='");
                 }
                 case "!": {
                     this.next();
@@ -95,12 +96,12 @@ export class Lexer {
                     break;
                 }
                 default: {
-                    if (this.isAlpha(value) || value === "$") {
+                    if (LexerUtils.isAlpha(value) || value === "$") {
                         this.tokenizeIdentifier(value);
                         break;
                     }
 
-                    if (this.isNumber(value)) {
+                    if (LexerUtils.isNumber(value)) {
                         this.tokenizeNumber(value);
                         break;
                     }
@@ -110,7 +111,7 @@ export class Lexer {
                         break;
                     }
 
-                    this.next();
+                    throw new Error(`Unrecognized symbol '${this.at()}'`);
                 }
             }
         }
@@ -119,15 +120,15 @@ export class Lexer {
         return this.tokens;
     }
 
-    private static tokenizeIdentifier(value: string): void {
+    private tokenizeIdentifier(value: string): void {
         let identifier = value;
 
         this.next();
 
         while (
             this.at() !== undefined &&
-            (this.isAlpha(this.at()!) ||
-                this.isNumber(this.at()!) ||
+            (LexerUtils.isAlpha(this.at()!) ||
+                LexerUtils.isNumber(this.at()!) ||
                 this.at()! === "$")
         ) {
             identifier += this.next()!;
@@ -148,7 +149,7 @@ export class Lexer {
         }
     }
 
-    private static tokenizeNumber(value: string): void {
+    private tokenizeNumber(value: string): void {
         let number = value;
         let foundDot = false;
 
@@ -156,11 +157,11 @@ export class Lexer {
 
         while (
             this.at() !== undefined &&
-            (this.isNumber(this.at()!) || this.at()! === ".")
+            (LexerUtils.isNumber(this.at()!) || this.at()! === ".")
         ) {
             if (this.at()! === ".") {
                 if (foundDot) {
-                    throw new Error("Second dot in number");
+                    throw new Error("Number cannot contain more than one dot.");
                 }
 
                 foundDot = true;
@@ -174,7 +175,7 @@ export class Lexer {
         this.token(TokenType.Number, number);
     }
 
-    private static tokenizeString(): void {
+    private tokenizeString(): void {
         this.next();
 
         let string = "";
@@ -184,15 +185,14 @@ export class Lexer {
         }
 
         this.next();
-
         this.token(TokenType.String, string);
     }
 
-    private static token(type: TokenType, value: string): void {
+    private token(type: TokenType, value: string): void {
         this.tokens.push({ type, value });
     }
 
-    private static at(): string | undefined {
+    private at(): string | undefined {
         if (this.formula.length === 0) {
             return undefined;
         }
@@ -200,25 +200,7 @@ export class Lexer {
         return this.formula[0];
     }
 
-    private static next(): string | undefined {
+    private next(): string | undefined {
         return this.formula.shift();
-    }
-
-    private static isAlpha(value: string): boolean {
-        return /^[A-Za-z]+$/.test(value);
-    }
-
-    private static isNumber(value: string): boolean {
-        const symbol = value.charCodeAt(0);
-        const bounds = {
-            lower: "0".charCodeAt(0),
-            upper: "9".charCodeAt(0),
-        };
-
-        return symbol >= bounds.lower && symbol <= bounds.upper;
-    }
-
-    private static isSkippable(value: string) {
-        return value === " ";
     }
 }

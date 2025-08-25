@@ -71,7 +71,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
 
-    z-index: 100;
+    z-index: 999;
 
     background-color: rgba(0, 0, 0, 0.5);
     animation: ${backgroundAnimation} 0.15s ease-out;

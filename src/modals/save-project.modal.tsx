@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
-interface Props {
+interface SaveProjectModalProps {
     hideModal: () => void;
 }
 
-export const SaveProjectModal = ({ hideModal }: Props) => {
+export const SaveProjectModal = ({ hideModal }: SaveProjectModalProps) => {
     const router = useRouter();
 
     const spreadsheet = useSpreadsheet();
@@ -31,9 +31,13 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
     }, [projects.project]);
 
     const saveNewProject = async () => {
+        if (title.trim() === "" || text.trim() === "") {
+            return alert("Field cannot be empty");
+        }
+
         setLoading(true);
 
-        const data = spreadsheet.exportData();
+        const data = spreadsheet.file.getExportedData();
 
         const projectId = await projects.saveProject({
             title,
@@ -50,9 +54,13 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
     };
 
     const saveExistingProject = async () => {
+        if (title.trim() === "" || text.trim() === "") {
+            return alert("Field cannot be empty");
+        }
+
         setLoading(true);
 
-        const data = spreadsheet.exportData();
+        const data = spreadsheet.file.getExportedData();
 
         const projectId = await projects.updateProject({
             id: projects.project.id,
@@ -70,9 +78,13 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
     };
 
     const cloneExistingProject = async () => {
+        if (title.trim() === "" || text.trim() === "") {
+            return alert("Field cannot be empty");
+        }
+
         setLoading(true);
 
-        const data = spreadsheet.exportData();
+        const data = spreadsheet.file.getExportedData();
 
         const projectId = await projects.saveProject({
             title,

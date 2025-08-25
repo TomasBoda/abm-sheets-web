@@ -1,0 +1,32 @@
+.token {
+    --token-function: #0000ff;
+    --token-cell: #795e27;
+    --token-number: #0b8658;
+    --token-operator: 262626;
+    --token-string: #a41918;
+    --token-boolean: #f3504e;
+}
+
+.token.function {
+    color: var(--token-function);
+}
+
+.token.cell {
+    color: var(--token-cell);
+}
+
+.token.number {
+    color: var(--token-number);
+}
+
+.token.operator {
+    color: var(--token-operator);
+}
+
+.token.string {
+    color: var(--token-string);
+}
+
+.token.boolean {
+    color: var(--token-boolean);
+}

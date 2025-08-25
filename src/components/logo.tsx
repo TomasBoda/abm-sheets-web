@@ -4,7 +4,7 @@ import { Atom } from "lucide-react";
 import styled from "styled-components";
 import { Href } from "./href";
 
-export type LogoVariant = "light" | "dark";
+type LogoVariant = "light" | "dark";
 
 interface Props {
     variant: LogoVariant;
@@ -14,7 +14,7 @@ export const Logo = ({ variant }: Props) => {
     return (
         <Href href="/">
             <Container $variant={variant}>
-                <Atom size={20} color="var(--color-2)" />
+                <Atom size={20} color="var(--color-1)" />
                 ABM Sheets
             </Container>
         </Href>

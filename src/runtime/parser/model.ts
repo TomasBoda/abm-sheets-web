@@ -1,14 +1,14 @@
 export enum NodeType {
-    NumericLiteral,
-    BooleanLiteral,
-    StringLiteral,
-    Identifier,
-    CellLiteral,
-    CellRangeLiteral,
-    RelationalExpression,
-    BinaryExpression,
-    UnaryExpression,
-    CallExpression,
+    NumericLiteral = "NumericLiteral",
+    BooleanLiteral = "BooleanLiteral",
+    StringLiteral = "StringLiteral",
+    Identifier = "Identifier",
+    CellLiteral = "CellLiteral",
+    CellRangeLiteral = "CellRangeLiteral",
+    RelationalExpression = "RelationalExpression",
+    BinaryExpression = "BinaryExpression",
+    UnaryExpression = "UnaryExpression",
+    CallExpression = "CallExpression",
 }
 
 export interface Expression {

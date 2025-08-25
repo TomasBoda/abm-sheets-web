@@ -1,6 +1,10 @@
 "use client";
 
-import { Utils } from "@/utils/utils";
+import {
+    DEFAULT_CELL,
+    SPREADSHEET_DATA,
+} from "@/components/spreadsheet/spreadsheet.constants";
+import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 import {
     createContext,
     Dispatch,
@@ -9,7 +13,6 @@ import {
     useContext,
     useState,
 } from "react";
-import { data } from "../components/spreadsheet/data";
 import {
     CellCoords,
     CellId,
@@ -34,7 +37,9 @@ const SelectionContext = createContext<SelectionContextType | undefined>(
 );
 
 export const SelectionProvider = ({ children }: { children: ReactNode }) => {
-    const [selectedCells, setSelectedCells] = useState(new Set<CellId>(["A1"]));
+    const [selectedCells, setSelectedCells] = useState(
+        new Set<CellId>([DEFAULT_CELL]),
+    );
     const [dragging, setDragging] = useState(false);
     const [startPos, setStartPos] = useState({ ri: null, ci: null });
 
@@ -47,7 +52,7 @@ export const SelectionProvider = ({ children }: { children: ReactNode }) => {
         setStartPos({ ri, ci });
 
         const newSelectedCells = new Set<CellId>();
-        newSelectedCells.add(Utils.cellCoordsToId({ ri, ci }));
+        newSelectedCells.add(SpreadsheetUtils.cellCoordsToId({ ri, ci }));
         setSelectedCells(newSelectedCells);
     };
 
@@ -63,7 +68,9 @@ export const SelectionProvider = ({ children }: { children: ReactNode }) => {
 
         for (let r = rowStart; r <= rowEnd; r++) {
             for (let c = colStart; c <= colEnd; c++) {
-                newSelectedCells.add(Utils.cellCoordsToId({ ri: r, ci: c }));
+                newSelectedCells.add(
+                    SpreadsheetUtils.cellCoordsToId({ ri: r, ci: c }),
+                );
             }
         }
 
@@ -75,14 +82,16 @@ export const SelectionProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const isCellSelected = ({ ri, ci }: CellCoords) =>
-        selectedCells.has(Utils.cellCoordsToId({ ri, ci }));
+        selectedCells.has(SpreadsheetUtils.cellCoordsToId({ ri, ci }));
 
     const selectAllCells = (): void => {
         const newSelectedCells = new Set<CellId>();
 
-        for (let ri = 0; ri < data.length; ri++) {
-            for (let ci = 0; ci < data[ri].length; ci++) {
-                newSelectedCells.add(Utils.cellCoordsToId({ ri, ci }));
+        for (let ri = 0; ri < SPREADSHEET_DATA.length; ri++) {
+            for (let ci = 0; ci < SPREADSHEET_DATA[ri].length; ci++) {
+                newSelectedCells.add(
+                    SpreadsheetUtils.cellCoordsToId({ ri, ci }),
+                );
             }
         }
 

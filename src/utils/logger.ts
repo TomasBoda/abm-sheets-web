@@ -1,6 +1,6 @@
 import { createClientClient } from "./supabase/client";
 
-export type LogType =
+type LogType =
     | "click-tab"
     | "click-step"
     | "click-reset"
