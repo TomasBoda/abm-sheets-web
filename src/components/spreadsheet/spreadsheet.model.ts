@@ -1,16 +1,19 @@
-export type SpreadsheetCell = {
+import { Value } from "@/runtime/runtime";
+
+type SpreadsheetCell = {
     formula: string;
-    value: string;
     color?: string;
-    font?: string[];
-    isInGraph?: boolean;
+    bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
 };
 
-export type SpreadsheetRow = SpreadsheetCell[];
+type SpreadsheetRow = SpreadsheetCell[];
+
 export type SpreadsheetData = SpreadsheetRow[];
 
 export type CellId = `${string}${number}`;
 
 export type CellCoords = { ri: number; ci: number };
 
-export type History = Map<CellId, string[]>;
+export type History = Map<CellId, Value[]>;

@@ -1,4 +1,4 @@
-import { Utils } from "@/utils/utils";
+import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 import { Lexer, Token, TokenType } from "../lexer";
 import {
     BinaryExpression,
@@ -19,7 +19,7 @@ export class Parser {
     private tokens: Token[] = [];
 
     public parse(formula: string): Expression {
-        this.tokens = Lexer.tokenize(formula);
+        this.tokens = new Lexer().tokenize(formula);
         return this.parseExpression();
     }
 
@@ -159,7 +159,7 @@ export class Parser {
                 return this.parseParenthesisedExpression();
             default:
                 throw new Error(
-                    `Unknown token '${TokenType[this.at().type]}' in parsePrimaryExpression()`,
+                    `Unknown token '${TokenType[this.at().type]}' during parsing`,
                 );
         }
     }
@@ -176,7 +176,7 @@ export class Parser {
         const value = this.expect(TokenType.Boolean).value;
         return {
             type: NodeType.BooleanLiteral,
-            value: value === "true",
+            value: value.toLowerCase() === "true",
         } as BooleanLiteral;
     }
 
@@ -188,7 +188,7 @@ export class Parser {
     private parseIdentifier(): Expression {
         const value = this.expect(TokenType.Identifier).value;
 
-        const cellRegex = /^([$]?)([A-Z]{1,2})([$]?)(\d+)$/;
+        const cellRegex = /^([$]?)([A-Z]{1,4})([$]?)(\d+)$/;
         const match = value.match(cellRegex);
 
         if (!match) {
@@ -197,7 +197,7 @@ export class Parser {
 
         const [, colFixed, col, rowFixed, row] = match;
 
-        const colIndex = Utils.columnTextToIndex(col);
+        const colIndex = SpreadsheetUtils.columnTextToIndex(col);
         const rowIndex = parseInt(row) - 1;
 
         const cellLiteral = {
@@ -215,7 +215,7 @@ export class Parser {
                 const operator = this.expect(TokenType.UnOp).value;
 
                 if (operator !== "!") {
-                    throw new Error("Unknown unary operator");
+                    throw new Error(`Unknown unary operator '${operator}'`);
                 }
 
                 const value = this.parseExpression();
@@ -230,7 +230,7 @@ export class Parser {
                 const operator = this.expect(TokenType.BinOp).value;
 
                 if (operator !== "-") {
-                    throw new Error("Unknown unary operator");
+                    throw new Error(`Unknown binary operator '${operator}'`);
                 }
 
                 const value = this.parseExpression();
@@ -253,7 +253,7 @@ export class Parser {
 
     private at(): Token {
         if (this.tokens.length === 0) {
-            throw new Error("No more tokens");
+            throw new Error("No more tokens to parse");
         }
 
         return this.tokens[0];
@@ -261,7 +261,7 @@ export class Parser {
 
     private next(): Token {
         if (this.tokens.length === 0) {
-            throw new Error("No more tokens");
+            throw new Error("No more tokens to parse");
         }
 
         return this.tokens.shift()!;
@@ -269,7 +269,9 @@ export class Parser {
 
     private expect(type: TokenType): Token {
         if (this.at()?.type !== type) {
-            throw new Error("Expected token type");
+            throw new Error(
+                `Expected token of type '${type}', got '${this.at()?.type}'`,
+            );
         }
 
         return this.next()!;

@@ -2,22 +2,23 @@
 
 import { Button } from "@/components/button/button.component";
 import { useAuth } from "@/hooks/useAuth";
+import { useMessage } from "@/hooks/useMessage";
 import { useProjects } from "@/hooks/useProjects";
 import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
-interface Props {
+interface SaveProjectModalProps {
     hideModal: () => void;
 }
 
-export const SaveProjectModal = ({ hideModal }: Props) => {
+export const SaveProjectModal = ({ hideModal }: SaveProjectModalProps) => {
     const router = useRouter();
-
-    const spreadsheet = useSpreadsheet();
-    const projects = useProjects();
     const auth = useAuth();
+    const projects = useProjects();
+    const spreadsheet = useSpreadsheet();
+    const message = useMessage();
 
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
@@ -31,9 +32,14 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
     }, [projects.project]);
 
     const saveNewProject = async () => {
+        if (title.trim() === "" || text.trim() === "") {
+            message.showMessage("error", "Fields cannot be empty");
+            return;
+        }
+
         setLoading(true);
 
-        const data = spreadsheet.exportData();
+        const data = spreadsheet.file.getExportedData();
 
         const projectId = await projects.saveProject({
             title,
@@ -50,9 +56,14 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
     };
 
     const saveExistingProject = async () => {
+        if (title.trim() === "" || text.trim() === "") {
+            message.showMessage("error", "Fields cannot be empty");
+            return;
+        }
+
         setLoading(true);
 
-        const data = spreadsheet.exportData();
+        const data = spreadsheet.file.getExportedData();
 
         const projectId = await projects.updateProject({
             id: projects.project.id,
@@ -70,9 +81,14 @@ export const SaveProjectModal = ({ hideModal }: Props) => {
     };
 
     const cloneExistingProject = async () => {
+        if (title.trim() === "" || text.trim() === "") {
+            message.showMessage("error", "Fields cannot be empty");
+            return;
+        }
+
         setLoading(true);
 
-        const data = spreadsheet.exportData();
+        const data = spreadsheet.file.getExportedData();
 
         const projectId = await projects.saveProject({
             title,

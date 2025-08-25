@@ -1,6 +1,9 @@
 "use client";
 
-import { Constants } from "@/utils/constants";
+import {
+    DEFAULT_STEP,
+    DEFAULT_STEPS,
+} from "@/components/spreadsheet/spreadsheet.constants";
 import {
     Dispatch,
     ReactNode,
@@ -21,8 +24,8 @@ type StepperContextType = {
 const StepperContext = createContext<StepperContextType | undefined>(undefined);
 
 export const StepperProvider = ({ children }: { children: ReactNode }) => {
-    const [step, setStep] = useState<number>(Constants.DEFAULT_STEP);
-    const [steps, setSteps] = useState<number>(Constants.DEFAULT_STEPS);
+    const [step, setStep] = useState<number>(DEFAULT_STEP);
+    const [steps, setSteps] = useState<number>(DEFAULT_STEPS);
 
     const reset = () => {
         setStep(0);

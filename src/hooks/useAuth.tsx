@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const loadAuthUser = async () => {
         const supabase = createClientClient();
-
         const user = await supabase.auth.getUser();
 
         if (!user.error && user.data && user.data.user) {

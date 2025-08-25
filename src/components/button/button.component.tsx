@@ -7,7 +7,7 @@ import { Loader } from "./loader.component";
 
 export type ButtonVariant = "primary" | "secondary";
 
-interface Props {
+interface ButtonProps {
     children?: ReactNode;
     variant: ButtonVariant;
     onClick?: () => void;
@@ -27,7 +27,7 @@ export const Button = ({
     href,
     stretch,
     loading = false,
-}: Props) => {
+}: ButtonProps) => {
     return (
         <Href
             href={disabled ? null : href}
@@ -62,27 +62,15 @@ const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean }>`
 
     padding: 10px 20px;
 
-    color: white;
-
-    color: ${({ $variant }) => $variant === "primary" && "white"};
-    color: ${({ $variant }) => $variant === "secondary" && "black"};
-
     font-size: 12px;
     font-weight: 400;
     text-align: center;
 
     border-radius: 10px;
-    border: 1px solid
-        ${({ $variant }) => $variant === "primary" && "var(--color-2)"};
-    border: 1px solid
-        ${({ $variant }) => $variant === "secondary" && "var(--bg-3)"};
-
-    background-color: ${({ $variant }) =>
-        $variant === "primary" && "var(--color-1)"};
-    background-color: ${({ $variant }) =>
-        $variant === "secondary" && "var(--bg-2)"};
+    border: 1px solid transparent;
 
     cursor: pointer;
+
     & * {
         cursor: pointer;
     }
@@ -91,24 +79,48 @@ const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean }>`
 
     white-space: nowrap;
 
-    &:hover {
-        //background-color: ${({ $disabled }) =>
-            !$disabled && "var(--color-2)"};
+    ${({ $variant }) =>
+        $variant === "primary" &&
+        `
+        color: white;
+        background-color: var(--color-1);
+        border-color: var(--color-2);
 
-        background-color: ${({ $variant }) =>
-            $variant === "primary" && "var(--color-2)"};
-        background-color: ${({ $variant }) =>
-            $variant === "secondary" && "var(--bg-3)"};
+        &:hover {
+            background-color: var(--color-2);
+        }
+    `};
 
-        border: 1px solid
-            ${({ $variant }) => $variant === "secondary" && "var(--bg-4)"};
-    }
+    ${({ $variant }) =>
+        $variant === "secondary" &&
+        `
+        color: black;
+        background-color: var(--bg-3);
+        border-color: var(--bg-4);
 
-    opacity: ${({ $disabled }) => $disabled && "0.5"};
+        &:hover {
+            background-color: var(--bg-5);
+            border-color: var(--bg-6);
+        }
+    `};
 
-    & * {
-        cursor: ${({ $disabled }) => $disabled && "not-allowed"};
-    }
+    ${({ $disabled, $variant }) =>
+        $disabled &&
+        `
+         opacity: 0.5;
+         cursor: not-allowed;
+
+        & * {
+            cursor: not-allowed;
+        }
+
+        &:hover {
+            background-color: ${$variant === "primary" && "var(--color-1)"};
+            background-color: ${$variant === "secondary" && "var(--bg-3)"};
+
+            border-color: ${$variant === "secondary" && "var(--bg-3)"};
+        }
+    `};
 `;
 
 const Content = styled.p`

@@ -1,28 +1,52 @@
 "use client";
 
 import { CellId } from "@/components/spreadsheet/spreadsheet.model";
+import { GraphType, GraphValue, ValueType } from "@/runtime/runtime";
 import {
-    Dispatch,
     ReactNode,
-    SetStateAction,
     createContext,
     useContext,
+    useEffect,
     useState,
 } from "react";
+import { useSpreadsheet } from "./useSpreadsheet";
+import { useStepper } from "./useStepper";
+
+interface GraphCell {
+    id: CellId;
+    value: GraphType;
+}
 
 type GraphContextType = {
-    cells: Set<CellId>;
-    setCells: Dispatch<SetStateAction<Set<CellId>>>;
+    cells: GraphCell[];
 };
 
 const GraphContext = createContext<GraphContextType | undefined>(undefined);
 
 export const GraphProvider = ({ children }: { children: ReactNode }) => {
-    const [cells, setCells] = useState<Set<CellId>>(new Set());
+    const spreadsheet = useSpreadsheet();
+    const stepper = useStepper();
+
+    const [cells, setCells] = useState<GraphCell[]>([]);
+
+    useEffect(() => {
+        const graphCells: GraphCell[] = [];
+
+        for (const cellId of spreadsheet.cells.usedCells) {
+            const value =
+                spreadsheet.history.history.get(cellId)?.[stepper.step];
+            if (!value || value.type !== ValueType.Graph) continue;
+            graphCells.push({
+                id: cellId,
+                value: (value as GraphValue).value,
+            });
+        }
+
+        setCells(graphCells);
+    }, [spreadsheet.cells.usedCells]);
 
     const values = {
         cells,
-        setCells,
     };
 
     return (

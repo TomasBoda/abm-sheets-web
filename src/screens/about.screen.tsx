@@ -62,9 +62,9 @@ export const H2WithID = styled.h2<{ $border?: boolean }>`
     ${({ $border = true }) =>
         $border &&
         `
-                padding-bottom: 10px;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-            `}
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        `}
 `;
 
 export const H3WithID = styled.h3`

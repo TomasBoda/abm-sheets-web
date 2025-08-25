@@ -10,7 +10,7 @@ import {
     useState,
 } from "react";
 
-export interface Project {
+interface Project {
     id: string;
     title: string;
     text: string;
@@ -19,8 +19,8 @@ export interface Project {
     created_at: string;
 }
 
-export type ProjectInsert = Omit<Project, "id" | "user_id" | "created_at">;
-export type ProjectUpdate = Omit<Project, "user_id" | "created_at">;
+type ProjectInsert = Omit<Project, "id" | "user_id" | "created_at">;
+type ProjectUpdate = Omit<Project, "user_id" | "created_at">;
 
 type ProjectsContextType = {
     project: Project | undefined;
@@ -28,6 +28,7 @@ type ProjectsContextType = {
     loadProjects: () => Promise<void>;
     saveProject: (project: ProjectInsert) => Promise<string>;
     updateProject: (project: ProjectUpdate) => Promise<string>;
+    deleteProject: (projectId: string) => Promise<boolean>;
 };
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(
@@ -112,6 +113,22 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         return response.data[0].id;
     };
 
+    const deleteProject = async (projectId: string) => {
+        const supabase = createClientClient();
+
+        const request = await supabase
+            .from("projects")
+            .delete()
+            .eq("id", projectId);
+
+        if (request.error) {
+            return false;
+        }
+
+        await loadProjects();
+        return true;
+    };
+
     useEffect(() => {
         loadProjects();
     }, []);
@@ -132,6 +149,7 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         loadProjects,
         saveProject,
         updateProject,
+        deleteProject,
     };
 
     return (

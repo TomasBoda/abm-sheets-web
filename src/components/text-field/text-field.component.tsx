@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface Props {
+interface TextFieldProps {
     id?: string;
     value?: string;
     onChange?: (value: string) => void;
@@ -16,7 +16,7 @@ export const TextField = ({
     onKeyDown,
     placeholder = "Enter text",
     disabled = false,
-}: Props) => {
+}: TextFieldProps) => {
     return (
         <Input
             id={id}
