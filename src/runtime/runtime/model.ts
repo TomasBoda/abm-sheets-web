@@ -100,8 +100,9 @@ export interface ErrorValue extends Value {
 
 export type FuncProps = {
     args: Value[];
-    step: number;
     history: History;
+    step: number;
+    steps: number;
 };
 
 export type FuncCall = (props: FuncProps) => Value;

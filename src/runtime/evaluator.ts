@@ -7,8 +7,9 @@ import { Runtime, Value, ValueType } from "./runtime";
 export class Evaluator {
     private evaluateCell(
         cellId: CellId,
-        step: number,
         history: History,
+        step: number,
+        steps: number,
     ): Value | undefined {
         const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
         const cell = SPREADSHEET_DATA[ri][ci];
@@ -25,17 +26,18 @@ export class Evaluator {
         const formula =
             step === 0 ? (defaultFormula ?? primaryFormula) : primaryFormula;
 
-        return this.evaluateFormula(formula, step, history);
+        return this.evaluateFormula(formula, history, step, steps);
     }
 
     private evaluateFormula(
         formula: string,
-        step: number,
         history: History,
+        step: number,
+        steps: number,
     ): Value {
         try {
             const expression = new Parser().parse(formula);
-            const result = new Runtime().run(expression, step, history);
+            const result = new Runtime().run(expression, history, step, steps);
             return result;
         } catch (e) {
             return { type: ValueType.Error, value: e.toString() };
@@ -47,7 +49,7 @@ export class Evaluator {
 
         for (let step = 0; step < steps; step++) {
             for (const cellId of cells) {
-                const result = this.evaluateCell(cellId, step, history);
+                const result = this.evaluateCell(cellId, history, step, steps);
 
                 if (!result) {
                     continue;

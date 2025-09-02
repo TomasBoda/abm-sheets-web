@@ -30,6 +30,7 @@ export const SpreadsheetWrapper = () => {
         setSelectedCells,
         selectionListeners,
         dragWithCopy,
+        selectionBounds,
     } = useSelection();
 
     const { selectedRows, selectedCols } = useSelectedRowsAndCols({
@@ -100,6 +101,7 @@ export const SpreadsheetWrapper = () => {
     }, []);
 
     const evaluateUsedCells = () => {
+        console.trace("log:", "here");
         const cells = Array.from(spreadsheet.cells.usedCells);
         const history = SpreadsheetUtils.evaluate(cells, steps);
         if (!history) return;
@@ -116,21 +118,6 @@ export const SpreadsheetWrapper = () => {
 
         if (event) {
             selectionListeners.handleMouseDown({ ri, ci });
-        }
-
-        const selectedCell = getFirstSelectedCell();
-        if (
-            SPREADSHEET_DATA[selectedCell.ri][
-                selectedCell.ci
-            ].formula.trim() === ""
-        ) {
-            spreadsheet.cells.removeUsedCell(
-                SpreadsheetUtils.cellCoordsToId(selectedCell),
-            );
-        } else {
-            spreadsheet.cells.addUsedCell(
-                SpreadsheetUtils.cellCoordsToId(selectedCell),
-            );
         }
 
         setFormula(SPREADSHEET_DATA[ri][ci].formula);
@@ -184,44 +171,107 @@ export const SpreadsheetWrapper = () => {
         setCopiedCells(newCopiedCells);
     };
 
+    const getPasteCellReferenceMap = () => {
+        if (!dragWithCopy || !selectionBounds) return;
+
+        if (
+            selectionBounds.rowStart !== selectionBounds.rowEnd &&
+            selectionBounds.colStart !== selectionBounds.colEnd
+        ) {
+            return;
+        }
+
+        const cellsToCopy = new Set<CellId>();
+
+        for (
+            let ri = selectionBounds.rowStart;
+            ri <= selectionBounds.rowEnd;
+            ri++
+        ) {
+            for (
+                let ci = selectionBounds.colStart;
+                ci <= selectionBounds.colEnd;
+                ci++
+            ) {
+                cellsToCopy.add(SpreadsheetUtils.cellCoordsToId({ ri, ci }));
+            }
+        }
+
+        const cellsToPaste = new Set<CellId>();
+
+        for (const selectedCell of selectedCells) {
+            if (!cellsToCopy.has(selectedCell)) {
+                cellsToPaste.add(selectedCell);
+            }
+        }
+
+        const cellMap = new Map<CellId, CellId[]>();
+
+        for (const cellToCopy of cellsToCopy) {
+            cellMap.set(cellToCopy, []);
+        }
+
+        for (const cellToPaste of cellsToPaste) {
+            for (const cellToCopy of cellsToCopy) {
+                if (
+                    SpreadsheetUtils.cellIdToCoords(cellToPaste).ci ===
+                        SpreadsheetUtils.cellIdToCoords(cellToCopy).ci ||
+                    SpreadsheetUtils.cellIdToCoords(cellToPaste).ri ===
+                        SpreadsheetUtils.cellIdToCoords(cellToCopy).ri
+                ) {
+                    cellMap.set(cellToCopy, [
+                        ...cellMap.get(cellToCopy),
+                        cellToPaste,
+                    ]);
+                    break;
+                }
+            }
+        }
+
+        return cellMap;
+    };
+
     const onMouseUp = () => {
-        if (!dragWithCopy) return;
+        if (!dragWithCopy || !selectionBounds) return;
 
-        const baseCell = Array.from(selectedCells)[0];
-        const baseCellCoors = SpreadsheetUtils.cellIdToCoords(baseCell);
-        const newUsedCells: CellId[] = [];
+        const cellMap = getPasteCellReferenceMap();
+        const newUsedCells = new Set<CellId>(spreadsheet.cells.usedCells);
 
-        for (let i = 1; i < Array.from(selectedCells).length; i++) {
-            const currentCell = Array.from(selectedCells)[i];
-            const currentCellCoors =
-                SpreadsheetUtils.cellIdToCoords(currentCell);
+        for (const baseCell of cellMap.keys()) {
+            const baseCellCoords = SpreadsheetUtils.cellIdToCoords(baseCell);
 
-            const rowOffset = currentCellCoors.ri - baseCellCoors.ri;
-            const colOffset = currentCellCoors.ci - baseCellCoors.ci;
+            for (const currentCell of cellMap.get(baseCell)) {
+                const currentCellCoords =
+                    SpreadsheetUtils.cellIdToCoords(currentCell);
 
-            const regex = /\$?[A-Z]+\$?\d+/g;
+                const rowOffset = currentCellCoords.ri - baseCellCoords.ri;
+                const colOffset = currentCellCoords.ci - baseCellCoords.ci;
 
-            const copiedCellFormula =
-                SPREADSHEET_DATA[baseCellCoors.ri][baseCellCoors.ci].formula;
+                const regex = /\$?[A-Z]+\$?\d+/g;
 
-            const newFormula = copiedCellFormula.replace(regex, (match) =>
-                SpreadsheetUtils.shiftCellReference(
-                    match,
-                    colOffset,
-                    rowOffset,
-                ),
-            );
+                const copiedCellFormula =
+                    SPREADSHEET_DATA[baseCellCoords.ri][baseCellCoords.ci]
+                        .formula;
 
-            SPREADSHEET_DATA[currentCellCoors.ri][currentCellCoors.ci].formula =
-                newFormula;
-            const cellId = SpreadsheetUtils.cellCoordsToId(currentCellCoors);
-            newUsedCells.push(cellId);
+                const newFormula = copiedCellFormula.replace(regex, (match) =>
+                    SpreadsheetUtils.shiftCellReference(
+                        match,
+                        colOffset,
+                        rowOffset,
+                    ),
+                );
+
+                SPREADSHEET_DATA[currentCellCoords.ri][
+                    currentCellCoords.ci
+                ].formula = newFormula;
+                const cellId =
+                    SpreadsheetUtils.cellCoordsToId(currentCellCoords);
+                newUsedCells.add(cellId);
+            }
         }
 
-        for (const usedCell of spreadsheet.cells.usedCells) {
-            newUsedCells.push(usedCell);
-        }
-        spreadsheet.cells.setUsedCells(new Set(newUsedCells));
+        spreadsheet.cells.setUsedCells(newUsedCells);
+        evaluateUsedCells();
     };
 
     const onCellPaste = () => {
@@ -594,6 +644,7 @@ const Cell = styled(SpreadsheetCell)<{
 }>`
     position: relative;
 
+    color: var(--text-1);
     font-size: 12px;
     font-weight: 500;
     line-height: 100%;
@@ -614,7 +665,7 @@ const Cell = styled(SpreadsheetCell)<{
     ${({ $selected }) =>
         $selected &&
         `
-            background-color: rgb(245, 245, 245);
+            background-color: var(--bg-2);
     `};
 
     ${({ $referenced }) =>
@@ -647,14 +698,9 @@ const CellDrag = styled.div`
     width: 15px;
     height: 10px;
 
-    background-color: var(--bg-3);
-    border-left: 2px solid var(--bg-6);
-    border-top: 2px solid var(--bg-6);
-
     cursor: cell;
 
     transition: all 150ms;
-    opacity: 0;
 `;
 
 const Container = styled.div`
@@ -672,7 +718,7 @@ const FormulaContainer = styled.div`
     flex-direction: row;
     align-items: center;
 
-    border: 1px solid rgb(230, 230, 230);
+    border: 1px solid var(--bg-5);
     border-bottom: none;
 
     border-top-left-radius: 10px;
@@ -695,12 +741,15 @@ const SelectedCellIndicator = styled.div`
     font-weight: 500;
     line-height: 100%;
     letter-spacing: 1px;
+
+    background-color: var(--bg-1);
 `;
 
 const FormulaInputContainer = styled.div`
     width: 100%;
     position: relative;
-    background-color: white;
+    background-color: var(--bg-1);
+    border-left: 1px solid var(--bg-5);
 `;
 
 const FormulaHighlightedContent = styled.div`
@@ -721,7 +770,7 @@ const FormulaHighlightedContent = styled.div`
 
     padding: 8px 16px;
 
-    color: black;
+    color: var(--text-1);
 `;
 
 const FormulaInput = styled.input<{ $focused: boolean }>`
@@ -741,7 +790,7 @@ const FormulaInput = styled.input<{ $focused: boolean }>`
 
     color: transparent;
     background-color: transparent;
-    caret-color: black;
+    caret-color: var(--text-1);
 `;
 
 const ErrorContainer = styled.span`

@@ -45,6 +45,9 @@ export const supportedFunctions = [
     "SIN",
     "COS",
     "TAN",
+    "LOG",
+    "EXP",
+    "SQRT",
     "RADIANS",
     "RAND",
     "RANDBETWEEN",
@@ -57,6 +60,7 @@ export const supportedFunctions = [
     "ROUND",
     "PREV",
     "STEP",
+    "STEPS",
     "POINT",
     "LINE",
     "AXES",
@@ -284,6 +288,27 @@ export namespace Functions {
     // PI ()
     export const pi = (): Value => {
         return createNumber(Math.PI);
+    };
+
+    // LOG (NUMBER)
+    export const log = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0);
+        const result = Math.log(value.value);
+        return createNumber(result);
+    };
+
+    // EXP (NUMBER)
+    export const exp = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0);
+        const result = Math.exp(value.value);
+        return createNumber(result);
+    };
+
+    // SQRT (NUMBER)
+    export const sqrt = ({ args }: FuncProps): Value => {
+        const value = expectNumber(args, 0);
+        const result = Math.sqrt(value.value);
+        return createNumber(result);
     };
 
     // RAND ()
@@ -661,6 +686,11 @@ export namespace Functions {
     // STEP ()
     export const step = ({ step }: FuncProps): Value => {
         return createNumber(step);
+    };
+
+    // STEPS ()
+    export const steps = ({ steps }: FuncProps): Value => {
+        return createNumber(steps);
     };
 }
 

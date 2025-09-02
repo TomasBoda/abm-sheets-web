@@ -28,8 +28,9 @@ import {
 } from "./model";
 
 export class Runtime {
-    private step: number;
     private history: History;
+    private step: number;
+    private steps: number;
 
     private inCallExpression: boolean = false;
 
@@ -56,6 +57,9 @@ export class Runtime {
         ["SIN", Functions.sin],
         ["COS", Functions.cos],
         ["TAN", Functions.tan],
+        ["LOG", Functions.log],
+        ["EXP", Functions.exp],
+        ["SQRT", Functions.sqrt],
         ["RADIANS", Functions.radians],
         ["RAND", Functions.rand],
         ["RANDBETWEEN", Functions.randbetween],
@@ -68,15 +72,22 @@ export class Runtime {
         ["ROUND", Functions.round],
         ["PREV", Functions.prev],
         ["STEP", Functions.step],
+        ["STEPS", Functions.steps],
         ["POINT", GraphFunctions.point],
         ["LINE", GraphFunctions.line],
         ["AXES", GraphFunctions.axes],
         ["RENDER", GraphFunctions.render],
     ]);
 
-    public run(expression: Expression, step: number, history: History) {
-        this.step = step;
+    public run(
+        expression: Expression,
+        history: History,
+        step: number,
+        steps: number,
+    ) {
         this.history = history;
+        this.step = step;
+        this.steps = steps;
 
         return this.runFormula(expression);
     }
@@ -134,8 +145,9 @@ export class Runtime {
 
         return func({
             args: evaluatedArgs,
-            step: this.step,
             history: this.history,
+            step: this.step,
+            steps: this.steps,
         });
     }
 

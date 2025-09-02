@@ -102,15 +102,15 @@ const Item = styled.div<{ $selected: boolean }>`
 
     padding: 6px 12px;
 
-    background-color: rgb(245, 245, 245);
-    border: 1px solid rgb(235, 235, 235);
+    background-color: var(--bg-1);
+    border: 1px solid var(--bg-5);
     border-radius: 5px;
 
     cursor: pointer;
     transition: all 100ms;
 
     &:hover {
-        background-color: rgb(235, 235, 235);
+        background-color: var(--bg-2);
     }
 
     ${({ $selected }) =>

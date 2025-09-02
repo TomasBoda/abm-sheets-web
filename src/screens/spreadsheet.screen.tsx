@@ -113,14 +113,11 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
 
-    background-color: rgb(245, 245, 245);
+    background-color: var(--bg-1);
 `;
 
 const ToolbarContainer = styled.div`
     width: 100%;
-
-    background-color: rgb(250, 250, 250);
-    border-bottom: 1px solid rgb(230, 230, 230);
 `;
 
 const Content = styled.div`

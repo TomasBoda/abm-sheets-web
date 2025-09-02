@@ -80,7 +80,7 @@ const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean }>`
     background-color: ${({ $variant }) =>
         $variant === "primary" && "var(--color-1)"};
     background-color: ${({ $variant }) =>
-        $variant === "secondary" && "var(--bg-2)"};
+        $variant === "secondary" && "var(--bg-4)"};
 
     cursor: pointer;
     & * {
@@ -92,13 +92,10 @@ const Container = styled.div<{ $variant: ButtonVariant; $disabled: boolean }>`
     white-space: nowrap;
 
     &:hover {
-        //background-color: ${({ $disabled }) =>
-            !$disabled && "var(--color-2)"};
-
         background-color: ${({ $variant }) =>
             $variant === "primary" && "var(--color-2)"};
         background-color: ${({ $variant }) =>
-            $variant === "secondary" && "var(--bg-3)"};
+            $variant === "secondary" && "var(--bg-5)"};
 
         border: 1px solid
             ${({ $variant }) => $variant === "secondary" && "var(--bg-4)"};

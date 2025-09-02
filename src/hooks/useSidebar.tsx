@@ -76,8 +76,8 @@ const Sidebar = styled.div`
     top: 15px;
     left: 100vw;
 
-    background-color: rgb(250, 250, 250);
-    border: 1px solid rgb(230, 230, 230);
+    background-color: var(--bg-1);
+    border: 1px solid var(--bg-5);
     border-radius: 10px;
 
     transition: left 300ms;

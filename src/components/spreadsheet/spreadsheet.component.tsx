@@ -16,6 +16,9 @@ import {
 } from "../spreadsheet/spreadsheet.constants";
 import { SpreadsheetUtils } from "./spreadsheet.utils";
 
+const SPREADSHEET_PANELS = Array.from(Array(PANEL_COUNT * PANEL_COUNT));
+const PANEL_CELLS = Array.from(Array(CELL_COUNT * CELL_COUNT));
+
 interface UseRenderedPanelsProps {
     containerRef: MutableRefObject<HTMLDivElement>;
 }
@@ -100,9 +103,6 @@ const useRenderedPanels = ({ containerRef }: UseRenderedPanelsProps) => {
 
     return { renderedPanels };
 };
-
-const SPREADSHEET_PANELS = Array.from(Array(PANEL_COUNT * PANEL_COUNT));
-const PANEL_CELLS = Array.from(Array(CELL_COUNT * CELL_COUNT));
 
 const getPanelRowAndColumn = (panelIndex: number) => {
     const panelRow = Math.floor(panelIndex / PANEL_COUNT);
@@ -224,8 +224,8 @@ export const SpreadsheetCell = styled.div`
 
     font-size: 12px;
 
-    border: 0.1px solid rgb(230, 230, 230);
-    background-color: white;
+    border: 0.1px solid var(--bg-5);
+    background-color: var(--bg-1);
 `;
 
 const Container = styled.div`
@@ -237,15 +237,15 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
 
-    border: 1px solid rgb(230, 230, 230);
-    border-top: 0.5px solid rgba(230, 230, 230);
+    border: 1px solid var(--bg-5);
+    border-top-width: 0.5px;
 
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 
     user-select: none;
 
-    background-color: white;
+    background-color: var(--bg-1);
 `;
 
 const Left = styled.div`
@@ -295,6 +295,8 @@ const Panel = styled.div`
 
     display: grid;
     grid-template-columns: repeat(${CELL_COUNT}, auto);
+
+    background-color: var(--bg-1);
 `;
 
 const IndicatorItem = styled(SpreadsheetCell)<{ $selected?: boolean }>`
@@ -303,16 +305,16 @@ const IndicatorItem = styled(SpreadsheetCell)<{ $selected?: boolean }>`
     align-items: center;
     justify-content: center;
 
-    background-color: rgb(245, 245, 245);
+    background-color: var(--bg-2);
 
     font-size: 12px;
     font-weight: 600;
-    color: rgb(120, 120, 120);
+    color: var(--text-2);
 
     ${({ $selected }) =>
         $selected &&
         `
-        background-color: rgb(230, 230, 230); 
+        background-color: var(--bg-4); 
     `};
 `;
 
