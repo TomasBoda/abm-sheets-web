@@ -105,7 +105,6 @@ export const SpreadsheetWrapper = () => {
         const cells = Array.from(spreadsheet.cells.usedCells);
         const history = SpreadsheetUtils.evaluate(cells, steps);
         if (!history) return;
-        console.log(history);
         spreadsheet.history.setHistory(history);
     };
 

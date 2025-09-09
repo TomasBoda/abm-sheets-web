@@ -8,6 +8,7 @@ export enum ValueType {
     CellRange = "CellRange",
 
     Point = "Point",
+    CategoricalCoord = "CategoricalCoord",
     Shape = "Shape",
     Graph = "Graph",
     Scale = "Scale",
@@ -31,7 +32,12 @@ export type CellRangeType = {
     end: CellLiteralType;
 };
 
-export type PointType = { x: number; y: number };
+export type PointType = {
+    x: number | CategoricalCoord;
+    y: number | CategoricalCoord;
+};
+
+export type CategoricalCoord = [string, number] | [number, string];
 
 export type ShapeType = any;
 
@@ -50,6 +56,7 @@ export interface Value {
         | CellLiteralType
         | CellRangeType
         | PointType
+        | CategoricalCoord
         | ShapeType
         | ScaleType
         | GraphType
@@ -84,6 +91,11 @@ export interface CellRangeValue extends Value {
 export interface PointValue extends Value {
     type: ValueType.Point;
     value: PointType;
+}
+
+export interface CategoricalCoordValue extends Value {
+    type: ValueType.CategoricalCoord;
+    value: CategoricalCoord;
 }
 
 export interface ShapeValue extends Value {
