@@ -75,8 +75,18 @@ export class Runtime {
         ["STEPS", Functions.steps],
         ["POINT", GraphFunctions.point],
         ["LINE", GraphFunctions.line],
+        ["COLUMN", GraphFunctions.column],
+        ["SHAPE", GraphFunctions.shape],
+        ["BUBBLE", GraphFunctions.bubble],
+        ["BAR", GraphFunctions.bar],
+        ["FILLCOLOR", GraphFunctions.fillColor],
+        ["PADDING", GraphFunctions.padding],
         ["AXES", GraphFunctions.axes],
+        ["NEST", GraphFunctions.nest],
+        ["OVERLAY", GraphFunctions.overlay],
         ["RENDER", GraphFunctions.render],
+        ["SCALECONTINUOUS", GraphFunctions.scaleContinuous],
+        ["SCALEY", GraphFunctions.scaleY],
     ]);
 
     public run(

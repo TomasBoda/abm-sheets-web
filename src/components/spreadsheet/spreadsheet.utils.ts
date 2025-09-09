@@ -5,6 +5,7 @@ import {
     CellRangeValue,
     NumberValue,
     PointValue,
+    ScaleValue,
     ShapeValue,
     StringValue,
     Value,
@@ -186,6 +187,8 @@ export namespace SpreadsheetUtils {
                 return getShapeValueText(value as ShapeValue);
             case ValueType.Graph:
                 return getGraphValueText();
+            case ValueType.Scale:
+                return getScaleValueText(value as ScaleValue);
             case ValueType.Error:
                 return getErrorValueText();
         }
@@ -225,6 +228,10 @@ export namespace SpreadsheetUtils {
     };
 
     export const getShapeValueText = (value: ShapeValue) => {
+        return `${value.label}`;
+    };
+
+    export const getScaleValueText = (value: ScaleValue) => {
         return `${value.label}`;
     };
 

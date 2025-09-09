@@ -10,6 +10,7 @@ export enum ValueType {
     Point = "Point",
     Shape = "Shape",
     Graph = "Graph",
+    Scale = "Scale",
 
     Error = "Error",
 }
@@ -34,6 +35,8 @@ export type PointType = { x: number; y: number };
 
 export type ShapeType = any;
 
+export type ScaleType = any;
+
 export type GraphType = ShapeType;
 
 export type ErrorType = string;
@@ -48,6 +51,7 @@ export interface Value {
         | CellRangeType
         | PointType
         | ShapeType
+        | ScaleType
         | GraphType
         | ErrorType;
 }
@@ -85,6 +89,12 @@ export interface PointValue extends Value {
 export interface ShapeValue extends Value {
     type: ValueType.Shape;
     value: ShapeType;
+    label: string;
+}
+
+export interface ScaleValue extends Value {
+    type: ValueType.Scale;
+    value: ScaleType;
     label: string;
 }
 
