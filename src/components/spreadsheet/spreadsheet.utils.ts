@@ -6,6 +6,8 @@ import {
     NumberValue,
     PointValue,
     ShapeValue,
+    CategoricalCoordValue,
+    ScaleValue,
     StringValue,
     Value,
     ValueType,
@@ -182,10 +184,16 @@ export namespace SpreadsheetUtils {
                 return getCellRangeValueText(value as CellRangeValue);
             case ValueType.Point:
                 return getPointValueText(value as PointValue);
+            case ValueType.CategoricalCoord:
+                return getCategoricalCoordValueText(
+                    value as CategoricalCoordValue,
+                );
             case ValueType.Shape:
                 return getShapeValueText(value as ShapeValue);
             case ValueType.Graph:
                 return getGraphValueText();
+            case ValueType.Scale:
+                return getScaleValueText(value as ScaleValue);
             case ValueType.Error:
                 return getErrorValueText();
         }
@@ -214,14 +222,16 @@ export namespace SpreadsheetUtils {
     };
 
     export const getPointValueText = (value: PointValue) => {
-        const x = Utils.getRoundedNumber(value.value.x, 3).toLocaleString(
-            "en-US",
-        );
-        const y = Utils.getRoundedNumber(value.value.y, 3).toLocaleString(
-            "en-US",
-        );
+        const { x, y } = Utils.handlePointValue(value);
 
-        return `POINT [${x}, ${y}]`;
+        return `POINT [${typeof x === "string" ? x : `[${x}]`}, ${typeof y === "string" ? y : `[${y}]`}]`;
+    };
+
+    export const getCategoricalCoordValueText = (
+        value: CategoricalCoordValue,
+    ) => {
+        const coord = Utils.roundCategoricalPoint(value.value);
+        return `[${coord}]`;
     };
 
     export const getShapeValueText = (value: ShapeValue) => {
@@ -230,6 +240,10 @@ export namespace SpreadsheetUtils {
 
     export const getGraphValueText = () => {
         return `GRAPH`;
+    };
+
+    export const getScaleValueText = (value: ScaleValue) => {
+        return `${value.label}`;
     };
 
     export const getErrorValueText = () => {
