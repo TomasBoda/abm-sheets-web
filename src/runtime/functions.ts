@@ -721,7 +721,7 @@ export namespace GraphFunctions {
         const shape = expectShape(args, 1);
 
         const graph = c.axes(config.value, shape.value) as ShapeType;
-
+        console.log("test");
         return createShape(graph, "AXES");
     };
 
