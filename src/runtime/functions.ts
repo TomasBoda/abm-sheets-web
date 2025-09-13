@@ -1,6 +1,6 @@
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
-import { compost as c } from "compostjs";
+import { compost as c, scale as s } from "compostjs";
 import {
     BooleanType,
     BooleanValue,
@@ -14,8 +14,12 @@ import {
     NumberValue,
     PointType,
     PointValue,
+    ScaleType,
+    ScaleValue,
     ShapeType,
     ShapeValue,
+    CategoricalCoord,
+    CategoricalCoordValue,
     StringType,
     StringValue,
     Value,
@@ -62,9 +66,23 @@ export const supportedFunctions = [
     "STEP",
     "STEPS",
     "POINT",
+    "CATEGORICALCOORD",
     "LINE",
+    "COLUMN",
+    "SHAPE",
+    "BAR",
+    "BUBBLE",
+    "TEXT",
+    "FILLCOLOR",
+    "STROKECOLOR",
+    "FONT",
+    "PADDING",
     "AXES",
+    "OVERLAY",
     "RENDER",
+    "NEST",
+    "SCALECONTINUOUS",
+    "SCALEY",
 ] as const;
 
 export type FunctionName = (typeof supportedFunctions)[number];
@@ -91,8 +109,21 @@ const createPoint = (value: PointType): PointValue => ({
     value,
 });
 
+const createCategoricalCoord = (
+    value: CategoricalCoord,
+): CategoricalCoordValue => ({
+    type: ValueType.CategoricalCoord,
+    value,
+});
+
 const createShape = (value: ShapeType, label: string): ShapeValue => ({
     type: ValueType.Shape,
+    value,
+    label,
+});
+
+const createScale = (value: ScaleType, label: string): ScaleValue => ({
+    type: ValueType.Scale,
     value,
     label,
 });
@@ -133,8 +164,23 @@ const expectPoint = (args: Value[], index: number): PointValue => {
     return expectArg(args, index, ValueType.Point) as PointValue;
 };
 
+const expectCategoricalCoord = (
+    args: Value[],
+    index: number,
+): CategoricalCoordValue => {
+    return expectArg(
+        args,
+        index,
+        ValueType.CategoricalCoord,
+    ) as CategoricalCoordValue;
+};
+
 const expectShape = (args: Value[], index: number): ShapeValue => {
     return expectArg(args, index, ValueType.Shape) as ShapeValue;
+};
+
+const expectScale = (args: Value[], index: number): ScaleValue => {
+    return expectArg(args, index, ValueType.Scale) as ScaleValue;
 };
 
 const expectArg = (args: Value[], index: number, type?: ValueType): Value => {
@@ -697,10 +743,37 @@ export namespace Functions {
 export namespace GraphFunctions {
     // POINT (NUMBER, NUMBER)
     export const point = ({ args }: FuncProps): Value => {
-        const x = expectNumber(args, 0);
-        const y = expectNumber(args, 1);
+        let x: number | CategoricalCoord;
+        let y: number | CategoricalCoord;
 
-        return createPoint({ x: x.value, y: y.value });
+        if (args[0].type === ValueType.Number) {
+            x = expectNumber(args, 0).value;
+        } else {
+            x = expectCategoricalCoord(args, 0).value;
+        }
+
+        if (args[1].type === ValueType.Number) {
+            y = expectNumber(args, 1).value;
+        } else {
+            y = expectCategoricalCoord(args, 1).value;
+        }
+
+        return createPoint({ x: x, y: y });
+    };
+
+    // CATEGORICALCOORD (STRING|NUMBER, NUMBER|STRING)
+    export const categoricalCoord = ({ args }: FuncProps): Value => {
+        if (args[0].type === ValueType.String) {
+            return createCategoricalCoord([
+                expectString(args, 0).value,
+                expectNumber(args, 1).value,
+            ]);
+        } else {
+            return createCategoricalCoord([
+                expectNumber(args, 0).value,
+                expectString(args, 1).value,
+            ]);
+        }
     };
 
     // LINE (SHAPE)
@@ -715,6 +788,74 @@ export namespace GraphFunctions {
         return createShape(graph, "LINE");
     };
 
+    // SHAPE (SHAPE)
+    export const shape = ({ args }: FuncProps): Value => {
+        const points = args.map((_, i) => expectPoint(args, i));
+        const compostPoints = points.map((point) => [
+            point.value.x,
+            point.value.y,
+        ]);
+
+        const graph = c.shape(compostPoints) as ShapeType;
+        return createShape(graph, "SHAPE");
+    };
+
+    // COLUMN (STRING, NUMBER)
+    export const column = ({ args }: FuncProps): Value => {
+        const name = expectString(args, 0).value;
+        const size = expectNumber(args, 1).value;
+
+        const graph = c.column(name, size) as ShapeType;
+        return createShape(graph, "COLUMN");
+    };
+
+    // BAR (NUMBER, STRING)
+    export const bar = ({ args }: FuncProps): Value => {
+        const size = expectNumber(args, 0).value;
+        const name = expectString(args, 1).value;
+
+        const graph = c.bar(size, name) as ShapeType;
+        return createShape(graph, "BAR");
+    };
+
+    // BUBBLE (POINT, NUMBER, NUMBER)
+    export const bubble = ({ args }: FuncProps): Value => {
+        const point = expectPoint(args, 0).value;
+        const height = expectNumber(args, 1).value;
+        const width = expectNumber(args, 2).value;
+        const graph = c.bubble(point, height, width) as ShapeType;
+        return createShape(graph, "BUBBLE");
+    };
+
+    // TEXT (POINT, STRING)
+    export const text = ({ args }: FuncProps): Value => {
+        const point = expectPoint(args, 0).value;
+
+        const content = expectString(args, 1).value;
+
+        let graph;
+        if (args[2]) {
+            graph = c.text(
+                point.x,
+                point.y,
+                content,
+                expectString(args, 2).value,
+            ) as ShapeType;
+        } else if (args[2] && args[3]) {
+            graph = c.text(
+                point.x,
+                point.y,
+                content,
+                expectString(args, 2).value,
+                expectString(args, 3).value,
+            ) as ShapeType;
+        } else {
+            graph = c.text(point.x, point.y, content) as ShapeType;
+        }
+
+        return createShape(graph, "TEXT");
+    };
+
     // AXES (STRING, SHAPE)
     export const axes = ({ args }: FuncProps): Value => {
         const config = expectString(args, 0);
@@ -725,10 +866,95 @@ export namespace GraphFunctions {
         return createShape(graph, "AXES");
     };
 
+    // FILLCOLOR (STRING, SHAPE)
+    export const fillColor = ({ args }: FuncProps): Value => {
+        const color = expectString(args, 0).value;
+        const shape = expectShape(args, 1).value;
+
+        const graph = c.fillColor(color, shape) as ShapeType;
+        return createShape(graph, "FILLCOLOR");
+    };
+
+    // FONT (STRING, STRING, SHAPE)
+    export const font = ({ args }: FuncProps): Value => {
+        const font = expectString(args, 0).value;
+        const color = expectString(args, 1).value;
+        const shape = expectShape(args, 2).value;
+
+        const graph = c.font(font, color, shape) as ShapeType;
+        return createShape(graph, "FONT");
+    };
+
+    // STROKECOLOR (STRING, SHAPE)
+    export const strokeColor = ({ args }: FuncProps): Value => {
+        const color = expectString(args, 0).value;
+        const shape = expectShape(args, 1).value;
+
+        const graph = c.strokeColor(color, shape) as ShapeType;
+        return createShape(graph, "STROKECOLOR");
+    };
+
+    // PADDING (NUMBER, NUMBER, NUMBER, NUMBER, SHAPE)
+    export const padding = ({ args }: FuncProps): Value => {
+        const top = expectNumber(args, 0).value;
+        const right = expectNumber(args, 1).value;
+        const bottom = expectNumber(args, 2).value;
+        const left = expectNumber(args, 3).value;
+
+        const shape = expectShape(args, 4).value;
+
+        const graph = c.padding(top, right, bottom, left, shape) as ShapeType;
+        return createShape(graph, "PADDING");
+    };
+
+    // OVERLAY (SHAPE)
+    export const overlay = ({ args }: FuncProps): Value => {
+        const shapes = args.map((_, i) => expectShape(args, i).value);
+        const graph = c.overlay(shapes) as ShapeType;
+
+        return createShape(graph, "OVERLAY");
+    };
+
+    // NEST (POINT, POINT, SHAPE)
+    export const nest = ({ args }: FuncProps): Value => {
+        const pointStart = expectPoint(args, 0).value;
+        const pointEnd = expectPoint(args, 1).value;
+        const shape = expectShape(args, 2).value;
+
+        const graph = c.nest(
+            pointStart.x,
+            pointEnd.x,
+            pointStart.y,
+            pointEnd.y,
+            shape,
+        ) as ShapeType;
+
+        return createShape(graph, "NEST");
+    };
+
     // RENDER (SHAPE)
     export const render = ({ args }: FuncProps): Value => {
         const shape = expectShape(args, 0);
 
         return createGraph(shape.value);
+    };
+
+    // SCALECONTINUOUS (NUMBER, NUMBER)
+    export const scaleContinuous = ({ args }: FuncProps): Value => {
+        const min = expectNumber(args, 0).value;
+        const max = expectNumber(args, 1).value;
+
+        const scale = s.continuous(min, max);
+        return createScale(scale, "CONTINUOUS") as ScaleType;
+    };
+
+    // SCALEY (SCALE, NUMBER)
+    export const scaleY = ({ args }: FuncProps): Value => {
+        const scale = expectScale(args, 0).value;
+        console.log(scale);
+        const shape = expectShape(args, 1).value;
+
+        const graph = c.scaleY(scale, shape) as ShapeType;
+        return createShape(graph, "SCALEY") as ScaleType;
     };
 }
