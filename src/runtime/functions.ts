@@ -220,6 +220,22 @@ const getCellRangeCellIds = (cellRange: CellRangeValue) => {
     return cellIds;
 };
 
+const parseArgs = (args: Value[], step: number, history: History): Value[] => {
+    const parsedArgs: Value[] = [];
+
+    for (let i = 0; i < args.length; i++) {
+        if (args[i].type === ValueType.CellRange) {
+            const cellIds = getCellRangeCellIds(expectCellRange(args, i));
+            for (let j = 0; j < cellIds.length; j++) {
+                parsedArgs.push(getHistoryValue(cellIds[j], step, history));
+            }
+        } else {
+            parsedArgs.push(args[i]);
+        }
+    }
+    return parsedArgs;
+};
+
 export namespace Functions {
     // IF (BOOLEAN, ANY, ANY)
     export const conditional = ({ args }: FuncProps): Value => {
@@ -777,8 +793,9 @@ export namespace GraphFunctions {
     };
 
     // LINE (SHAPE)
-    export const line = ({ args }: FuncProps): Value => {
-        const points = args.map((_, i) => expectPoint(args, i));
+    export const line = ({ args, step, history }: FuncProps): Value => {
+        const parsedPoints = parseArgs(args, step, history);
+        const points = parsedPoints.map((_, i) => expectPoint(parsedPoints, i));
         const compostPoints = points.map((point) => [
             point.value.x,
             point.value.y,
@@ -789,8 +806,9 @@ export namespace GraphFunctions {
     };
 
     // SHAPE (SHAPE)
-    export const shape = ({ args }: FuncProps): Value => {
-        const points = args.map((_, i) => expectPoint(args, i));
+    export const shape = ({ args, step, history }: FuncProps): Value => {
+        const parsedPoints = parseArgs(args, step, history);
+        const points = parsedPoints.map((_, i) => expectPoint(parsedPoints, i));
         const compostPoints = points.map((point) => [
             point.value.x,
             point.value.y,
@@ -862,7 +880,6 @@ export namespace GraphFunctions {
         const shape = expectShape(args, 1);
 
         const graph = c.axes(config.value, shape.value) as ShapeType;
-        console.log("test");
         return createShape(graph, "AXES");
     };
 
@@ -908,8 +925,11 @@ export namespace GraphFunctions {
     };
 
     // OVERLAY (SHAPE)
-    export const overlay = ({ args }: FuncProps): Value => {
-        const shapes = args.map((_, i) => expectShape(args, i).value);
+    export const overlay = ({ args, step, history }: FuncProps): Value => {
+        const parsedShapes = parseArgs(args, step, history);
+        const shapes = parsedShapes.map(
+            (_, i) => expectShape(parsedShapes, i).value,
+        );
         const graph = c.overlay(shapes) as ShapeType;
 
         return createShape(graph, "OVERLAY");
@@ -932,6 +952,48 @@ export namespace GraphFunctions {
         return createShape(graph, "NEST");
     };
 
+    export const nestX = ({ args }: FuncProps): Value => {
+        let start: number | CategoricalCoord;
+        let end: number | CategoricalCoord;
+        const shape = expectShape(args, 2);
+
+        if (args[0].type === ValueType.Number) {
+            start = expectNumber(args, 0).value;
+        } else {
+            start = expectCategoricalCoord(args, 0).value;
+        }
+
+        if (args[1].type === ValueType.Number) {
+            end = expectNumber(args, 1).value;
+        } else {
+            end = expectCategoricalCoord(args, 1).value;
+        }
+
+        const graph = c.nestX(start, end, shape) as ShapeType;
+        return createShape(graph, "NESTX");
+    };
+
+    export const nestY = ({ args }: FuncProps): Value => {
+        let start: number | CategoricalCoord;
+        let end: number | CategoricalCoord;
+        const shape = expectShape(args, 2);
+
+        if (args[0].type === ValueType.Number) {
+            start = expectNumber(args, 0).value;
+        } else {
+            start = expectCategoricalCoord(args, 0).value;
+        }
+
+        if (args[1].type === ValueType.Number) {
+            end = expectNumber(args, 1).value;
+        } else {
+            end = expectCategoricalCoord(args, 1).value;
+        }
+
+        const graph = c.nestY(start, end, shape) as ShapeType;
+        return createShape(graph, "NESTY");
+    };
+
     // RENDER (SHAPE)
     export const render = ({ args }: FuncProps): Value => {
         const shape = expectShape(args, 0);
@@ -948,13 +1010,45 @@ export namespace GraphFunctions {
         return createScale(scale, "CONTINUOUS") as ScaleType;
     };
 
+    export const scaleCategorical = ({
+        args,
+        step,
+        history,
+    }: FuncProps): Value => {
+        const parsedNames = parseArgs(args, step, history);
+        const names = parsedNames.map(
+            (_, i) => expectString(parsedNames, i).value,
+        );
+
+        const scale = s.categorical(names);
+        return createScale(scale, "CATEGORICAL") as ScaleType;
+    };
+
     // SCALEY (SCALE, NUMBER)
     export const scaleY = ({ args }: FuncProps): Value => {
         const scale = expectScale(args, 0).value;
-        console.log(scale);
         const shape = expectShape(args, 1).value;
 
         const graph = c.scaleY(scale, shape) as ShapeType;
         return createShape(graph, "SCALEY") as ScaleType;
+    };
+
+    // SCALEX (SCALE, NUMBER)
+    export const scaleX = ({ args }: FuncProps): Value => {
+        const scale = expectScale(args, 0).value;
+        const shape = expectShape(args, 1).value;
+
+        const graph = c.scaleX(scale, shape) as ShapeType;
+        return createShape(graph, "SCALEX") as ScaleType;
+    };
+
+    // SCALE (SCALE, SCALE, NUMBER)
+    export const scale = ({ args }: FuncProps): Value => {
+        const scaleX = expectScale(args, 0).value;
+        const scaleY = expectScale(args, 1).value;
+        const shape = expectShape(args, 2).value;
+
+        const graph = c.scale(scaleX, scaleY, shape) as ShapeType;
+        return createShape(graph, "SCALE") as ScaleType;
     };
 }
