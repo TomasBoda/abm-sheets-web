@@ -18,10 +18,9 @@ import {
 import {
     BooleanValue,
     CellLiteralValue,
-    CellRangeType,
-    CellRangeValue,
     FuncCall,
     NumberValue,
+    RangeValue,
     StringValue,
     Value,
     ValueType,
@@ -73,6 +72,7 @@ export class Runtime {
         ["PREV", Functions.prev],
         ["STEP", Functions.step],
         ["STEPS", Functions.steps],
+        ["TIMERANGE", Functions.timerange],
         ["POINT", GraphFunctions.point],
         ["CATEGORICALCOORD", GraphFunctions.categoricalCoord],
         ["LINE", GraphFunctions.line],
@@ -150,7 +150,7 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
-        if (identifier === "PREV") {
+        if (identifier === "PREV" || identifier === "TIMERANGE") {
             this.inCallExpression = true;
         }
 
@@ -368,18 +368,21 @@ export class Runtime {
     private runCellRangeLiteral(expression: CellRangeLiteral): Value {
         const { left, right } = expression;
 
-        const value: CellRangeType = {
-            start: {
-                ri: left.row.index,
-                ci: left.col.index,
-            },
-            end: {
-                ri: right.row.index,
-                ci: right.col.index,
-            },
-        };
+        const values: Value[] = [];
 
-        return { type: ValueType.CellRange, value } as CellRangeValue;
+        for (let ri = left.row.index; ri <= right.row.index; ri++) {
+            for (let ci = left.col.index; ci <= right.col.index; ci++) {
+                const value = this.runCellLiteral({
+                    type: NodeType.CellLiteral,
+                    row: { index: ri, fixed: false },
+                    col: { index: ci, fixed: false },
+                });
+
+                values.push(value);
+            }
+        }
+
+        return { type: ValueType.Range, value: values } as RangeValue;
     }
 
     // utilities

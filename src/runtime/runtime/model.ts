@@ -5,7 +5,7 @@ export enum ValueType {
     Boolean = "Boolean",
     String = "String",
     CellLiteral = "CellLiteral",
-    CellRange = "CellRange",
+    Range = "Range",
 
     Point = "Point",
     CategoricalCoord = "CategoricalCoord",
@@ -27,10 +27,7 @@ export type CellLiteralType = {
     ci: number;
 };
 
-export type CellRangeType = {
-    start: CellLiteralType;
-    end: CellLiteralType;
-};
+export type RangeType = Value[];
 
 export type PointType = {
     x: number | CategoricalCoord;
@@ -54,7 +51,7 @@ export interface Value {
         | BooleanType
         | StringType
         | CellLiteralType
-        | CellRangeType
+        | RangeType
         | PointType
         | CategoricalCoord
         | ShapeType
@@ -83,9 +80,9 @@ export interface CellLiteralValue extends Value {
     value: CellLiteralType;
 }
 
-export interface CellRangeValue extends Value {
-    type: ValueType.CellRange;
-    value: CellRangeType;
+export interface RangeValue extends Value {
+    type: ValueType.Range;
+    value: RangeType;
 }
 
 export interface PointValue extends Value {

@@ -4,8 +4,9 @@ import { compost as c, scale as s } from "compostjs";
 import {
     BooleanType,
     BooleanValue,
+    CategoricalCoord,
+    CategoricalCoordValue,
     CellLiteralValue,
-    CellRangeValue,
     ErrorValue,
     FuncProps,
     GraphType,
@@ -14,12 +15,12 @@ import {
     NumberValue,
     PointType,
     PointValue,
+    RangeType,
+    RangeValue,
     ScaleType,
     ScaleValue,
     ShapeType,
     ShapeValue,
-    CategoricalCoord,
-    CategoricalCoordValue,
     StringType,
     StringValue,
     Value,
@@ -65,6 +66,8 @@ export const supportedFunctions = [
     "PREV",
     "STEP",
     "STEPS",
+    "TIMERANGE",
+
     "POINT",
     "CATEGORICALCOORD",
     "LINE",
@@ -101,6 +104,11 @@ const createBoolean = (value: BooleanType): BooleanValue => ({
 
 const createString = (value: StringType): StringValue => ({
     type: ValueType.String,
+    value,
+});
+
+const createRange = (value: RangeType): RangeValue => ({
+    type: ValueType.Range,
     value,
 });
 
@@ -156,8 +164,8 @@ const expectCellLiteral = (args: Value[], index: number): CellLiteralValue => {
     return expectArg(args, index, ValueType.CellLiteral) as CellLiteralValue;
 };
 
-const expectCellRange = (args: Value[], index: number): CellRangeValue => {
-    return expectArg(args, index, ValueType.CellRange) as CellRangeValue;
+const expectRange = (args: Value[], index: number): RangeValue => {
+    return expectArg(args, index, ValueType.Range) as RangeValue;
 };
 
 const expectPoint = (args: Value[], index: number): PointValue => {
@@ -205,34 +213,21 @@ const getHistoryValue = (cellId: CellId, step: number, history: History) => {
     return undefined;
 };
 
-const getCellRangeCellIds = (cellRange: CellRangeValue) => {
-    const { start, end } = cellRange.value;
-
-    const cellIds: CellId[] = [];
-
-    for (let ri = start.ri; ri <= end.ri; ri++) {
-        for (let ci = start.ci; ci <= end.ci; ci++) {
-            const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
-            cellIds.push(cellId);
-        }
-    }
-
-    return cellIds;
-};
-
-const parseArgs = (args: Value[], step: number, history: History): Value[] => {
+const parseArgs = (args: Value[]): Value[] => {
     const parsedArgs: Value[] = [];
 
     for (let i = 0; i < args.length; i++) {
-        if (args[i].type === ValueType.CellRange) {
-            const cellIds = getCellRangeCellIds(expectCellRange(args, i));
-            for (let j = 0; j < cellIds.length; j++) {
-                parsedArgs.push(getHistoryValue(cellIds[j], step, history));
+        if (args[i].type === ValueType.Range) {
+            const range = args[i] as RangeValue;
+
+            for (const value of range.value) {
+                parsedArgs.push(value);
             }
         } else {
             parsedArgs.push(args[i]);
         }
     }
+
     return parsedArgs;
 };
 
@@ -473,114 +468,42 @@ export namespace Functions {
     };
 
     // INDEX (RANGE, NUMBER)
-    export const index = ({ args, step, history }: FuncProps): Value => {
-        const lookupRange = expectCellRange(args, 0);
+    export const index = ({ args }: FuncProps): Value => {
+        const lookupRange = expectRange(args, 0);
         const index = expectNumber(args, 1);
 
-        const { start, end } = lookupRange.value;
-
-        const scaleType =
-            start.ri === end.ri
-                ? "column"
-                : start.ci === end.ci
-                  ? "row"
-                  : "none";
-
-        if (scaleType === "none") {
-            throw new Error("Multi row/col ranges are not supported");
+        if (index.value > lookupRange.value.length - 1) {
+            return createNumber(0);
         }
 
-        let ci: number;
-        let ri: number;
-
-        switch (scaleType) {
-            case "row": {
-                ci = start.ci;
-                ri = start.ri + index.value;
-                break;
-            }
-            case "column": {
-                ci = start.ci + index.value;
-                ri = start.ri;
-                break;
-            }
-        }
-
-        const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
-        const value = getHistoryValue(cellId, step, history) ?? createNumber(0);
-
-        return value;
+        return lookupRange.value[index.value];
     };
 
     // MATCH (ANY, RANGE)
-    export const match = ({ args, step, history }: FuncProps): Value => {
+    export const match = ({ args }: FuncProps): Value => {
         const lookupValue = args[0];
-        const lookupRange = expectCellRange(args, 1);
-        const cellIds = getCellRangeCellIds(lookupRange);
+        const lookupRange = expectRange(args, 1);
 
-        const { start, end } = lookupRange.value;
+        const index = lookupRange.value.findIndex(
+            (value) =>
+                value.type === lookupValue.type &&
+                value.value === lookupValue.value,
+        );
 
-        const scaleType =
-            start.ri === end.ri
-                ? "column"
-                : start.ci === end.ci
-                  ? "row"
-                  : "none";
-
-        if (scaleType === "none") {
-            throw new Error("Multi row/col ranges are not supported");
-        }
-
-        for (const cellId of cellIds) {
-            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-
-            const value =
-                getHistoryValue(cellId, step, history) ?? createNumber(0);
-
-            switch (args[0].type) {
-                case ValueType.Number: {
-                    if (value.value === (lookupValue as NumberValue).value) {
-                        return scaleType === "row"
-                            ? createNumber(ri - start.ri)
-                            : createNumber(ci - start.ci);
-                    }
-                    break;
-                }
-                case ValueType.Boolean: {
-                    if (value.value === (lookupValue as BooleanValue).value) {
-                        return scaleType === "row"
-                            ? createNumber(ri - start.ri)
-                            : createNumber(ci - start.ci);
-                    }
-                    break;
-                }
-                case ValueType.String: {
-                    if (value.value === (lookupValue as StringValue).value) {
-                        return scaleType === "row"
-                            ? createNumber(ri - start.ri)
-                            : createNumber(ci - start.ci);
-                    }
-                    break;
-                }
-            }
-        }
-
-        return createNumber(-1);
+        return createNumber(index);
     };
 
     // MIN (RANGE)
-    export const min = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
-        const cellIds = getCellRangeCellIds(range);
+    export const min = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
 
-        const min = cellIds.reduce<number | undefined>((acc, cellId) => {
-            const value = getHistoryValue(cellId, step, history);
-
-            if (value === undefined || value.type !== ValueType.Number) {
+        const min = range.value.reduce<number | undefined>((acc, value) => {
+            if (value.type !== ValueType.Number) {
                 return acc;
             }
 
             const numberValue = value as NumberValue;
+
             return acc === undefined
                 ? numberValue.value
                 : Math.min(acc, numberValue.value);
@@ -590,18 +513,16 @@ export namespace Functions {
     };
 
     // MAX (RANGE)
-    export const max = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
-        const cellIds = getCellRangeCellIds(range);
+    export const max = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
 
-        const max = cellIds.reduce<number | undefined>((acc, cellId) => {
-            const value = getHistoryValue(cellId, step, history);
-
-            if (value === undefined || value.type !== ValueType.Number) {
+        const max = range.value.reduce<number | undefined>((acc, value) => {
+            if (value.type !== ValueType.Number) {
                 return acc;
             }
 
             const numberValue = value as NumberValue;
+
             return acc === undefined
                 ? numberValue.value
                 : Math.max(acc, numberValue.value);
@@ -611,14 +532,11 @@ export namespace Functions {
     };
 
     // SUM (RANGE)
-    export const sum = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
-        const cellIds = getCellRangeCellIds(range);
+    export const sum = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
 
-        const sum = cellIds.reduce<number>((acc, cellId) => {
-            const value = getHistoryValue(cellId, step, history);
-
-            if (value === undefined || value.type !== ValueType.Number) {
+        const sum = range.value.reduce<number>((acc, value) => {
+            if (value.type !== ValueType.Number) {
                 return acc;
             }
 
@@ -630,14 +548,11 @@ export namespace Functions {
     };
 
     // PRODUCT (RANGE)
-    export const product = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
-        const cellIds = getCellRangeCellIds(range);
+    export const product = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
 
-        const sum = cellIds.reduce<number>((acc, cellId) => {
-            const value = getHistoryValue(cellId, step, history);
-
-            if (value === undefined || value.type !== ValueType.Number) {
+        const sum = range.value.reduce<number>((acc, value) => {
+            if (value.type !== ValueType.Number) {
                 return acc;
             }
 
@@ -649,15 +564,12 @@ export namespace Functions {
     };
 
     // AVERAGE (RANGE)
-    export const average = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
-        const cellIds = getCellRangeCellIds(range);
+    export const average = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
 
-        const sum = cellIds.reduce<[number, number]>(
-            (acc, cellId) => {
-                const value = getHistoryValue(cellId, step, history);
-
-                if (value === undefined || value.type !== ValueType.Number) {
+        const sum = range.value.reduce<[number, number]>(
+            (acc, value) => {
+                if (value.type !== ValueType.Number) {
                     return acc;
                 }
 
@@ -677,14 +589,11 @@ export namespace Functions {
     };
 
     // COUNT (RANGE)
-    export const count = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
-        const cellIds = getCellRangeCellIds(range);
+    export const count = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
 
-        const count = cellIds.reduce<number>((acc, cellId) => {
-            const value = getHistoryValue(cellId, step, history);
-
-            if (value === undefined || value.type !== ValueType.Number) {
+        const count = range.value.reduce<number>((acc, value) => {
+            if (value.type !== ValueType.Number) {
                 return acc;
             }
 
@@ -695,18 +604,11 @@ export namespace Functions {
     };
 
     // COUNTIF (RANGE, ANY)
-    export const countif = ({ args, step, history }: FuncProps): Value => {
-        const range = expectCellRange(args, 0);
+    export const countif = ({ args }: FuncProps): Value => {
+        const range = expectRange(args, 0);
         const matcher = expectArg(args, 1);
-        const cellIds = getCellRangeCellIds(range);
 
-        const count = cellIds.reduce<number>((acc, cellId) => {
-            const value = getHistoryValue(cellId, step, history);
-
-            if (value === undefined) {
-                return acc;
-            }
-
+        const count = range.value.reduce<number>((acc, value) => {
             if (value.type !== matcher.type) {
                 return acc;
             }
@@ -754,6 +656,31 @@ export namespace Functions {
     export const steps = ({ steps }: FuncProps): Value => {
         return createNumber(steps);
     };
+
+    // TIMERANGE (CELL, NUMBER)
+    export const timerange = ({ args, history, step }: FuncProps): Value => {
+        const cellLiteral = expectCellLiteral(args, 0);
+        const depth = expectNumber(args, 1);
+
+        const cellId = SpreadsheetUtils.cellCoordsToId(cellLiteral.value);
+
+        const startStep = Math.max(0, step - depth.value);
+        const endStep = step;
+
+        const values: Value[] = [];
+
+        for (
+            let currentStep = startStep;
+            currentStep <= endStep;
+            currentStep++
+        ) {
+            const value = getHistoryValue(cellId, currentStep, history);
+            if (!value) continue;
+            values.push(value);
+        }
+
+        return createRange(values);
+    };
 }
 
 export namespace GraphFunctions {
@@ -793,8 +720,8 @@ export namespace GraphFunctions {
     };
 
     // LINE (SHAPE)
-    export const line = ({ args, step, history }: FuncProps): Value => {
-        const parsedPoints = parseArgs(args, step, history);
+    export const line = ({ args }: FuncProps): Value => {
+        const parsedPoints = parseArgs(args);
         const points = parsedPoints.map((_, i) => expectPoint(parsedPoints, i));
         const compostPoints = points.map((point) => [
             point.value.x,
@@ -806,8 +733,8 @@ export namespace GraphFunctions {
     };
 
     // SHAPE (SHAPE)
-    export const shape = ({ args, step, history }: FuncProps): Value => {
-        const parsedPoints = parseArgs(args, step, history);
+    export const shape = ({ args }: FuncProps): Value => {
+        const parsedPoints = parseArgs(args);
         const points = parsedPoints.map((_, i) => expectPoint(parsedPoints, i));
         const compostPoints = points.map((point) => [
             point.value.x,
@@ -925,8 +852,8 @@ export namespace GraphFunctions {
     };
 
     // OVERLAY (SHAPE)
-    export const overlay = ({ args, step, history }: FuncProps): Value => {
-        const parsedShapes = parseArgs(args, step, history);
+    export const overlay = ({ args }: FuncProps): Value => {
+        const parsedShapes = parseArgs(args);
         const shapes = parsedShapes.map(
             (_, i) => expectShape(parsedShapes, i).value,
         );
@@ -1010,12 +937,8 @@ export namespace GraphFunctions {
         return createScale(scale, "CONTINUOUS") as ScaleType;
     };
 
-    export const scaleCategorical = ({
-        args,
-        step,
-        history,
-    }: FuncProps): Value => {
-        const parsedNames = parseArgs(args, step, history);
+    export const scaleCategorical = ({ args }: FuncProps): Value => {
+        const parsedNames = parseArgs(args);
         const names = parsedNames.map(
             (_, i) => expectString(parsedNames, i).value,
         );

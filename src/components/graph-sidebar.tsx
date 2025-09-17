@@ -28,7 +28,11 @@ export const GraphSidebar = () => {
 
         const graph = value as GraphValue;
 
-        c.render(GRAPH_RENDERER_ID, graph.value);
+        try {
+            c.render(GRAPH_RENDERER_ID, graph.value);
+        } catch (e) {
+            console.error("log:", e.toString());
+        }
     }, [graphCellId, spreadsheet.history.history, stepper.step]);
 
     return (

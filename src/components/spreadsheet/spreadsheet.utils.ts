@@ -1,13 +1,12 @@
 import { Evaluator } from "@/runtime/evaluator";
 import {
     BooleanValue,
+    CategoricalCoordValue,
     CellLiteralValue,
-    CellRangeValue,
     NumberValue,
     PointValue,
-    ShapeValue,
-    CategoricalCoordValue,
     ScaleValue,
+    ShapeValue,
     StringValue,
     Value,
     ValueType,
@@ -180,8 +179,8 @@ export namespace SpreadsheetUtils {
                 return getStringValueText(value as StringValue);
             case ValueType.CellLiteral:
                 return getCellLiteralValueText(value as CellLiteralValue);
-            case ValueType.CellRange:
-                return getCellRangeValueText(value as CellRangeValue);
+            case ValueType.Range:
+                return getRangeValueText();
             case ValueType.Point:
                 return getPointValueText(value as PointValue);
             case ValueType.CategoricalCoord:
@@ -216,9 +215,8 @@ export namespace SpreadsheetUtils {
         return SpreadsheetUtils.cellCoordsToId({ ri, ci });
     };
 
-    export const getCellRangeValueText = (value: CellRangeValue) => {
-        const { start, end } = value.value;
-        return `${SpreadsheetUtils.cellCoordsToId({ ri: start.ri, ci: start.ci })}:${SpreadsheetUtils.cellCoordsToId({ ri: end.ri, ci: end.ci })}`;
+    export const getRangeValueText = () => {
+        return "TIMERANGE";
     };
 
     export const getPointValueText = (value: PointValue) => {
