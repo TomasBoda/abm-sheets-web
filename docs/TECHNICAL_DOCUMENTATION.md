@@ -433,6 +433,54 @@ The topological sorting algorithm first builds a dependency graph. The dependenc
 
 After a topological ordering has been found, the sorted cells are passed to the `Evaluator` module for evaluation.
 
+## Database Schema
+
+ABM Sheets uses a remote [Supabase](https://supabase.com) database instance for database and authentication.
+
+### Authentication
+
+Users can use ABM Sheets either as authenticated or unauthenticated users. The user can create an account on the `/auth/sign-up` page using their e-mail address and a password. Users with an existing account can sign in on the `/auth/sign-in` page. Once the user is authenticated, they can create, update or delete their spreadsheet projects, which are stored in the remote Supabase instance.
+
+Supabase provides user authentication out-of-the-box. It must be enabled and configured on the Supabase dashboard.
+
+### Projects
+
+The user-created projects are stored in the remote Supabase instance in the `public.projects` table. It has the following schema:
+
+```sql
+CREATE TABLE public.projects (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    user_id uuid NOT NULL DEFAULT auth.uid(),
+    title text NOT NULL,
+    text text,
+    data jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT now(),
+    CONSTRAINT projects_pkey PRIMARY KEY (id),
+    CONSTRAINT projects_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+```
+
+Each project has a unique `id` as well as `user_id` which is the `id` of the user who is the owner of this project. Furthermore, each project has a mandatory `title` and an optional `text` description. The `data` column contains a raw `JSON` object of the spreadsheet data, which is composed by the front-end part of ABM Sheets.
+
+### Logging
+
+ABM Sheets integrates a simple logging system, which fires events upon user interaction with the spreadsheet interface. These include for instance clicking on a cell, inputting a formula to a cell or using toolbar options. Logs are stored as rows in the `public.log` table.
+
+```sql
+CREATE TABLE public.logs (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    session_id uuid NOT NULL,
+    user_id uuid NOT NULL DEFAULT auth.uid(),
+    type text NOT NULL,
+    value text NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT now(),
+    CONSTRAINT logs_pkey PRIMARY KEY (id),
+    CONSTRAINT logs_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+```
+
+Each log has its unique `id` as well as `user_id` which is the `id` of the user who is logged in and produces the log. Furthermore, the front-end generates a unique `session_id` query parameter in the URL which is used for differentiating between sessions, or when a user is not authenticated. Finally, each log has a specific `type` (e.g. `cell-click`) and `value` (e.g. cell ID - `B12`).
+
 ## Installation & Deployment Guide
 
 - step-by-step installation
