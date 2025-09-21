@@ -464,7 +464,7 @@ Each project has a unique `id` as well as `user_id` which is the `id` of the use
 
 ### Logging
 
-ABM Sheets integrates a simple logging system, which fires events upon user interaction with the spreadsheet interface. These include for instance clicking on a cell, inputting a formula to a cell or using toolbar options. Logs are stored as rows in the `public.log` table.
+ABM Sheets integrates a simple logging system, which fires events upon user interaction with the spreadsheet interface. These include for instance clicking on a cell, inputting a formula to a cell or using toolbar options. Logs are stored as rows in the `public.logs` table.
 
 ```sql
 CREATE TABLE public.logs (
@@ -483,38 +483,54 @@ Each log has its unique `id` as well as `user_id` which is the `id` of the user 
 
 ## Installation & Deployment Guide
 
+A running instance of ABM Sheets is deployed on [this link](https://abm-sheets-web.vercel.app). It contains the most up-to-date changes of the `main` branch on [GitHub](https://github.com/TomasBoda/abm-sheets-web).
+
 - step-by-step installation
 - how to configure and run the system
 - deployment instructions (e.g. Docker, cloud setup)
 
-ABM Sheets is a web-based application built using TypeScript and the Next.js framework. It uses Node.js as a runtime and Webpack for bundling.
-
-### Deployed Version
-
-ABM Sheets is deployed on the [this link](https://abm-sheets-web.vercel.app/).
-
 ### Running Locally
 
-To run ABM Sheets locally, following requirements must be met
+To set up and run ABM Sheets locally, follow the instructions below:
 
-- Node.js version `20` or higher must be installed on the computer
-- clone the project `git clone https://github.com/TomasBoda/abm-sheets-web.git`
-- navigate to the project folder `cd abm-sheets-web`
-- install dependencies `npm install`
-- run the web application `npm run dev`
+1. install [Node.js](https://nodejs.org/) version `18.8` or higher (as specified in the [Next.js Documentation](https://nextjs.org/docs/app/getting-started/installation))
+2. clone the project `git clone https://github.com/TomasBoda/abm-sheets-web.git`
+3. navigate to the project's folder `cd abm-sheets-web`
+4. install dependencies `npm install`
+5. run the project `npm run dev`
 
-ABM Sheets uses Supabase for database and authentication. The credentials for Supabase are stored in the `.env` file in the project's root directory. In order to run ABM Sheets locally, the user needs to have a running local Supabase instance on their computer and the following fields set in the `.env` file:
+In order for the application to work properly, a Supabase instance must be connected to the web application. The instance can be created either locally or remotely. In either case, create an `.env` file in the project's root with the following structure:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
+#### Remote Supabase
+
+To create a remote Supabase instance, follow the instructions below:
+
+1. navigate to the [Supabase](https://supabase.com/) website
+2. create an account or sign in to an existing account
+3. create a new organization
+4. create a new project in the organization
+5. create the `projects` and `log` table based on the above database schema
+6. set up user authentication using e-mail and password credentials
+7. add `SUPABASE_URL` and `SUPABASE_ANON_KEY` to the `.env` file in the ABM Sheets project
+
+#### Local Instance
+
+To create a local Supabase instance, follow the instructions below:
+
+1. follow the steps on this [Supabase Docs Page](https://supabase.com/docs/guides/local-development)
+2. open the Supabase dashboard locally on `http://localhost:54323`
+3. create the `projects` and `log` table based on the above database schema
+4. set up user authentication using e-mail and password credentials
+5. add `SUPABASE_URL` and `SUPABASE_ANON_KEY` to the `.env` file in the ABM Sheets project
+
 ## Testing & Quality Assurance
 
-- test strategy (unit tests, integration tests, user testing)
-- tools/frameworks used
-- test cases & results
+No automated tests have been created for this project.
 
 ## Limitations & Future Work
 
