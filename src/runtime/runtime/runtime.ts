@@ -52,6 +52,7 @@ export class Runtime {
         ["POWER", Functions.power],
         ["MMIN", Functions.mmin],
         ["MMAX", Functions.mmax],
+        ["NORM", Functions.norm],
         ["PI", Functions.pi],
         ["SIN", Functions.sin],
         ["COS", Functions.cos],

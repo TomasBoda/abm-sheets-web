@@ -46,6 +46,7 @@ export const supportedFunctions = [
     "POWER",
     "MMIN",
     "MMAX",
+    "NORM",
     "PI",
     "SIN",
     "COS",
@@ -339,6 +340,22 @@ export namespace Functions {
         const value = expectNumber(args, 0);
         const result = Math.tan(value.value);
 
+        return createNumber(result);
+    };
+
+    // NORM ()
+    export const norm = (): Value => {
+        const randNorm = () => {
+            let u = 0;
+            let v = 0;
+
+            while (u === 0) u = Math.random();
+            while (v === 0) v = Math.random();
+
+            return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        };
+
+        const result = randNorm();
         return createNumber(result);
     };
 

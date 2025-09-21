@@ -675,6 +675,8 @@ const Cell = styled(SpreadsheetCell)<{
     overflow: hidden;
     text-overflow: ellipsis;
 
+    cursor: default;
+
     ${({ $selected }) =>
         $selected &&
         `
