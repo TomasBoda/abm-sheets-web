@@ -28,21 +28,26 @@ Spreadsheets are powerful tools for data analysis and modeling, but they are inh
 
 ### Landing Page
 
-Upon navigating to the [ABM Sheets homepage](https://abm-sheets-web.vercel.app), you will see a welcome screen.
+Upon opening up [ABM Sheets](https://abm-sheets-web.vercel.app), you will see the landing page with a brief info about ABM Sheets and two buttons.
 
 ![landing_page](/docs/screenshots/landing-page.png)
 
-To navigate to the spreadsheet, click the `Get started` button.
+To navigate to the spreadsheet, click on the `Get started` button.
 
 ### Spreadsheet Page
 
-Upon navigating to the `/spreadsheet` page, you will see an empty spreadsheet with a toolbar at the top of the screen.
+Upon navigating to the spreadsheet page, you will see an empty spreadsheet with a toolbar at the top of the page.
 
 ![spreadsheet_page](/docs/screenshots/tab-simulation.png)
 
 #### Toolbar
 
-In the toolbar, you can see a navigation menu with five options:
+The toolbar offers various actions to the user. It allows the user to change the styling of specific cells, control the simulation or import and export their projects. On the top of the toolbar, there is a navigation menu, where each item groups together a set of controls that are related.
+
+- `Home` - provides controls for styling spreadsheet cells
+- `Simulation` - provides controls for the simulation and time steps
+- `Graph` - opens the sidebar with the graph view
+- `Projects` - opens the sidebar with user's projects
 
 - `Home` - provides options for styling spreadsheet cells
 - `Simulation` - provides simulation controls
