@@ -83,12 +83,12 @@ Another major feature is the integration of a composable data visualisation libr
 
 Lastly, some of the minor features include user authentication and ability to create, update, delete and share user projects.
 
-1. [Discrete Time](#discrete-time)
+1. [Built-in Time](#built-in-time)
 2. [Cell References](#cell-references)
 3. [Time Ranges](#time-ranges)
 4. [Composable Graphs](#composable-graphs)
 
-#### Discrete Time
+#### Built-in Time
 
 The core innovation in ABM Sheets is the integration of discrete time as a native feature of the spreadsheet environment. This addition introduces several fundamental changes to how cells behave and how formulas are interpreted.
 
