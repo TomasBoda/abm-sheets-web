@@ -290,9 +290,21 @@ The following sections describe the architecture and design of the ABM Sheets so
 
 ### 5.1 Component Diagram
 
-The ABM Sheets web application encapsulates both the spreadsheet interface and the evaluation engine. Therefore, the evaluation engine runs purely in the browser. However, the front-end and the engine are separate modules that communicate using a shared interface. The evaluation engine exposes the `Evaluator` module, that receives an array of cells the total number of steps to evaluate. It returns the evaluated cell values across the time steps. The database module is a remote Supabase instance and is accessed by the front-end part of ABM Sheets using its native JavaScript library.
+The ABM Sheets `Web Application` module encapsulates both the spreadsheet interface and the evaluation engine. The engine therefore runs purely in the browser, however, it cannot be considered as part of the front-end. The engine exposes the `Evaluator` module that is used as communication channel between the engine and the spreadsheet interface.
+
+The `Database` module is a remote [Supabase](https://supabase.com) instance. All database requests are handled on the front-end by the [supabase-js](https://www.npmjs.com/package/@supabase/supabase-js/v/2.41.0) client library.
 
 ![component_diagram](./diagrams/component_diagram.png)
+
+### 5.2 Class Diagram
+
+The `SpreadsheetPage` renders both the spreadsheet interface (`SpreadsheetWrapper`) as well as the toolbar and sidebar. The `SpreadsheetWrapper` component handles all spreadsheet client-side logic, such as keyboard/mouse handlers, and uses `SpreadsheetComponent` under the hood to handle the rendering of the spreadsheet grid.
+
+The `useSpreadsheet` hook is responsible for handling all spreadsheet-related logic and holds the current state of the spreadsheet (e.g. cell data, cell styling, etc.). It is reused across the front-end in both the primary spreadsheet grid as well as the toolbar and sidebar. The `useSelection` hook is used primarily in the `SpreadsheetWrapper` and handles cell-selection logic.
+
+Last but not least, the `Evaluator` class is responsible for running the evaluation engine for the spreadsheet cells and returns the evaluated results back to the `SpreadsheetWrapper`. In between, there are two functions (part of the same concept) that perform topological sorting of cells before passing them to the `Evaluator`.
+
+![class_diagram](./diagrams/class_diagram.png)
 
 ## 6. Implementation Details
 
@@ -590,17 +602,17 @@ After a topological ordering has been found, the sorted cells are passed to the 
 
 ## 7. Database Schema
 
-ABM Sheets uses a remote [Supabase](https://supabase.com) database instance for database and authentication.
+ABM Sheets uses a remote [Supabase](https://supabase.com) instance for database and authentication.
 
 ### 7.1 Authentication
 
-Users can use ABM Sheets either as authenticated or unauthenticated users. The user can create an account on the `/auth/sign-up` page using their e-mail address and a password. Users with an existing account can sign in on the `/auth/sign-in` page. Once the user is authenticated, they can create, update or delete their spreadsheet projects, which are stored in the remote Supabase instance.
+Users can use ABM Sheets either with or without authentication. Creating an account provides users the benefit of saving projects to the database, which can be retrieved from anywhere using the account. Users can sign up for ABM Sheets using only their e-mail address and password.
 
-Supabase provides user authentication out-of-the-box. It must be enabled and configured on the Supabase dashboard.
+ABM Sheets uses the built-in authentication provider (e-mail, password) by [Supabase](https://supabase.com).
 
 ### 7.2 Projects
 
-The user-created projects are stored in the remote Supabase instance in the `public.projects` table. It has the following schema:
+User-created projects are stored in the `public.projects` table. This table has the following schema:
 
 ```sql
 CREATE TABLE public.projects (
@@ -615,11 +627,13 @@ CREATE TABLE public.projects (
 );
 ```
 
-Each project has a unique `id` as well as `user_id` which is the `id` of the user who is the owner of this project. Furthermore, each project has a mandatory `title` and an optional `text` description. The `data` column contains a raw `JSON` object of the spreadsheet data, which is composed by the front-end part of ABM Sheets.
+Each project has a unique, randomly generated `id`. The `user_id` column holds the `id` of the authenticated user who is the owner (creator) of this project. Each project has a mandatory `title` and an optional `text` attributes used for describing the project. The `data` column contains a raw `JSON` object representing the state of the spreadsheet. The structure of this object is defined by the front-end part of ABM Sheets.
 
 ### 7.3 Logging
 
-ABM Sheets integrates a simple logging system, which fires events upon user interaction with the spreadsheet interface. These include for instance clicking on a cell, inputting a formula to a cell or using toolbar options. Logs are stored as rows in the `public.logs` table.
+ABM Sheets integrates a simple logging system, which fires events upon user interaction with the spreadsheet. These might include clicking on a cell, typing text to the formula field or using toolbar options.
+
+Logs are stored in the `public.logs` table. This table has the following schema:
 
 ```sql
 CREATE TABLE public.logs (
@@ -634,13 +648,13 @@ CREATE TABLE public.logs (
 );
 ```
 
-Each log has its unique `id` as well as `user_id` which is the `id` of the user who is logged in and produces the log. Furthermore, the front-end generates a unique `session_id` query parameter in the URL which is used for differentiating between sessions, or when a user is not authenticated. Finally, each log has a specific `type` (e.g. `cell-click`) and `value` (e.g. cell ID - `B12`).
+Each log has a unique `id`. The `user_id` column holds the `id` of the authenticated user who is the creator of this project. The `session_id` column represents a randomly generated `UUID` by the user's browser to identify individual user sessions. Each log has a specific `type` (e.g. `cell-click`) and `value` (additional data for the event, e.g. cell ID).
 
 ## 8. Installation & Deployment Guide
 
 ### 8.1 Deployed Version
 
-A running instance of ABM Sheets is deployed on [this link](https://abm-sheets-web.vercel.app). It contains the most up-to-date changes of the `main` branch on [GitHub](https://github.com/TomasBoda/abm-sheets-web).
+A running instance of ABM Sheets is deployed on [this link](https://abm-sheets-web.vercel.app). It contains the most up-to-date changes of ABM Sheets `main` branch on [GitHub](https://github.com/TomasBoda/abm-sheets-web).
 
 ### 8.2 Running Locally
 
@@ -652,7 +666,7 @@ To set up and run ABM Sheets locally, follow the instructions below:
 4. install dependencies `npm install`
 5. run the project `npm run dev`
 
-In order for the application to work properly, a Supabase instance must be connected to the web application. The instance can be created either locally or remotely. In either case, create an `.env` file in the project's root with the following structure:
+In order for the application to work properly, a [Supabase](https://supabase.com) instance must be connected to the web application. You can either create a local or a remote instance. In either case, you need to create the `.env` file in the project's root with the following structure:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=...
@@ -663,7 +677,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
 To create a remote Supabase instance, follow the instructions below:
 
-1. navigate to the [Supabase](https://supabase.com/) website
+1. navigate to the [Supabase](https://supabase.com) website
 2. create an account or sign in to an existing account
 3. create a new organization
 4. create a new project in the organization
