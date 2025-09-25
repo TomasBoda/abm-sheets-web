@@ -24,6 +24,10 @@ Spreadsheets are powerful tools for data analysis and modeling, but they are inh
 
 ## 2. Introduction
 
+1. [Purpose of the Software](#21-purpose-of-the-software)
+2. [Scope of the System](#22-scope-of-the-system)
+3. [Target Audience](#23-target-audience)
+
 ### 2.1 Purpose of the Software
 
 Spreadsheets are among the most widely used tools for data analysis, planning, and modeling due to their flexibility, accessibility and low barrier to entry. However, their core structural simplicity also introduces limitations for representing models that evolve over time or extend beyond the two dimensions of rows and columns.
@@ -44,6 +48,11 @@ ABM Sheets is designed primarily for researches, scientists and people with at l
 
 ## 3. System Overview
 
+1. [High-level Architecture](#31-high-level-architecture)
+2. [Technology Stack](#32-technology-stack)
+3. [Main Features](#33-main-features)
+4. [Language Reference](#34-language-reference)
+
 ### 3.1 High-level Architecture
 
 ABM Sheets is a web-based application written in [TypeScript](https://www.typescriptlang.org). It consists of three high-level components:
@@ -54,7 +63,15 @@ ABM Sheets is a web-based application written in [TypeScript](https://www.typesc
 
 ![high_level_architecture_diagram](./diagrams/high_level_architecture_diagram.png)
 
-### 3.2 Main Features
+### 3.2 Technology Stack
+
+ABM Sheets is built in [TypeScript](https://www.typescriptlang.org) using the following tools and frameworks:
+
+- [Next.js](https://nextjs.org/) for front-end
+- [Styled Components](https://styled-components.com/) for styling
+- [Supabase](https://supabase.com/) for database and authentication
+
+### 3.3 Main Features
 
 The built-in support for discrete time results in several major additions to the spreadsheet:
 
@@ -65,6 +82,11 @@ The built-in support for discrete time results in several major additions to the
 Another major feature is the integration of a composable data visualisation library [Compost.js](https://compostjs.github.io/compost), which enables users to compose custom graphs directly in the spreadsheet using cells and formulas.
 
 Lastly, some of the minor features include user authentication and ability to create, update, delete and share user projects.
+
+1. [Discrete Time](#discrete-time)
+2. [Cell References](#cell-references)
+3. [Time Ranges](#time-ranges)
+4. [Composable Graphs](#composable-graphs)
 
 #### Discrete Time
 
@@ -165,7 +187,7 @@ Now, we can create a dynamic point object and compose a line from it's time rang
 
 The cell `B2` now contains a line graph shape with dynamic size that changes as we go forward in time.
 
-### 3.3 Language Reference
+### 3.4 Language Reference
 
 ABM Sheets formula language provides a subset of core functions from [Microsoft Excel](https://www.microsoft.com/en-us/microsoft-365/excel). This set of functions work in the same manner and accept the same arguments. In addition, ABM Sheets provides several new functions for handling the discrete time as well as for composing dynamic [Compost.js](https://compostjs.github.io/compost) graphs.
 
@@ -267,14 +289,6 @@ ABM Sheets formula language provides a subset of core functions from [Microsoft 
 
 - `RENDER (SHAPE)` - render the given shape onto the graph
 
-### 3.4 Technology Stack
-
-ABM Sheets is built in [TypeScript](https://www.typescriptlang.org) using the following tools and frameworks:
-
-- [Next.js](https://nextjs.org/) for front-end
-- [Styled Components](https://styled-components.com/) for styling
-- [Supabase](https://supabase.com/) for database and authentication
-
 ## 4. System Requirements
 
 - hardware & software requirements
@@ -287,6 +301,9 @@ ABM Sheets is built in [TypeScript](https://www.typescriptlang.org) using the fo
 - key design decisions & rationale
 
 The following sections describe the architecture and design of the ABM Sheets software system.
+
+1. [Component Diagram](#51-component-diagram)
+2. [Class Diagram](#52-class-diagram)
 
 ### 5.1 Component Diagram
 
@@ -312,6 +329,10 @@ The core of ABM Sheets is composed of the following two modules:
 
 - **front-end** - spreadsheet interface, toolbar, sidebar, graph, user interactions
 - **engine** - parses and evaluates cell formulas (lexer, parser, runtime, evaluator)
+
+1. [Spreadsheet](#61-spreadsheet)
+2. [Engine](#62-engine)
+3. [Topological Sorting](#63-topological-sorting)
 
 ### 6.1 Spreadsheet
 
@@ -604,6 +625,10 @@ After a topological ordering has been found, the sorted cells are passed to the 
 
 ABM Sheets uses a remote [Supabase](https://supabase.com) instance for database and authentication.
 
+1. [Authentication](#71-authentication)
+2. [Projects](#72-projects)
+3. [Logging](#73-logging)
+
 ### 7.1 Authentication
 
 Users can use ABM Sheets either with or without authentication. Creating an account provides users the benefit of saving projects to the database, which can be retrieved from anywhere using the account. Users can sign up for ABM Sheets using only their e-mail address and password.
@@ -651,6 +676,9 @@ CREATE TABLE public.logs (
 Each log has a unique `id`. The `user_id` column holds the `id` of the authenticated user who is the creator of this project. The `session_id` column represents a randomly generated `UUID` by the user's browser to identify individual user sessions. Each log has a specific `type` (e.g. `cell-click`) and `value` (additional data for the event, e.g. cell ID).
 
 ## 8. Installation & Deployment Guide
+
+1. [Deployed Version](#81-deployed-version)
+2. [Running Locally](#82-running-locally)
 
 ### 8.1 Deployed Version
 
