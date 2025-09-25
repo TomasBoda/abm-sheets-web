@@ -26,45 +26,45 @@ Spreadsheets are powerful tools for data analysis and modeling, but they are inh
 
 ### 2.1 Purpose of the Software
 
-Spreadsheets are among the most widely used tools for data analysis, planning, and modeling due to their flexibility, accessibility, and low barrier to entry. They offer a familiar interface based on a two-dimensional grid of cells, which makes them ideal for a broad range of applications, from financial modeling to project management and scientific calculations. However, their core structural simplicity also introduces limitations, particularly when representing models that extend beyond two dimensions.
+Spreadsheets are among the most widely used tools for data analysis, planning, and modeling due to their flexibility, accessibility and low barrier to entry. However, their core structural simplicity also introduces limitations for representing models that evolve over time or extend beyond the two dimensions of rows and columns.
 
-ABM Sheets focuses on extending the traditional spreadsheet paradigm with discrete time. There are multiple domains where discrete time simulations are ubiquitous. Those include physics simulations, agent-based models or financial market analyses. The typical way of modeling time in spreadsheets is to reserve one of the available dimensions (e.g. rows) for modeling time steps. However, this approach leaves the spreadsheet with only one dimension for other aspects of the model, eventually making it difficult to model more complex domains.
+ABM Sheets aims to extend the traditional spreadsheet paradigm with discrete time. Many domains, such as physics simulations, agent-based models, or financial markets rely on time-based processes. Conventional spreadsheets typically allocate one dimension (e.g. rows) to represent time steps, leaving only one dimension for all other aspects of the model. However, this quickly becomes restrictive for more complex domains.
 
-In ABM Sheets, cells can reference themselves, calculating their new values from values in the previous time steps. The user can step through the time steps using button controls and see the cell contents recalculate and change with time. This simple extension introduces a new dimension to the spreadsheet, extending its expressive power and opening doors to new kinds of simulations, which are difficult to model in traditional spreadsheet interfaces.
+In ABM Sheets, cells can reference their own past values, enabling them to update across discrete time steps. Users can step forward through time using dedicated controls and observe the spreadsheet recalculate dynamically. This simple but powerful extension adds a new temporal dimension to spreadsheets, expanding their expressive power and opening doors to new types of simulations that are difficult to model in traditional spreadsheet interfaces.
 
 ### 2.2 Scope of the System
 
-ABM Sheets aims to resemble traditional spreadsheet interfaces, such as Micorosft Excel or Google Sheets. However, it does not aim to fully replace all functionality offered by current spreadsheet software. It offers a core subset of features of traditional spreadsheet systems and an essential subset of functions offered by their formula languages. However, some advanced features might not be available. Furthermore, due to the built-in support for discrete time, several additions in terms of features and language functions are introduced to fully support the integration of time in ABM Sheets.
+ABM Sheets aims to copy the look and feel of conventional spreasheet interfaces, such as [Microsoft Excel](https://www.microsoft.com/en-us/microsoft-365/excel) or [Google Sheets](https://workspace.google.com/products/sheets/), while focusing on the core subset of their functionality and language features. It is not intended to be a full replacement of existing spreadsheet software, rather as a specialized tool for time-based modeling. Therefore, some advanced features might not be available.
+
+In addition to standard spreadsheet features, ABM Sheets introduces several new language constructs and functions to fully integrate the notion of discrete time into the spreadsheet paradigm. These extensions allow users to reference past cell values, work with time ranges and define temporal relationships between cells.
 
 ### 2.3 Target Audience
 
-ABM Sheets is aimed primarily for scientists with at least some background in spreadsheets, simulations, modeling, prototyping, mathematics, computer science, economics or physics. It is not aimed for users with no technical background whatsoever, since it might be overwhelming to understand the notion of time and its behaviour without understanding spreadsheets or other form of interactive programming systems.
+ABM Sheets is designed primarily for researches, scientists and people with at least some background in spreadsheets, simulations, modeling, prototyping, mathematics, computer science, economics or physics. It is **not intended** for users with no technical experience whatsoever, since understanding the integration of time requires familiarity with spreadsheets or other form of interactive programming systems.
 
 ## 3. System Overview
 
 ### 3.1 High-level Architecture
 
-ABM Sheets is a web-based application written in [TypeScript](https://www.typescriptlang.org). It is composed of three main components:
+ABM Sheets is a web-based application written in [TypeScript](https://www.typescriptlang.org). It consists of three high-level components:
 
-- **front-end** - provides the spreadsheet interface, toolbar and handles user interaction
-- **engine** - parses and evaluates cell formulas (lexer, parser, runtime, evaluator)
-- **database** - used for authentication, logging and storing user-created projects
+- **front-end** - spreadsheet interface, toolbar, graphs, user interactions
+- **engine** - evaluates cell formulas (lexical & semantic analysis, runtime)
+- **database** - authentication, user projects, logging
+
+![high_level_architecture_diagram](./diagrams/high_level_architecture_diagram.png)
 
 ### 3.2 Main Features
 
-The core innovation that ABM Sheets offers is the built-in support for discrete time, which results in the following additions:
+The built-in support for discrete time results in several major additions to the spreadsheet:
 
-- ability to self-reference a cell without recursive evaluation errors
-- ability to step through time steps and see changes in the spreadsheet
-- introduction of time ranges as an extension to cell ranges
+- ability to **self-reference a cell** without recursive evaluation errors
+- ability to **step through time** steps and see changes in the spreadsheet
+- introduction of **time ranges** as an extension to cell ranges
 
-Some of the minor features include:
+Another major feature is the integration of a composable data visualisation library [Compost.js](https://compostjs.github.io/compost), which enables users to compose custom graphs directly in the spreadsheet using cells and formulas.
 
-- user authentication
-- persistance of user-created projects (create, update, delete)
-- sharing projects using a dedicated project URL
-
-Last but not least, ABM Sheets integrates a composable graphing library [Compost.js](https://compostjs.github.io/compost). It allows the user to create custom graphs using a functional programming paradigm directly in the spreadsheet interface.
+Lastly, some of the minor features include user authentication and ability to create, update, delete and share user projects.
 
 #### Discrete Time
 
@@ -74,24 +74,24 @@ Most notably, cells in ABM Sheets are allowed to reference themselves within the
 
 Each cell in ABM Sheets can therefore have one or two formulas:
 
-- **default formula** (optional) - defines the cell's value at the initial time step (t = 1)
-- **primary formula** (mandatory) - defines the cell's value in all subsequent time steps (t > 1), potentially referencing its own prior state or the states of other cells
+- **default formula** (optional) - defines the cell's value at the initial time step (`t = 1`)
+- **primary formula** (mandatory) - defines the cell's value in all subsequent time steps (`t > 1`), potentially referencing its own prior state or the states of other cells
 
 If a cell attempts to reference itself without the default formula defined, the evaluation results in an error due to the absence of an initial state.
 
 To define both formulas within a single cell, ABM Sheets uses a dual-assignment syntax - the first `=` introduces the default formula, and the second `=` introduces the primary formula. If only one formula is provided, it is treated as the primary formula and applies uniformly across all time steps without referencing prior state.
 
-To define a simple counter that starts at `1` and increments by `1` at each time step, the formula in cell `A1` could be `= 1 = A1 + 1`:
+To define a simple counter that starts at `0` and increments by `1` at each time step, the formula in cell `A1` could be `= 0 = A1 + 1`:
 
-- at time step `1`, `A1` evaluates to `1` (the default formula)
-- at time step `2`, `A1` evaluates to `1 + 1 = 2` (the primary formula)
-- at time step `3`, `A1` evaluates to `2 + 1 = 3`, and so on
+- at time step `1`, `A1` evaluates to `0` (the default formula)
+- at time step `2`, `A1` evaluates to `0 + 1 = 1` (the primary formula)
+- at time step `3`, `A1` evaluates to `1 + 1 = 2`, and so on
 
 #### Cell References
 
 In a spreadsheet model where cells reference themselves arbitrarily, a mechanism to ensure that all cells are evaluated in correct and consistent order must be enforced. For instance, if `A1` references `B1`, the system must make sure to evaluate `B1` prior to `A1` in order for `A1` to have the most up-to-date value of `B1`.
 
-To enforce this ordering, ABM Sheets employs a topological sorting algorithm that analyzes cell dependencies and determines a valid evaluation sequence. This guarantees that each cell is computed only after all the cells it depends on have been evaluated.
+To enforce this ordering, ABM Sheets employs a **topological sorting algorithm** that analyzes cell dependencies and determines a valid evaluation sequence. This guarantees that each cell is computed only after all the cells it depends on have been evaluated.
 
 However, this approach can encounter issues when cyclic dependencies exist — when two or more cells depend on each other either directly or indirectly. For instance:
 
@@ -109,30 +109,29 @@ This mechanism allows ABM Sheets to support recursive and interdependent cell lo
 
 #### Time Ranges
 
-In traditional spreadsheet interfaces, some functions accept cell ranges as arguments. These are usually defined using the syntax `<CELL_ID>:<CELL_ID>`, e.g. `A5:A15`. ABM Sheets builds on this idea and further extends ranges to support time ranges as well.
+Conventional spreadsheet interfaces usually provide a way to specify cell ranges using the `A5:B10` syntax. These are usually used as arguments to functions that work with cell ranges, such as `MIN`, `MAX`, `SUM`, `AVERAGE`, etc. With the addition of built-in discrete time, this naturally opens the question whether we can utilise these functions for time as well.
 
-A cell range typically evaluates to an array of cell references that are within the cell range bounds. For instance, cell range `A5:A10` evaluates to a list of cells `A5`, `A6`, `A7`, `A8`, `A9` and `A10`. These cell references are then evaluated to values that these cells hold, eventually resulting in an array of values. Since the core inovation in ABM Sheets is built-in time, we have explored the idea of generalizing ranges in spreadsheets to time ranges as well, meaning an array of historical values of a given cell.
+A cell range typically evaluates to an array of cell references that are within the cell range bounds. These cell references are then evaluated, resulting in an array of calculated values. ABM Sheets builds on this idea by generalizing the concept of ranges, which results in the ability to use cell ranges and time ranges interchangeably.
 
-ABM Sheets provides a new language function `TIMERANGE`, which accepts in a cell reference and a number of time steps to reference. This produces an array of values, same as the traditional cell range literal and these values correspond to a subset of historical values of the given cell, spanning from the current time step to the time step of the second argument. Thanks to this, ABM Sheets can work with ranges as general objects, either as results of cell range literals or timelapse objects. As a result, all functions that take cell range arguments, such as `SUM`, `AVERAGE`, `MIN`, etc. now accept these generalized range values, which they are now able to evaluate without any differences.
+ABM Sheets provides a new function `TIMERANGE (CELL, NUMBER)`, which accepts a cell reference and a number of time steps to reference. This function takes a cell range and evaluates returns its values from the last `N` time steps. This naturally results in an array of calculated values, same as with cell ranges. This addition results in a generalized range object for both cell ranges and time ranges, which can be used in all functions that accept cell ranges in traditional spreadsheet interfaces. For instance, to calculate the average value of cell `B5` in the last `10` time steps, we can utilise the following formula: `= AVERAGE(TIMERANGE(B5, 10))`.
 
-For instance, imagine a cell that represents a value of a trading asset (e.g. a stock or a cryptocurrency) and changes in time thanks to the ABM Sheets' built-in time support. Using time ranges, we can calculate the average value of the given asset in the last 10 time steps using the `AVERAGE` function as follows:
+We see the introduction of time ranges as a natural addition to ABM Sheets in order to intergate time as a native concept of the spreadsheet interface, making it fully compliant with the spreadsheet paradigm.
 
-- `B1` holds the asset value
-- `B2` calculates the average asset value in the last 10 time steps - `= AVERAGE(TIMERANGE(B1, 10))`
+#### Composable Graphs
 
-We see the introduction of time ranges as a natural addition to ABM Sheets to intergate and work with time as a built-in feature of the spreadsheet interface directly using the well-know spreadsheet language formulas.
+ABM Sheets provides a way to create graphs based on the data in the spreadsheet. For this, it integrates a composable data visualisation library [Compost.js](https://compostjs.github.io/compost), which enables users to compose customk graphs directly in the spreadsheet using cells and their formulas.
 
-#### Composable Graph
+The primary construct of Compost is `Shape`, which is a general representation of a graph. Compost provides a set of functions, which can be divided into five categories:
 
-ABM Sheets integrates [Compost.js](https://compostjs.github.io/compost), which is a composable graphing library for JavaScript. It allows the user to create custom graphs using the functional programming paradigm directly inside the spreadsheet interface.
+1. functions that produce `Shape` objects
+2. functions that specify visual properties of `Shape` objects
+3. functions that produce or transform `Scale` objects
+4. functions that combine graph axes and `Shape` objects
+5. functions that render the composed graphs
 
-[Compost.js](https://compostjs.github.io/compost) provides a set of functions, where each function returns a generic `Shape` objects that represents a graph. These functions can be nested into each other to produce a full graph by modifying specific parts of the shapes they produce. For instance, a shape can produce a rectangle, which can be passed to a function that changes its colour and finally being passed to the rendering functions which renders the resulting graph onto a DOM element.
+These functions can be composed together to build custom graphs from data in the spreadsheet. For each Compost function, a corresponding ABM Sheets function is available for use. Let's look at a short example of a line graph in ABM Sheets.
 
-##### Line Graph
-
-Line graph consists of a set of points in a two-dimensional space connected by lines. ABM Sheets provides functions to create points, compose them into a line graph and render this graph. For this, the user is going to need the following functions: `POINT`, `LINE`, `AXES` and `RENDER`.
-
-First, create a set of five points:
+To compose a line graph, we must first generate a set of points to render onto the graph:
 
 - `A1` - `= POINT(1, 5)`
 - `A2` - `= POINT(2, 7)`
@@ -140,81 +139,89 @@ First, create a set of five points:
 - `A4` - `= POINT(4, 2)`
 - `A5` - `= POINT(5, 9)`
 
-Then, combine these five points using a line:
+When we have the points, we can combine them into a line:
 
 - `B1` - `= LINE(A1:A5)`
 
-Then, create the graph's `x` and `y` axes using:
+Then, we create the graph axes and render the line into the graph:
 
 - `B2` - `= AXES("left bottom", B1)`
 
-Finally, render the graph using:
+Finally, we render the resulting graph:
 
 - `B3` - `= RENDER(B2)`
 
-First, the user creates the data for the line graph to render by creating a set of `POINT` objects. These points are then composed into a line using the `LINE` function. The `AXES` function takes this line and puts it in an environment with the `x` axis rendered on the bottom of the graph and the `y` axis rendered on the left side of the graph. Finally, this composed line graph objects is passed to the `RENDER` function, which renders the graph.
+The cell `B3` now holds the composed graph object representing a line graph. Using the ABM Sheets UI, we can open the graph sidebar and observe the rendered graph of cell `B3`.
 
-Each cell that evaluates to the `RENDER(...)` expression holds a separate graph object. These graph objects are then rendered for the user in the graph sidebar. The user can switch between the graphs by selecting the specific cell in the sidebar.
+Note that thanks to time ranges, we can utilise time to render dynamic graphs. Instead of generating a fixed array of points, we can create dynamic line grap:
+
+- `A1` - `= 1 = A1 + 1` (represents the `x` coordinate of the point)
+- `A2` - `= RANDBETWEEN(10, 20) = A2 + (RAND() - 0.5) * 5` (represents the `y` coordinate of the point)
+
+Now, we can create a dynamic point object and compose a line from it's time range values:
+
+- `B1` - `= POINT(A1, A2)`
+- `B2` - `= LINE(TIMERANGE(B1, STEP()))`
+
+The cell `B2` now contains a line graph shape with dynamic size that changes as we go forward in time.
 
 ### 3.3 Language Reference
 
-The ABM Sheets formula language is designed to contain a core subset of functions provided by Microsoft Excel. This set of functions expects the same types of arguments and behave in the same way. On top of that, ABM Sheets provides several new functions that work with the discrete time natively.
+ABM Sheets formula language provides a subset of core functions from [Microsoft Excel](https://www.microsoft.com/en-us/microsoft-365/excel). This set of functions work in the same manner and accept the same arguments. In addition, ABM Sheets provides several new functions for handling the discrete time as well as for composing dynamic [Compost.js](https://compostjs.github.io/compost) graphs.
 
-#### Basic Functions
-
-##### Math Functions
+#### Math Functions
 
 - `ABS (NUMBER)` - returns the absolute value of the given number
 - `FLOOR (NUMBER)` - returns the floor value of the given number
 - `CEILING (NUMBER)` - returns the ceiling value of the given number
-- `POWER (NUMBER, NUMBER)` - returns the first number to the power of the second number
+- `POWER (NUMBER, NUMBER)` - returns the first argument to the power of the second argument
 - `PI ()` - returns the value of PI
-- `SIN (NUMBER)` - returns the sine value of the number in radians
-- `COS (NUMBER)` - returns the cosine value of the number in radians
-- `TAN (NUMBER)` - returns the tangent value of the number in radians
-- `RADIANS (NUMBER)` - converts the number in degrees to radians
-- `LOG (NUMBER)` - returns the natural logarithm of the number
+- `SIN (NUMBER)` - returns the sine value of the given number in radians
+- `COS (NUMBER)` - returns the cosine value of the given number in radians
+- `TAN (NUMBER)` - returns the tangent value of the given number in radians
+- `RADIANS (NUMBER)` - converts the given degrees to radians
+- `LOG (NUMBER)` - returns the natural logarithm of the given number
 - `EXP (NUMBER)` - returns `e` raised to the power of the given number
 - `SQRT (NUMBER)` - returns the square root of the given number
-- `ROUND (NUMBER)` - rounds the first number to decimal places specified by the second number
+- `ROUND (NUMBER, NUMBER)` - rounds the first argument to decimal places specified by the second argument
 - `NORM ()` - returns a random draw from normal distribution
 
-- `RAND ()` - returns a random decimal number between `0` and `1`
-- `RANDBETWEEN( NUMBER, NUMBER)` - returns a random integer number between the first value and the second value
+- `RAND ()` - returns a random floating number between `0` and `1`
+- `RANDBETWEEN (NUMBER, NUMBER)` - returns a random integer in given range
 - `CHOICE (...ANY)` - returns a random value from the given arguments
 
 - `MIN (RANGE)` - returns the minimum numeric value in the given range
 - `MAX (RANGE)` - returns the maximum numeric value in the given range
 - `SUM (RANGE)` - returns the sum of numeric values in the given range
-- `PRODUCT (RANGE)` - returns the product of numeric values in the given range
-- `AVERAGE (RANGE)` - returns the average of numeric values in the given range
-- `COUNT (RANGE)` - counts the number of cells with a numeric value in the given range
-- `COUNTIF (RANGE, ANY)` - counts the number of cells with the value provided in the second argument in the given range
+- `PRODUCT (RANGE)` - returns the product of the numeric values in the given range
+- `AVERAGE (RANGE)` - returns the average of the numeric values in the given range
+- `COUNT (RANGE)` - counts the number of cells with numeric values in the given range
+- `COUNTIF (RANGE, ANY)` - counts the number of cells in the given range whose value matches with the second argument
 
-##### Logical Functions
+#### Logical Functions
 
-- `IF (BOOLEAN, ANY, ANY)` - a conditional expression with a boolean condition, a consequent value and an alternate value
+- `IF (BOOLEAN, ANY, ANY)` - returns the second argument if the condition is true, otherwise the third argument
 - `AND (...BOOLEAN)` - returns the conjunction of the provided boolean arguments
 - `OR (...BOOLEAN)` - returns the disjunction of the provided boolean arguments
 
-##### Range Functions
+#### Range Functions
 
-- `INDEX (RANGE, NUMBER)` - returns the value of a cell with the given index in the given range
-- `MATCH (ANY, RANGE)` - returns the index of a cell in the given range that has the given value
+- `INDEX (RANGE, NUMBER)` - returns the value of a cell from the given range with the given index
+- `MATCH (ANY, RANGE)` - returns the index of a cell in the given range that matches the given value
 
-##### String Functions
+#### String Functions
 
-- `CONCAT (...ANY)` - concatenates the given arguments into a string
+- `CONCAT (...ANY)` - concatenates the arguments into a string
 - `LEFT (STRING, NUMBER)` - returns the first `N` characters of the given string
 - `RIGHT (STRING, NUMBER)` - returns the last `N` characters of the given string
-- `MID (STRING, NUMBER, NUMBER)` - returns a substring starting at `A` and ending at `B` in the given string
+- `MID (STRING, NUMBER, NUMBER)` - returns a substring of the given string based on the given bounds
 - `LEN (STRING)` - returns the length of the given string
 
 #### Time Functions
 
 - `PREV (CELL, ?NUMBER)` - returns the value of the given cell in the time step that is specified as the current time step minus the second argument (1 if the second argument is omitted)
-- `STEP ()` - returns the current step
-- `STEPS ()` - returns the total number of steps
+- `STEP ()` - returns the index of the current time step
+- `STEPS ()` - returns the total number of time steps
 - `TIMERANGE (CELL, NUMBER)` - returns a range of values of the given cell from the current step to the current step minus the second argument
 
 #### Graph Functions
@@ -222,14 +229,16 @@ The ABM Sheets formula language is designed to contain a core subset of function
 ##### Scales
 
 - `SCALECONTINUOUS (NUMBER, NUMBER)` - creates a continuous scale that can contain value in the specified range
-- `SCALECATEGORICAL (RANGE<STRING> | ...STRING)` - creates a categorical scale that can contain categorical values specified in the given array of strings
+- `SCALECATEGORICAL (...STRING)` - creates a categorical scale that can contain categorical values specified in the given array of strings
 
 ##### Basic Shapes
 
+- `POINT (NUMBER, NUMBER)` - compose a two-dimensional point
+- `CATEGORICALCOORD (STRING | NUMBER, NUMBER | STRING)` - compose a categorial coordinate
 - `TEXT (POINT, STRING, ?STRING, ?STRING)` - draws a text specified as the second parameter at a given point coordinates specified by the first parameter. The last two optional parameters specify alignment (baseline, hanging, middle, start, end, center) and rotation in radians
 - `BUBBLE (POINT, NUMBER, NUMBER)` - creates a bubble (point) at the specified point coordinates. The last two parameters specify the width and height of the bubble in pixels
-- `SHAPE (RANGE<POINT> | ...POINT)` - creates a filled shape. The shape is specified as an array of points
-- `LINE (RANGE<POINT> | ...POINT)` - creates a line drawn using the current stroke color. The line is specified as an array of points
+- `SHAPE (...POINT)` - creates a filled shape. The shape is specified as an array of points
+- `LINE (...POINT)` - creates a line drawn using the current stroke color. The line is specified as an array of points
 - `COLUMN (STRING, NUMBER)` - creates a filled rectangle for use in a column chart. It creates a rectangle that fills the whole area for a given categorical value and has a specified height.
 - `BAR (NUMBER, STRING)` - creates a filled rectangle for use in a bar chart. It creates a rectangle that fills the whole area for a given categorical value and has a specified width.
 
@@ -251,17 +260,12 @@ The ABM Sheets formula language is designed to contain a core subset of function
 
 ##### Axes
 
-- `OVERLAY (RANGE<SHAPE> | ...SHAPE)` - compose a given array of shapes by drawing them all in the same chart area. This calculates the scale of all nested shapes and those are then automatically aligned based on their coordinates
+- `OVERLAY (...SHAPE)` - compose a given array of shapes by drawing them all in the same chart area. This calculates the scale of all nested shapes and those are then automatically aligned based on their coordinates
 - `AXES (STRING, SHAPE)` - draw axes around a given shape. The string parameter can be any string containing the words left, right, bottom and/or top, for example using space as a separator
 
-##### Additional
+##### Render
 
-- `POINT (NUMBER, NUMBER)` - compose a two-dimensional point
-- `CATEGORICALCOORD (STRING | NUMBER, NUMBER | STRING)` - compose a categorial coordinate
-
-##### Rendering
-
-- `RENDER (SHAPE)` - render the composed shape onto the graph
+- `RENDER (SHAPE)` - render the given shape onto the graph
 
 ### 3.4 Technology Stack
 
