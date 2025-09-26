@@ -44,6 +44,9 @@ export const LandingScreen = () => {
                         <Button variant="secondary" href="/about">
                             Learn more
                         </Button>
+                        <Button variant="secondary" href="/documentation">
+                            Documentation
+                        </Button>
                     </ButtonPanel>
 
                     <Image src="/preview-2.png" alt="preview" />
