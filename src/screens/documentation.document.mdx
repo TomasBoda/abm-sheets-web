@@ -1,0 +1,312 @@
+import {
+    Container,
+    Content,
+    Video,
+    Image,
+    Highlight,
+    H2WithID,
+    H3WithID,
+    SmallText,
+} from "./documentation.screen";
+import { Logo } from "@/components/logo";
+
+<Container>
+
+  	<Content>
+        <Logo />
+
+    	<br />
+
+    	# ABM Sheets Documentation
+
+    	<span style={{ marginTop: 0 }}>
+    		**Tomáš Boďa** ([tominoboda@gmail.com](mailto:tominoboda@gmail.com))
+    	</span>
+
+    	<span style={{ marginTop: -10 }}>
+    		**Tomáš Petříček** ([tomas@tomasp.net](mailto:tomas@tomasp.net))
+    	</span>
+
+    	<span style={{ marginTop: 0 }}>
+    		Faculty of Mathematics and Physics
+    	</span>
+
+    	<span style={{ marginTop: -10 }}>
+    		Charles University
+    	</span>
+
+    	<span style={{ marginTop: -10 }}>
+    		Prague, Czech Republic
+    	</span>
+
+        ## Table of Contents
+
+    	  1. [Introduction](#introduction)
+        2. [Standard ABM Sheets functions](#genfunctions)
+        3. [ABM Sheets graphical functions](#graphfunctions)
+        4. [Coordinates: Continuous and categorical coordinates](#coordinates)
+        5. [Scales: Categorical and continuous](#scales)
+        6. [Basic shapes](#basicShapes)
+        7. [Specifying visual properties](#visuals)
+        8. [Transforming scales](#transformScales)
+        9. [Combining shapes and axes](#combine)
+        10. [Rendering charts](#render)
+        11. [Walkthrough demo with examples](#demo)
+        12. [References](#refs)
+
+        <H2WithID id="introduction">Introduction</H2WithID>
+
+        This documentation gives you an overview of the standard and graphing functions in the ABM Sheets application.
+
+        Each function has its parameters described, and some of the graphical ones have examples for you to better understand the nature of rendering graphs in this environment.
+
+        <H2WithID id="genfunctions">Standard ABM Sheets functions</H2WithID>
+
+        ABM Sheets has many standard functions derived from the library of Excel functions that are needed to perform even the simplest operations.
+
+        <H2WithID id="graphfunctions">ABM Sheets graphical functions</H2WithID>
+
+        ABM Sheets uses CompostJS for rendering graphs, which is a library designed to render graphs in a functional programming–like style.
+
+        It also provides the user with a system of coordinates that is explained below and a system of scales that lets the user directly change the default scaling.
+
+        The following sections describe all of the primitives used to put together complex and fully customizable graphs. Each function has a description, types of input parameters, and the produced output type.
+
+        At the end, there will be a step-by-step tutorial with examples for creating a demo that utilizes all of the primitives.
+
+        ***Note:** The words graph and chart may be used interchangeably.*
+
+        <H2WithID id="coordinates">Coordinates: Continuous and categorical coordinates</H2WithID>
+
+        When specifying coordinates, you do so using a value from your domain rather than using a value in pixels. A value can be either categorical (such as a political party or a country) or continuous (such as an exchange rate or a year).
+
+        When specifying a location using a continuous value, you specify just a number. When using a categorical value, ABM Sheets associates a whole area with each category, and so you need to give a category together with a number specifying a location within this area. The following are valid ways of specifying a `Coord`:
+
+        <Highlight>
+        **EXAMPLE OF COORDINATES** 
+
+        Continuous values are simple numbers; they can represent things such as the size of a population or the number of cars in the city. 
+
+        The categorical values represent a point in an area associated with a categorical value.
+        - `CATEGORICALCOORD(Labour, 0)` &rarr; This represents the leftmost corner of an area associated with the categorical value `Labour`.
+        - `CATEGORICALCOORD(Labour, 0.5)` &rarr; This represents the middle of an area associated with the categorical value `Labour`.
+        </Highlight>
+
+        In other words, `Coord` can be either a number or an array of two elements containing a string (the name of the category) and a number (between 0 and 1).
+
+        When you want to specify a location on a chart, you need an x and y coordinate. A `Point` in the following documentation refers to an array of two `Coord` elements, one for the x and one for the y coordinate.
+
+        <Highlight>
+        **EXAMPLE OF VALID POINTS** 
+        - `POINT(5, 10)` &rarr; A pair of continuous values.
+        - `POINT(CATEGORICALCOORD(Labour, 0.5), 10)` &rarr; A point with categorical X and continuous Y.
+        </Highlight>
+
+        <H2WithID id="scales">Scales: Categorical and continuous</H2WithID>
+
+        The following functions create a `Scale` object that can then be passed through some of the scale-transforming functions to modify the scales.
+
+        - **SCALECONTINUOUS** \
+        Creates a continuous scale that can contain values in the specified range.
+            - `float`, `float` &rarr; `Scale`
+        - **SCALECATEGORICAL** \
+        Creates a categorical scale that can contain categorical values specified in the given range of strings.
+            - `string[ ]` &rarr; `Scale`
+
+        
+        <H2WithID id="basicShapes">Basic shapes</H2WithID>
+
+        - **TEXT** \
+        Draws text specified as the third parameter at given x and y coordinates specified by the first two parameters. The last two optional parameters specify alignment (baseline, hanging, middle, start, end, center) and rotation in radians.
+            - `Point`, `string`, `?string`, `?float` &rarr; `Shape`
+
+        - **BUBBLE** \
+          Creates a bubble (point) at specified x and y coordinates. The last two parameters specify the width and height of the bubble in pixels.
+          - `Point`, `float`, `float` &rarr; `Shape`
+
+        - **SHAPE** \
+          Creates a filled shape. The shape is specified as an array of points (see the section on coordinates).
+          - `Point[]` &rarr; `Shape`
+
+        - **LINE** \
+          Creates a line drawn using the current stroke color. The line is specified as an array of points (see the section on coordinates).
+          - `Point[]` &rarr; `Shape`
+
+        - **COLUMN** \
+          Creates a filled rectangle for use in a column chart. This is a shorthand for `SHAPE`. It creates a rectangle that fills the whole area for a given categorical value and has a specified height.
+          - `string`, `float` &rarr; `Shape`
+
+        - **BAR** \
+          Creates a filled rectangle for use in a bar chart. This is a shorthand for `SHAPE`. It creates a rectangle that fills the whole area for a given categorical value and has a specified width.
+          - `float`, `string` &rarr; `Shape`
+
+        <H2WithID id="visuals">Specifying visual properties</H2WithID>
+
+        - **FILLCOLOR** \
+        Sets the fill color to be used for all shapes drawn using `SHAPE` in the given shape.
+            - `string`, `Shape` &rarr; `Shape`
+
+        - **STROKECOLOR** \
+          Sets the line color to be used for all lines drawn using `LINE` in the given shape.
+          - `string`, `Shape` &rarr; `Shape`
+
+        - **FONT** \
+          Sets the font and text color to be used for all text occurring in the given shape.
+          - `string`, `string`, `Shape` &rarr; `Shape`
+
+        <H2WithID id="transformScales">Transforming scales</H2WithID>
+
+        - **NEST** \
+        Creates a shape that occupies an explicitly specified space using the four coordinates as left and right X values and top and bottom Y values. Inside this explicitly specified space, the nested shape is drawn, using its own scales.
+            - `Point`, `Point`, `Shape` &rarr; `Shape`
+
+        - **NESTX** \
+          Same as above, but this primitive only overrides the X scale of the nested shape while the Y scale is left unchanged and can be shared with other shapes.
+          - `Coord`, `Coord`, `Shape` &rarr; `Shape`
+
+        - **NESTY** \
+          Same as above, but this primitive only overrides the Y scale of the nested shape while the X scale is left unchanged and can be shared with other shapes.
+          - `Coord`, `Coord`, `Shape` &rarr; `Shape`
+
+        - **SCALE** \
+          Overrides the automatically inferred scale with an explicitly specified one. You can use this to define a custom minimal and maximal value. To create scales use `s.continuous` or `s.categorical`.
+          - `Scale`, `Scale`, `Shape` &rarr; `Shape`
+
+        - **SCALEX** \
+          Overrides the automatically inferred X scale (as above).
+          - `Scale`, `Shape` &rarr; `Shape`
+
+        - **SCALEY** \
+          Overrides the automatically inferred Y scale (as above).
+          - `Scale`, `Shape` &rarr; `Shape`
+
+        - **PADDING** \
+          Adds padding around the given shape. The padding is specified as top, right, bottom, left. This will subtract the padding from the available space and draw the nested shape into the smaller space.
+          - `float`, `float`, `float`, `float`, `Shape` &rarr; `Shape`
+
+        <H2WithID id="combine">Combining shapes and axes</H2WithID>
+
+        - **OVERLAY** \
+        Composes a given range of shapes by drawing them all in the same chart area. This calculates the scale of all nested shapes, and those are then automatically aligned based on their coordinates.
+            - `Shape[]` &rarr; `Shape`
+
+        - **AXES** \
+        Draws axes around a given shape. The string parameter can be any string containing the words left, right, bottom and/or top, for example using space as a separator.
+            - `string`, `Shape` &rarr; `Shape`
+
+        <H2WithID id="render">Rendering charts</H2WithID>
+
+        - **RENDER** \
+        Displays a given chart in the `Graph` sidebar menu. 
+        If you have multiple graphs rendered at the same time (you have more than one `RENDER` function in your spreadsheet), you can toggle between them in the `Graph` sidebar.
+            - `Shape` &rarr; Displays chart.
+
+        <H2WithID id="demo">Walkthrough demo with examples</H2WithID>
+
+        This demo is going to show you examples of using the graph functions and how to put them all together to create a complete chart.
+
+        The chart in this demo shows the population size of three countries and a legend.
+
+        <Highlight>
+        First, we want to create the columns for the respective countries. This is done with the `COLUMN` function.
+        <Image src="/column.png"/><br/>
+        </Highlight>
+        This creates a column shape. We can create the other columns in the same way. Your spreadsheet should now look like this.
+
+        <Image src="/columns.png"/><br/>
+
+        <Highlight>
+
+        If we put our columns together using `OVERLAY` and then render the shape with `RENDER`, it displays this chart. 
+
+        <Image src="/overlay.png"/><br/>
+
+        </Highlight>
+
+        <Image src="/columnsrendered.png"/><br/>
+
+        Not very impressive, but we can do better. Let's add some color and axes. 
+
+        <Highlight>
+        We can do that using the `FILLCOLOR` function in which we are going to wrap each column. With the `AXES` function, we can display axes by wrapping the result shape from the `OVERLAY` function in it.
+
+        <Image src="/fillColor.png"/><br/>
+        <Image src="/axes.png"/><br/>
+        </Highlight>
+
+        When displayed, the chart should now be colorful and have axes.
+
+        <Image src="/chartColors.png"/><br/>
+
+        As you can see, the chart has its scales derived from the size of the columns. We can change that using the scale functions.
+
+        <Highlight>
+        Let's say that we want to modify the vertical axis. We are going to use the `SCALECONTINUOUS` and `SCALEY` functions. Here, the `B7` cell contains the overlay of the columns. 
+
+        <Image src="/scales.png"/><br/>
+        </Highlight>
+        And now our graph has a set vertical scale.
+
+        <Image src="/axesGraph.png"/><br/>
+
+        We would, however, still like to add the legend. For that, we are going to create another separate chart and then nest the actual graph and the legend.
+
+        <Highlight>
+        Here, we are creating the colored bars using the `BAR` and `FILLCOLOR` functions.
+
+        <Image src="/bar.png"/><br/>
+        </Highlight>
+        <Image src="/legend.png"/><br/>
+
+        <Highlight> 
+        The legend would look better if the bars were a bit spaced out; we can do that with the `PADDING` function.
+
+        <Image src="/padding.png"/><br/>
+        </Highlight>
+        <Image src="/paddingGraph.png"/><br/>
+
+        The bars look nice, but we need to add some text. With the `TEXT` function, we can create the descriptions and position them relative to the bars using the `CATEGORICALCOORD`, and with the `FONT` function, we are going to specify how the text will appear.
+
+        
+        <Highlight>
+        Positioning the text vertically exactly at the middle of the bar.
+
+        <Image src="/text.png"/><br/>
+        </Highlight>
+
+        <Highlight>
+        Wrapping all of the text in the `FONT` function and specifying the size and font.
+
+        <Image src="/font.png"/><br/>
+        </Highlight>
+
+        The legend is now complete with the colored bars and their respective text.
+
+        <Image src="/legendComplete.png"/><br/>
+
+        The last thing we need to do is specify the respective spaces which the main chart and the legend should occupy.
+
+        This is done via the `NEST` function. 
+
+        <Highlight>
+        We need to define the area where the shape is going to be contained. We do that by specifying two `POINTS`, the bottom-left and top-right corners of the said area. 
+
+        Both of the shapes (the graph and the legend) need to be nested in their respective areas.
+        <Image src="/nest.png"/><br/>
+        </Highlight>
+
+        Finally, we can display the complete graph with `OVERLAY` and `RENDER`.
+
+        <Image src="/finalGraph.png"/><br/>
+
+        Your spreadsheet and graph should look like this. This demo showcases the highly customizable nature of the graphing environment that ABM Sheets offers.
+
+        <H2WithID id="refs">References</H2WithID>
+
+        1. Tomáš Petříček (2020). Compost.js: Composable data visualization library.
+    	    - [https://compostjs.github.io/compost/index.html](https://compostjs.github.io/compost/index.html)
+
+
+    </Content>
+</Container>
+
