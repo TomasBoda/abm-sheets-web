@@ -67,11 +67,11 @@ How ABM Sheets differs from Excel/Google Sheets
 
 In ABM Sheets, you can click on a cell and start typing in on the keyboard to input a value to the cell. Cells can either contain plain, static values, or formulas. All values starting with the `=` sign are considered as formulas, whereas other values are considered as plain values.
 
-<video controls><source src="./videos/video-1.mov" type="video/mp4"></source></video>
+https://github.com/user-attachments/assets/6dcefb14-0559-4457-bfd8-22e639d94fba
 
 ABM Sheets supports a subset of Microsoft Excel functions that can be used to calculate new values from existing values in the spreadsheet.
 
-<video controls><source src="./videos/video-2.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/bea8ee28-eaf4-429e-98c2-f5279c619c01
 
 ## 4. Concept of Time
 
@@ -79,11 +79,11 @@ In ABM Sheets, a cell can have either one or two formulas. If two formulas are s
 
 To create a simple time-aware cell that represents a simple counter that starts at `1` and increments in each new time step by `1`, we can utilize the dual formula together with a self-reference.
 
-<video controls><source src="./videos/video-3.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/59ae3d51-17d7-4cf3-81d9-fcb12aabea33
 
 This time-aware cell counter is equivalent to the below table in conventional spreadsheet tools.
 
-<video controls><source src="./videos/video-4.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/326ee0a5-c53f-424d-bbe9-089fddf85b9e
 
 Another addition that ABM Sheets provides is the `PREV` function used to retrieve the previous time value of a cell.
 
@@ -96,13 +96,13 @@ Let's define the same counter as in the previous video. On the right, we define 
 
 Notice what values the `C` column contains as we step through time.
 
-<video controls><source src="./videos/video-5.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/26c5388b-966d-4c43-8feb-f2fe26765389
 
 Last but not least, ABM Sheets generalizes and unifies cell ranges with time ranges, making their use interchangable.
 
 We can use the `SUM` functions to sum a range of values on the spreadsheet. However, in ABM Sheets, we can use the `TIMERANGE` function to create a range of historical values from a single cell and use the `SUM` function to sum their values as time changes.
 
-<video controls><source src="./videos/video-6.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/e0871de5-f8fa-4020-891e-f7685914f7cd
 
 ## 5. Graphs & Visualisation
 
@@ -110,11 +110,11 @@ ABM Sheets integrates a composable data visualisation library [Compost.js](https
 
 To create a simple line graph, we first need to define a set of two-dimensional `POINT` objects, compose them using the `LINE` function, define axes using the `AXES` function and finally render the graph using the `RENDER` function. When we open the `Graph` sidebar in the toolbar, we can see the rendered graph of the specified points.
 
-<video controls><source src="./videos/video-7.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/3963846b-9a9c-4b3d-83e1-783373849d7c
 
 Thanks to generalized ranges, we can utilise the `TIMERANGE` function to build the same graph, but dynamic.
 
-<video controls><source src="./videos/video-8.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/f536fc04-876b-4c11-bd82-824342e778f7
 
 ## 6. Projects
 
@@ -122,25 +122,25 @@ Thanks to generalized ranges, we can utilise the `TIMERANGE` function to build t
 
 When the user is authenticated, they can create and save a project to their account, that can be accessed on any device with the same account.
 
-<video controls><source src="./videos/video-9.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/e5e520bd-39ea-49ca-8194-69c52c91df69
 
 If the user has created a project and has updated the spreadsheet, they can save the changes to the database.
 
-<video controls><source src="./videos/video-10.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/77ee8bb9-0214-4912-98a0-52190ae5f919
 
 If the user decides to remove a project, they can do so in the projects sidebar.
 
-<video controls><source src="./videos/video-11.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/15c33c9d-13a8-4573-aecb-8061e5e0f7aa
 
 ### 6.2 Import & Export
 
 The user can also export a project to a local `.json` file.
 
-<video controls><source src="./videos/video-12.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/9fe1efe7-f47d-4437-9755-acb0464b43f2
 
 The user can then import an existing local `.json` export to the spreadsheet.
 
-<video controls><source src="./videos/video-13.mov" type="video/mp4"></source>
+https://github.com/user-attachments/assets/fc16a2f6-5ec3-43f2-8ee2-bb5ccde9e898
 
 ## 7. Language Reference
 
