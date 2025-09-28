@@ -1,7 +1,7 @@
 # User Documentation
 
-**Project**: ABM Sheets
-**Author**: Bc. Tomáš Boďa
+**Project**: ABM Sheets \
+**Author**: Bc. Tomáš Boďa \
 **Supervisor**: Mgr. Tomáš Petříček, Ph.D.
 
 ## 1. Abstract
