@@ -16,13 +16,14 @@
 8. [Installation & Deployment Guide](#8-installation--deployment-guide)
 9. [Testing & Quality Assurance](#9-testing--quality-assurance)
 10. [Limitations & Future Work](#10-limitations--future-work)
-11. [References & Appendices](#11-references--appendices)
 
 ## 1. Abstract
 
 Spreadsheets are powerful tools for data analysis and modeling, but they are inherently limited to two dimensions - rows and columns, making it difficult to represent systems that evolve over time. This limitation poses challenges for domains like agent-based modeling, physics simulations, or financial market analysis, where the concept of time is fundamental. In particular, agent-based models require tracking multiple agents, each with evolving attributes, across discrete time steps - something traditional spreadsheets struggle to express without resorting to duplication and convoluted formulas. We address this limitation by extending the spreadsheet paradigm with a built-in support for discrete time, allowing cells to reference their own values from previous time steps directly. This extension preserves the familiar spreadsheet paradigm while adding a powerful new dimension of time. With this approach, users can build and explore dynamic models, such as agent-based simulations with the same ease as traditional spreadsheet calculations.
 
 ## 2. Introduction
+
+This section introduces the ABM Sheets software system and lays out its purpose, scope and target audience.
 
 1. [Purpose of the Software](#21-purpose-of-the-software)
 2. [Scope of the System](#22-scope-of-the-system)
@@ -47,6 +48,8 @@ In addition to standard spreadsheet features, ABM Sheets introduces several new 
 ABM Sheets is designed primarily for researches, scientists and people with at least some background in spreadsheets, simulations, modeling, prototyping, mathematics, computer science, economics or physics. It is **not intended** for users with no technical experience whatsoever, since understanding the integration of time requires familiarity with spreadsheets or other form of interactive programming systems.
 
 ## 3. System Overview
+
+This section introduces the main features of ABM Sheets and describes its high-level architecture and technologies used for its development.
 
 1. [High-level Architecture](#31-high-level-architecture)
 2. [Technology Stack](#32-technology-stack)
@@ -296,12 +299,6 @@ ABM Sheets formula language provides a subset of core functions from [Microsoft 
 
 ## 5. Architecture & Design
 
-- UML diagrams (class diagram, sequence diagram, component diagram, etc.)
-- data model (ER diagrams, database schema)
-- key design decisions & rationale
-
-The following sections describe the architecture and design of the ABM Sheets software system.
-
 1. [Component Diagram](#51-component-diagram)
 2. [Class Diagram](#52-class-diagram)
 
@@ -325,10 +322,7 @@ Last but not least, the `Evaluator` class is responsible for running the evaluat
 
 ## 6. Implementation Details
 
-The core of ABM Sheets is composed of the following two modules:
-
-- **front-end** - spreadsheet interface, toolbar, sidebar, graph, user interactions
-- **engine** - parses and evaluates cell formulas (lexer, parser, runtime, evaluator)
+This section describes the implementation details of ABM Sheets and describes the rationale behind the key decisions made during its development.
 
 1. [Spreadsheet](#61-spreadsheet)
 2. [Engine](#62-engine)
@@ -623,7 +617,7 @@ After a topological ordering has been found, the sorted cells are passed to the 
 
 ## 7. Database Schema
 
-ABM Sheets uses a remote [Supabase](https://supabase.com) instance for database and authentication.
+This section provides the database schema in ABM Sheets.
 
 1. [Authentication](#71-authentication)
 2. [Projects](#72-projects)
@@ -677,6 +671,8 @@ Each log has a unique `id`. The `user_id` column holds the `id` of the authentic
 
 ## 8. Installation & Deployment Guide
 
+This section describes how to run ABM Sheets locally.
+
 1. [Deployed Version](#81-deployed-version)
 2. [Running Locally](#82-running-locally)
 
@@ -729,10 +725,22 @@ No automated tests have been created for this project.
 
 ## 10. Limitations & Future Work
 
-- known issues
-- possible improvements
+This section lists and describes the most important limitations of ABM Sheets and lays out future plans for this project.
 
-## 11. References & Appendices
+1. [Transparency](#101-transparency)
+2. [Performance](#102-performance)
+3. [Functionality](#103-functionality)
 
-- bibliography, technical references
-- full source code (if required)
+### 10.1 Transparency
+
+One of the core strengths of spreadsheets is their inherent transparency, as all calculations are visible and auditable on the grid. ABM Sheets, however, reduces this transparency, as only the state of the current time step is visible, making it more difficult to reason about a cell's value at a given moment, since the current value is a direct result of the value in the previous time step, originating at time step `0`. While time-based forumlas enhance expressiveness, they inherently reduce transparency and introduce complexity to debugging.
+
+The question about how to accommodate this lack of visibility in ABM Sheets is definitely one of the key future topics to explore, since making ABM Sheets transparent in the way it changes in time would be a great benefit in building complex models where things can go wrong.
+
+### 10.2 Performance
+
+The primary goal of ABM Sheets was a usable, fully working MVP (Minimum Viable Product) rather than a scalable and performant spreadsheet software. Therefore, the evaluation engine is designed to be rather simple and is ineffective in handling tens of thousands of cells for each time step. A natural next step would be to make the evaluation of cells and time steps more optimized and tailored to the specific use case of ABM Sheets. For instance, several caching mechanisms could be employed to reduce the number of recalculations. Another approach would be to rewrite the interpreter to a compiler, possibly a transpiler, that could run as pure JavaScript in the browser.
+
+### 10.3 Functionality
+
+As the core invention of ABM Sheets is discrete time as a native feature of the spreadsheet model, limited time had been allocated for implementing standard spreadsheet feature. Therefore, only an essential subset of spreadsheet features, controls and language functions are provided. Although this subset suffices for building a wide variety of models, extending the software system with additional well-known UI/UX handles could significantly improve the user experience as well as provide more comfort to more advanced users used to traditional keystrokes/interaction handles.
