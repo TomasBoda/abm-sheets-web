@@ -1,6 +1,5 @@
 # ABM Sheets
 
-**Project**: ABM Sheets \
 **Author**: Bc. Tomáš Boďa \
 **Supervisor**: Mgr. Tomáš Petříček, Ph.D.
 
