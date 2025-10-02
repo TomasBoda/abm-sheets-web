@@ -1,7 +1,0 @@
-# Financial Contagion in a Banking Network
-
-This model simulates how financial distress can spread through a system of interconnected banks, each acting as an individual agent with its own balance sheet. The core mechanism is based on interbank lending: banks lend to and borrow from one another, forming a financial network. When one bank defaults and cannot repay its debts, it causes financial losses to the banks that lent to it, potentially pushing them into default as well. This creates a chain reaction or contagion effect, where a single failure can trigger a systemic crisis.
-
-Each bank is characterized by three main variables: assets, liabilities, and equity (the difference between the first two). A bank is considered solvent as long as its equity is positive. If its equity turns negative—often due to absorbing losses from other failed banks—it is marked as defaulted. The model evolves in discrete time steps, where at each step, banks assess losses, update their financial positions, and determine whether they remain active or fail.
-
-The interbank relationships are defined in an exposure matrix, showing how much each bank has lent to others. This network structure is crucial, as it determines the pathways through which distress can propagate. For example, a highly interconnected bank that defaults can have a much larger systemic impact than a more isolated one. As time progresses, the model updates each bank’s asset base by subtracting losses incurred from counterparties who defaulted in the previous round.
