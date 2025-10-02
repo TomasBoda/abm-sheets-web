@@ -1,5 +1,9 @@
 # ABM Sheets
 
+**Project**: ABM Sheets \
+**Author**: Bc. Tomáš Boďa \
+**Supervisor**: Mgr. Tomáš Petříček, Ph.D.
+
 The official repository of the **ABM Sheets** research project.
 
 ## About
