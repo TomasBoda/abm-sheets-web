@@ -10,9 +10,9 @@ Spreadsheets are powerful tools for data analysis and modeling, but they are inh
 
 ## 2. Getting Started
 
-### Sign Up & Sign Up
+### 2.1 Sign Up & Sign Up
 
-Upon opening the ABM Sheets web application, you will see the landing page with a headline, a short description, a screenshot and two buttons.
+Upon opening the ABM Sheets web application, you will see the landing page with a headline, a short description and two buttons.
 
 ![landing](./screenshots/landing.png)
 
@@ -28,9 +28,9 @@ If you wish to create a new account, click on the `Sign up` button on the bottom
 
 ![sign_up](./screenshots/sign-up.png)
 
-After signing in or creating an account, you will be redirected to the spreadsheet and can start using it as an authenticated user.
+After signing in or creating an account, you will be redirected back to the spreadsheet and can start using it as an authenticated user.
 
-### Spreadsheet
+### 2.2 Spreadsheet
 
 The spreadsheet page consists of two main parts:
 
@@ -43,7 +43,7 @@ The `Home` tab provides controls for styling cells. The user can change the font
 
 ![tab_home](./screenshots/tab-home.png)
 
-The `Simulation` tab provides controls of the simulations and time steps. On the left side, there is a small text field that indicates the current time step. The arrow buttons on the left and right side of the text field increment/decrement the current time step, recalculating the spreadsheet on click. Then, there is a text field with the total number of steps. The user can change the number of steps by writing in a custom value into the text field. The `Reset` button resets the current time step to `1`. On the right side, there is the `Play` button that automatically plays the simulation from time step `1` to the final time step. The text field on the left side of the `Play` button specifies the number of milliseconds between each time step when the simulation is playing.
+The `Simulation` tab provides controls of the simulations and time steps. On the left side, there is a small text field that indicates the current time step. The arrow buttons on the left and right side of the text field increment/decrement the current time step, recalculating the spreadsheet on click. Then there is a text field with the total number of steps. The user can change the number of steps by writing in a custom value into the text field. The `Reset` button resets the current time step to `1`. On the right side, there is the `Play` button that automatically plays the simulation from time step `1` to the final time step. The text field on the left side of the `Play` button specifies the number of milliseconds between each time step when the simulation is playing.
 
 ![tab_simulation](./screenshots/tab-simulation.png)
 
@@ -61,10 +61,6 @@ The `Graph` tab opens a sidebar where the user can render a custom graph. More a
 
 ## 3. Basic Concepts
 
-Spreadsheet overview (rows, columns, cells)
-The concept of time steps in ABM Sheets
-How ABM Sheets differs from Excel/Google Sheets
-
 In ABM Sheets, you can click on a cell and start typing in on the keyboard to input a value to the cell. Cells can either contain plain, static values, or formulas. All values starting with the `=` sign are considered as formulas, whereas other values are considered as plain values.
 
 https://github.com/user-attachments/assets/6dcefb14-0559-4457-bfd8-22e639d94fba
@@ -75,6 +71,8 @@ https://github.com/user-attachments/assets/bea8ee28-eaf4-429e-98c2-f5279c619c01
 
 ## 4. Concept of Time
 
+### 4.1 Time-aware Cells
+
 In ABM Sheets, a cell can have either one or two formulas. If two formulas are specified, the first formula is calculated in the time step `t = 1`, whereas the second formula is used in all subsequent time steps `t > 1`. If only one formula is specified, it is used in all time steps `t >= 1`.
 
 To create a simple time-aware cell that represents a simple counter that starts at `1` and increments in each new time step by `1`, we can utilize the dual formula together with a self-reference.
@@ -84,6 +82,8 @@ https://github.com/user-attachments/assets/59ae3d51-17d7-4cf3-81d9-fcb12aabea33
 This time-aware cell counter is equivalent to the below table in conventional spreadsheet tools.
 
 https://github.com/user-attachments/assets/326ee0a5-c53f-424d-bbe9-089fddf85b9e
+
+### 4.2 Referencing Previous Values
 
 Another addition that ABM Sheets provides is the `PREV` function used to retrieve the previous time value of a cell.
 
@@ -97,6 +97,8 @@ Let's define the same counter as in the previous video. On the right, we define 
 Notice what values the `C` column contains as we step through time.
 
 https://github.com/user-attachments/assets/26c5388b-966d-4c43-8feb-f2fe26765389
+
+### 4.3 Time Ranges
 
 Last but not least, ABM Sheets generalizes and unifies cell ranges with time ranges, making their use interchangable.
 
@@ -120,15 +122,15 @@ https://github.com/user-attachments/assets/f536fc04-876b-4c11-bd82-824342e778f7
 
 ### 6.1 Cloud Projects
 
-When the user is authenticated, they can create and save a project to their account, that can be accessed on any device with the same account.
+If the user is authenticated, they can create and save projects associated with their account in the database, that can be accessed on any device with the same account.
 
 https://github.com/user-attachments/assets/e5e520bd-39ea-49ca-8194-69c52c91df69
 
-If the user has created a project and has updated the spreadsheet, they can save the changes to the database.
+If the user created a project and updated the spreadsheet, they can save the changes to the database.
 
 https://github.com/user-attachments/assets/77ee8bb9-0214-4912-98a0-52190ae5f919
 
-If the user decides to remove a project, they can do so in the projects sidebar.
+If the user decided to remove a project, they can do so in the projects sidebar.
 
 https://github.com/user-attachments/assets/15c33c9d-13a8-4573-aecb-8061e5e0f7aa
 
