@@ -20,5 +20,3 @@ Contributions are welcome! If you would like to improve ABM Sheets, please follo
 2. **Open an issue** – before starting major changes, open an issue to discuss your ideas and ensure alignment with the project’s goals
 3. **Follow standards** – keep code clean, consistent, and well-documented
 4. **Submit a pull request** – clearly describe the purpose of your contribution and reference related issues
-
-By [Tomas Boda](https://github.com/TomasBoda)
