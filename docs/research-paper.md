@@ -6,7 +6,7 @@
 
 ## About
 
-This document describes the research methodology used during the inital user study, planning, development and the evaluation study of the ABM Sheets research project and analyses the results gathered from the conducted studies.
+This document outlines the research methodology applied during the inital user study, planning, development and the evaluation study of the ABM Sheets research project and presents an analysis of the results gathered through these studies.
 
 ## Introduction
 
@@ -24,13 +24,11 @@ The original assignment is described further in [this document](./user-study.md)
 
 ### Participants
 
-The study consisted of four participants. Two had extensive prior experience with Microsoft Excel and had been using it regularly in either professional or personal contexts, both for modeling and analytical tasks. The other two participants were university students of a technical field with limited prior exposure to spreadsheet tools, but with solid foundation in programming concepts.
+The study involved four participants. Two had extensive prior experience with Microsoft Excel and had been using it regularly in either professional or personal contexts, both for modeling and analytical tasks. The other two participants were university students of a technical field with limited prior exposure to spreadsheet tools, but with solid foundation in programming concepts.
 
 ### Solutions
 
-Interestingly enough, the solutions of all four participants were more or less identical in terms of their conceptual composition.
-
-The first two participants initially chose an analytical method of modeling time, calculating the positions of the runners as `T * SPEED`, where `T` is the current time step. Morover, they modeled `TIME_AT_FINISH` as `FINISH_LINE / SPEED` and the runner with the lowest `TIME_AT_FINISH` value won. However, the assignment stated that we wanted to observe individual time steps, so this approach did not work.
+Interestingly enough, all four participants approached the problem in similar ways. The first two participants initially chose an analytical method of modeling time, calculating the positions of the runners as `T * SPEED`, where `T` is the current time step. Moreover, they modeled `TIME_AT_FINISH` as `FINISH_LINE / SPEED` and the runner with the lowest `TIME_AT_FINISH` value won. However, this approach was unsuitable since the task required simulating individual time steps.
 
 Eventually, all four participants chose an approach where columns represented time steps and rows represented runners. The participants created two such tables, one for the changing `POSITION` attribute and one for the changing `SPEED` attribute. They calculated `SPEED` as `SPEED[T] = SPEED[T - 1] + (RAND - 0.5)` and the `POSITION` as `POSITION[T] = POSITION[T - 1] + SPEED[T]`.
 
@@ -42,7 +40,7 @@ When we asked the first participant why they initially chose the analytical appr
 
 _"I guess because once you set the columns to time steps, you have lost a dimension of your spreadsheet and so now everything is one-dimensional and everything about the dynamics has to be embedded in a single formula and that can get really complicated, so I was trying to get away from not having to do that for as long as possible. You've only got two dimensions, and if you use one for time, everything else becomes miserable."_
 
-Moreover, the second participant had an interesting remark about why spreadsheets are so popular nowadays:
+Moreover, the second participant had an interesting remark about the popularity of spreadsheets in general:
 
 _"One of the benefits of Excel, as you probably know, is just the whip attitude of it, you know, this kind of interactive, reactive programming environment. The ability to mix data and formulas/programming in the same environment is extremely attractive."_
 
@@ -52,18 +50,30 @@ At the end of the interviews, we explained to each participant the purpose of th
 
 ## Evaluation Study
 
-After the design and development of ABM Sheets was completed, an evaluation study was conducted to test whether the system is usable and solves the pain points our hypothesis claimed. The study was conducted in a similar manner than the initial user study and consisted of a series of interviews with people of various technical background and with different experience with spreadsheets. The format of the interviews was to give the participants the same modeling task as in the initial study, however, this time the participants were given ABM Sheets to complete the assignment.
+After the design and development of ABM Sheets was completed, a follow-up evaluation study was conducted to assess whether the system addressed the limitations observed in the initial user study. The study was conducted in a similar manner than the initial user study and consisted of a series of video interviews with people of various technical background and with different experience with spreadsheets. The format of the interviews was to give the participants the same modeling task as in the initial study, however, this time the participants were given ABM Sheets to complete the assignment.
 
-Before diving into the task, we briefly introduced the system to the participants and explained the new features that it offers compared to conventional spreadsheet tools.
+Before diving into the task, the participants were given a brief introduction to the system and its extended features compared to conventional spreadsheet tools.
 
 ### Participants
 
-The study included three participants, all of whom had more than 5 years of experience with programming. One of the participants had prior extensive experience with spreadsheet tools, whereas the other two participants had only limited prior exposure to spreadsheets.
+The evaluation study included four participants, each with more than five years of programming experience. One had substantial prior experience with spreadsheet tools, while the other three had only limited exposure.
 
 ### Solutions
 
-Interestingly enough, with little to no help, all three participants managed to complete the assignment in a way we predicted and hoped for. All three participants eventually used rows for representing runners and columns for their attributes (position, speed), utilizing the built-in dimension of time natively.
+With minimal assistance, all four participants successfully completed the assignment in alignment with the intended design of ABM Sheets. They consistently represented runners as rows and attributes (position, speed) as columns, relying on the built-in time dimension to drive the simulation.
 
-One interesting thing we learned was the way that the first participant chose to self-reference a cell. For the `POSITION` column, they tried to model the formula as `A1: = 0 = PREV(A1, STEP() - 1) + A2`, where `A2` represented `SPEED`. The `PREV(A1, STEP() - 1)` evaluates to the value of `A1` in the previous time step, however, a simplified version that ABM Sheets supports would look like `A1: = 0 = A1 + A2` as `A1` is a self-reference and always evaluates to the previous time step. The fact that the participant naturally decided to use the `PREV` function to reference the previous time step pointed us in the direction to omit the simplified short-hand version and require explicit use of `PREV` for self-references - an idea we thought about in the course of the entire development of ABM Sheets.
+One interesting thing we learned was the way that the first participant chose to self-reference a cell. For the `POSITION` column, the participant tried to model the formula as `A1: = 0 = PREV(A1, STEP() - 1) + A2`, where `A2` represented `SPEED`. The `PREV(A1, STEP() - 1)` evaluates to the value of `A1` in the previous time step, however, a simplified version that ABM Sheets supports would look like `A1: = 0 = A1 + A2` as `A1` is a self-reference and always evaluates to the previous time step. The fact that the participant naturally decided to use the `PREV` function to reference the previous time step pointed us in the direction to omit the simplified short-hand version and require explicit use of `PREV` for self-references - an idea we thought about in the course of the entire development of ABM Sheets. However, this idea is not yet implemented and will potentially be added in future releases of ABM Sheets.
 
-The second and the third participant also mentioned an interesint thing. Both participants said that this software would have great use in physics simulations, as they often require time in their calculations, making ABM Sheets a great tool to explore this field. Furthermore, the third participant mentioned that this tool, as "technical" as it is, could be a great learning tool for elementary/high school students exploring interactive programming system - a middle step between high school math and university-grade programming.
+The second and the third participant also mentioned an interesint thing. Both participants commented that this software would have great use in physics simulations, as they often require time in their calculations, making ABM Sheets a great tool to explore this field. Furthermore, the third participant mentioned that this tool, as "technical" as it is, could be a great learning tool for elementary/high school students exploring interactive programming system, describing it as an accessible bridge between high school mathematics and university-level programming.
+
+Last but not least, the fourth participant managed to complete the assignment very quickly, despite the fact that they had no prior experience with spreadsheets. Although they had some problems with the naming of the built-in functions and how formulas worked, they described the concept of built-in time as “very natural to understand and use”, directly supporting the ease of use of ABM Sheets.
+
+## Conclusion
+
+The research carried out through both the initial user study and the evaluation study provides strong evidence that supports our initial hypothesis: extending the spreadsheet paradigm with a native notion of discrete time greatly improves its expressive power and significantly simplifies modeling tasks that are otherwise cumbersome or impractical to model in conventional spreadsheet systems.
+
+The user study confirmed that in traditional spreadsheets, participants needed to resort to repetitive and structurally inefficient workarounds to model time. Their chosen strategy of duplicating tables for each attribute across time steps or attempting to compress the model into analytical formulas underscored the difficulty of modeling multi-dimensional models using conventional approach in a two-dimensional grid. More importantly, the feedback from the participants explicitly supported the hypothesis, that using one axis of the spreadsheet to represent time comes at the cost of clarity and quickly makes the model difficult to manage and extend.
+
+In contrast, the evaluation study of ABM Sheets demonstrated that the introduction of built-in time together with self-references allows participants to build dynamic models more directly, intuitively and with less overhead. All participants, regardless of their prior experience with spreadsheets, were able to successfully complete the task in a way that aligned with the design intentions of the system. The participants' solutions were more compact and expressive than those modeled with traditional spreadsheet tools. More importantly, the gathered feedback clearly states that the concept of time as a built-in feature was natural to understand and use. Last but not least, some participants highlighted the potential of ABM Sheets not only for agent-based modeling, but also for physics simulations and educational contexts.
+
+In conclusion, the findings from these studies support the contribution of ABM Sheets as a meaningful extension to the spreadsheet paradigm. The system successfully preserves the strengths that make spreadsheets widely popular, while overcoming one of their significant limitations, making ABM Sheets a solid prototype for building temporal models.
