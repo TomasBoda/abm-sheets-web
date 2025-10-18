@@ -189,13 +189,15 @@ Last but not least, the `Evaluator` class is responsible for running the evaluat
 
 The following sections describe the implementation details of ABM Sheets and the rationale behind the key decisions made during its development.
 
-### 5.1 Spreadsheet
+### 5.1 Rendering the Spreadsheet
 
 The spreadsheet interface is the most important part of the front-end module. It renders a grid of cells which the user can interact with. The spreadsheet grid consists of rows and columns, labeled by numbers and letters respectivelly.
 
 Currently, ABM Sheets supports up to `1,000` rows and `1,000` columns, resulting in the total of `1,000,000` cells. This large amount of cells is difficult for browsers to render without any performance issues. In fact, during the development of ABM Sheets, it took about `10` seconds to render these cells. Further interactions with the rendered cells resulted in an unusable product and needed vast optimizations.
 
 Due to these reasons, an algorithm that effectively selects which cells to render is employed to ensure smooth user experience. First and foremost, the number of cells that are rendered on the user's screen is limited by the size of their computer screen (not taking into account browser zooming). This implies that the browser only needs to render cells that are visible. One option is to track cells that are visible and only render these cells, omitting all other cells that are out of the viewport. However, listening to website scroll changes for each cell, or using complex calculations for the cell boundaries would be inefficient. Therefore, the whole spreadsheet grid is divided into smaller panels, each representing a subgrid of cells in the grid. Each panel tracks its intersection with the viewport and is rendered onto the DOM only if it becomes visible. The size of one panels corresponds roughly to the size of the viewport. This implies that in one particular moment, a maximum of `4` panels is rendered by the browser. In this way, only a small portion of the spreadsheet cells is handled by the browser's rendering engine, no matter the size of the spreadsheet, optimizing its performance and making the spreadsheet usable.
+
+![spreadsheet_diagram](./diagrams/spreadsheet_diagram.png)
 
 The spreadsheet module consists of two primary components:
 
@@ -206,7 +208,7 @@ The spreadsheet module consists of two primary components:
 
 `SpreadsheetWrapper` is an application-specific component that uses the `SpreadsheetComponent` to render the spreadsheet grid. It defines all user interaction handles, such as cell clicks, double clicks, cell selection, cell styling, etc. This is the primary component of the front-end module where most of the spreadsheet logic lies.
 
-### 5.2 Engine
+### 5.2 Evaluation Engine
 
 The evaluation engine is a module that is responsible for parsing and evaluating cell formulas. It takes in an array of cell IDs and the number of steps of the simulation and evaluates each cell for each time step. Its output is a `History` object, which is a map of cell IDs and their calculated values for each time step. This object is then passed to the spreadsheet interface and rendered in the corresponding cells.
 
