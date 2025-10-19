@@ -1,4 +1,8 @@
-import { CellId, SpreadsheetData } from "../spreadsheet/spreadsheet.model";
+import {
+    CellId,
+    SpreadsheetCell,
+    SpreadsheetData,
+} from "../spreadsheet/spreadsheet.model";
 
 // number of rows/columns in spreadsheet
 export const SPREADSHEET_SIZE = 1000;
@@ -20,26 +24,30 @@ export const DEFAULT_STEP = 0;
 // default number of simulation steps
 export const DEFAULT_STEPS = 50;
 
-export const createEmptySpreadsheet = (
-    rowCount: number,
-    colCount: number,
-): SpreadsheetData => {
-    const data = [];
+export namespace Spreadsheet {
+    export const data: Map<CellId, SpreadsheetCell> = new Map();
 
-    for (let i = 0; i < rowCount; i++) {
-        const row = [];
+    export const get = (cellId: CellId): SpreadsheetCell => {
+        return data.get(cellId) ?? { formula: "" };
+    };
 
-        for (let j = 0; j < colCount; j++) {
-            row.push({ formula: "", value: "" });
-        }
+    export const set = (cellId: CellId, cell: SpreadsheetCell): void => {
+        data.set(cellId, cell);
+    };
 
-        data.push(row);
-    }
+    export const update = (
+        cellId: CellId,
+        cell: Partial<SpreadsheetCell>,
+    ): void => {
+        const data = Spreadsheet.get(cellId);
+        Spreadsheet.set(cellId, { ...data, ...cell });
+    };
 
-    return data;
-};
+    export const remove = (cellId: CellId): void => {
+        Spreadsheet.data.delete(cellId);
+    };
 
-export const SPREADSHEET_DATA: SpreadsheetData = createEmptySpreadsheet(
-    SPREADSHEET_SIZE,
-    SPREADSHEET_SIZE,
-);
+    export const clear = (): void => {
+        Spreadsheet.data.clear();
+    };
+}

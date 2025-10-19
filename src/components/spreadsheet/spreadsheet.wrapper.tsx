@@ -5,16 +5,16 @@ import { ErrorValue, ValueType } from "@/runtime/runtime";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { SpreadsheetCell, SpreadsheetComponent } from "./spreadsheet.component";
-import { SPREADSHEET_DATA } from "./spreadsheet.constants";
+import { Spreadsheet, SPREADSHEET_SIZE } from "./spreadsheet.constants";
 import { useFormulaFocus, useSelectedRowsAndCols } from "./spreadsheet.hooks";
 import { CellCoords, CellId } from "./spreadsheet.model";
 import { SpreadsheetUtils } from "./spreadsheet.utils";
 
 import { useProjects } from "@/hooks/useProjects";
-import { useSyntaxHighlighting } from "@/hooks/useSyntaxHighlighting";
-import { StatusIcon } from "../status-icon";
-import { Logger } from "@/utils/logger";
 import { useSessionId } from "@/hooks/useSessionId";
+import { useSyntaxHighlighting } from "@/hooks/useSyntaxHighlighting";
+import { Logger } from "@/utils/logger";
+import { StatusIcon } from "../status-icon";
 
 export const SpreadsheetWrapper = () => {
     const formulaRef = useRef<HTMLInputElement>(null);
@@ -64,9 +64,8 @@ export const SpreadsheetWrapper = () => {
 
     useEffect(() => {
         for (const cellId of spreadsheet.cells.usedCells) {
-            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
             const value = spreadsheet.history.history.get(cellId)?.[step];
-            const formula = SPREADSHEET_DATA[ri][ci].formula;
+            const formula = Spreadsheet.get(cellId).formula;
 
             const text = value
                 ? SpreadsheetUtils.getValueText(value)
@@ -81,7 +80,9 @@ export const SpreadsheetWrapper = () => {
     // propagate formula input to cell data
     useEffect(() => {
         const selectedCell = getFirstSelectedCell();
-        SPREADSHEET_DATA[selectedCell.ri][selectedCell.ci].formula = formula;
+        Spreadsheet.update(SpreadsheetUtils.cellCoordsToId(selectedCell), {
+            formula,
+        });
 
         if (isFormulaFocused) {
             SpreadsheetUtils.updateCellText(
@@ -133,7 +134,10 @@ export const SpreadsheetWrapper = () => {
             selectionListeners.handleMouseDown({ ri, ci });
         }
 
-        setFormula(SPREADSHEET_DATA[ri][ci].formula);
+        setFormula(
+            Spreadsheet.get(SpreadsheetUtils.cellCoordsToId({ ri, ci }))
+                .formula,
+        );
         getCellElement({ ri, ci })?.focus();
     };
 
@@ -164,8 +168,7 @@ export const SpreadsheetWrapper = () => {
 
     const onCellBackspace = () => {
         for (const selectedCellId of selectedCells) {
-            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(selectedCellId);
-            SPREADSHEET_DATA[ri][ci].formula = "";
+            Spreadsheet.update(selectedCellId, { formula: "" });
             spreadsheet.cells.removeUsedCell(selectedCellId);
             SpreadsheetUtils.updateCellText(selectedCellId, "");
         }
@@ -262,9 +265,7 @@ export const SpreadsheetWrapper = () => {
 
                 const regex = /\$?[A-Z]+\$?\d+/g;
 
-                const copiedCellFormula =
-                    SPREADSHEET_DATA[baseCellCoords.ri][baseCellCoords.ci]
-                        .formula;
+                const copiedCellFormula = Spreadsheet.get(baseCell).formula;
 
                 const newFormula = copiedCellFormula.replace(regex, (match) =>
                     SpreadsheetUtils.shiftCellReference(
@@ -274,9 +275,8 @@ export const SpreadsheetWrapper = () => {
                     ),
                 );
 
-                SPREADSHEET_DATA[currentCellCoords.ri][
-                    currentCellCoords.ci
-                ].formula = newFormula;
+                Spreadsheet.update(currentCell, { formula: newFormula });
+
                 const cellId =
                     SpreadsheetUtils.cellCoordsToId(currentCellCoords);
                 newUsedCells.add(cellId);
@@ -310,10 +310,7 @@ export const SpreadsheetWrapper = () => {
             const cellCol =
                 SpreadsheetUtils.cellIdToCoords(copiedCell).ci + colOffset;
 
-            const copiedCellFormula =
-                SPREADSHEET_DATA[
-                    SpreadsheetUtils.cellIdToCoords(copiedCell).ri
-                ][SpreadsheetUtils.cellIdToCoords(copiedCell).ci].formula;
+            const copiedCellFormula = Spreadsheet.get(copiedCell).formula;
 
             const newFormula = copiedCellFormula.replace(regex, (match) =>
                 SpreadsheetUtils.shiftCellReference(
@@ -327,7 +324,10 @@ export const SpreadsheetWrapper = () => {
                 formula = newFormula;
             }
 
-            SPREADSHEET_DATA[cellRow][cellCol].formula = newFormula;
+            Spreadsheet.update(
+                SpreadsheetUtils.cellCoordsToId({ ri: cellRow, ci: cellCol }),
+                { formula: newFormula },
+            );
             const cellId = SpreadsheetUtils.cellCoordsToId({
                 ri: cellRow,
                 ci: cellCol,
@@ -377,7 +377,7 @@ export const SpreadsheetWrapper = () => {
         const newCellId = SpreadsheetUtils.cellCoordsToId(coords);
         setSelectedCells(new Set([newCellId]));
         getCellElement(coords).focus();
-        setFormula(SPREADSHEET_DATA[coords.ri][coords.ci].formula);
+        setFormula(Spreadsheet.get(newCellId).formula);
     };
 
     const onCellKeyDown = (
@@ -417,8 +417,7 @@ export const SpreadsheetWrapper = () => {
             return;
         }
 
-        const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-        const cell = SPREADSHEET_DATA[ri][ci];
+        const cell = Spreadsheet.get(cellId);
         setFormula(cell.formula);
 
         formulaRef.current?.focus();
@@ -432,9 +431,11 @@ export const SpreadsheetWrapper = () => {
         const coords = getFirstSelectedCell();
 
         const formula = SpreadsheetUtils.tryGetFormulaFromCellValue(
-            SPREADSHEET_DATA[coords.ri][coords.ci].formula,
+            Spreadsheet.get(SpreadsheetUtils.cellCoordsToId(coords)).formula,
         );
-        SPREADSHEET_DATA[coords.ri][coords.ci].formula = formula;
+        Spreadsheet.update(SpreadsheetUtils.cellCoordsToId(coords), {
+            formula,
+        });
 
         if (formula.trim() !== "") {
             spreadsheet.cells.addUsedCell(
@@ -474,16 +475,17 @@ export const SpreadsheetWrapper = () => {
     };
 
     const moveToCellBelow = ({ ri, ci }: CellCoords) => {
-        const newCoords = { ri: Math.min(ri + 1, SPREADSHEET_DATA.length), ci };
+        const newCoords = { ri: Math.min(ri + 1, SPREADSHEET_SIZE), ci };
         getCellElement(newCoords)?.focus();
         setSelectedCells(new Set([SpreadsheetUtils.cellCoordsToId(newCoords)]));
-        setFormula(SPREADSHEET_DATA[newCoords.ri][newCoords.ci].formula);
+        setFormula(
+            Spreadsheet.get(SpreadsheetUtils.cellCoordsToId(newCoords)).formula,
+        );
     };
 
     const getCellText = (cellId: CellId) => {
-        const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
         const value = spreadsheet.history.history.get(cellId)?.[step];
-        const formula = SPREADSHEET_DATA[ri][ci].formula;
+        const formula = Spreadsheet.get(cellId).formula;
 
         const text = value
             ? SpreadsheetUtils.getValueText(value)

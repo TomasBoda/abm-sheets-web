@@ -1,4 +1,4 @@
-import { SPREADSHEET_DATA } from "@/components/spreadsheet/spreadsheet.constants";
+import { Spreadsheet } from "@/components/spreadsheet/spreadsheet.constants";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 import { Parser } from "./parser";
@@ -11,8 +11,7 @@ export class Evaluator {
         step: number,
         steps: number,
     ): Value | undefined {
-        const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-        const cell = SPREADSHEET_DATA[ri][ci];
+        const cell = Spreadsheet.get(cellId);
 
         const formulaWithoutFixes = cell.formula.replaceAll("$", "");
 

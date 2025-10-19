@@ -1,6 +1,6 @@
 import { Value } from "@/runtime/runtime";
 
-type SpreadsheetCell = {
+export type SpreadsheetCell = {
     formula: string;
     color?: string;
     bold?: boolean;

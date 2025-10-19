@@ -2,7 +2,7 @@
 
 import {
     DEFAULT_CELL,
-    SPREADSHEET_DATA,
+    SPREADSHEET_SIZE,
 } from "@/components/spreadsheet/spreadsheet.constants";
 import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 import {
@@ -147,8 +147,8 @@ export const SelectionProvider = ({ children }: { children: ReactNode }) => {
     const selectAllCells = (): void => {
         const newSelectedCells = new Set<CellId>();
 
-        for (let ri = 0; ri < SPREADSHEET_DATA.length; ri++) {
-            for (let ci = 0; ci < SPREADSHEET_DATA[ri].length; ci++) {
+        for (let ri = 0; ri < SPREADSHEET_SIZE; ri++) {
+            for (let ci = 0; ci < SPREADSHEET_SIZE; ci++) {
                 newSelectedCells.add(
                     SpreadsheetUtils.cellCoordsToId({ ri, ci }),
                 );

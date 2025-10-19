@@ -1,15 +1,15 @@
 "use client";
 
 import {
-    SPREADSHEET_DATA,
+    Spreadsheet,
     SPREADSHEET_SIZE,
 } from "@/components/spreadsheet/spreadsheet.constants";
 import { CellId, History } from "@/components/spreadsheet/spreadsheet.model";
 import { SpreadsheetUtils } from "@/components/spreadsheet/spreadsheet.utils";
 import { Value } from "@/runtime/runtime";
 import {
-    ReactNode,
     createContext,
+    ReactNode,
     useContext,
     useEffect,
     useState,
@@ -87,11 +87,7 @@ const useStyle = () => {
 
     useEffect(() => {
         for (const [cellId, styles] of cellStyles.entries()) {
-            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-            SPREADSHEET_DATA[ri][ci] = {
-                ...SPREADSHEET_DATA[ri][ci],
-                ...styles,
-            };
+            Spreadsheet.update(cellId, { ...styles });
         }
     }, [cellStyles]);
 
@@ -148,7 +144,7 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
         for (let ri = 0; ri < SPREADSHEET_SIZE; ri++) {
             for (let ci = 0; ci < SPREADSHEET_SIZE; ci++) {
                 const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
-                SPREADSHEET_DATA[ri][ci] = { formula: "" };
+                Spreadsheet.remove(cellId);
                 SpreadsheetUtils.updateCellText(cellId, "");
             }
         }
@@ -161,15 +157,15 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
     const getExportedData = (): object => {
         const object = {};
 
-        for (let ri = 0; ri < SPREADSHEET_DATA.length; ri++) {
-            for (let ci = 0; ci < SPREADSHEET_DATA[ri].length; ci++) {
+        for (let ri = 0; ri < SPREADSHEET_SIZE; ri++) {
+            for (let ci = 0; ci < SPREADSHEET_SIZE; ci++) {
                 const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
 
-                if (SPREADSHEET_DATA[ri][ci].formula.trim() === "") {
+                if (Spreadsheet.get(cellId).formula.trim() === "") {
                     continue;
                 }
 
-                object[cellId] = { ...SPREADSHEET_DATA[ri][ci] };
+                object[cellId] = { ...Spreadsheet.get(cellId) };
             }
         }
 
@@ -183,17 +179,15 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
 
         for (const [key, value] of Object.entries(importedData)) {
             const cellId = key as CellId;
-            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-
             const { formula, color, bold, italic, underline } = value;
 
-            SPREADSHEET_DATA[ri][ci] = {
+            Spreadsheet.set(cellId, {
                 formula,
                 color,
                 bold,
                 italic,
                 underline,
-            };
+            });
 
             style.setCellStyle(cellId, "color", color);
             style.setCellStyle(cellId, "bold", bold);

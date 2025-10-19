@@ -13,7 +13,7 @@ import {
 } from "@/runtime/runtime";
 import { getSortedCells } from "@/utils/topological-sort";
 import { Utils } from "@/utils/utils";
-import { SPREADSHEET_DATA } from "./spreadsheet.constants";
+import { Spreadsheet } from "./spreadsheet.constants";
 import { CellCoords, CellId, History } from "./spreadsheet.model";
 
 export namespace SpreadsheetUtils {
@@ -107,14 +107,12 @@ export namespace SpreadsheetUtils {
         }
 
         const cellsWithFormula = cells.filter((cellId) => {
-            const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-            return SPREADSHEET_DATA[ri][ci].formula.startsWith("=");
+            return Spreadsheet.get(cellId).formula.startsWith("=");
         });
 
         const sortedCells = getSortedCells(
             cellsWithFormula.map((cellId) => {
-                const { ri, ci } = SpreadsheetUtils.cellIdToCoords(cellId);
-                const formula = SPREADSHEET_DATA[ri][ci].formula;
+                const formula = Spreadsheet.get(cellId).formula;
                 return { id: cellId, formula };
             }),
         );
