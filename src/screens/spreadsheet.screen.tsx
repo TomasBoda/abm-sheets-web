@@ -101,4 +101,5 @@ const Content = styled.div<{ $size: { width: number; height: number } }>`
     height: ${({ $size }) => $size.height}px;
 
     padding: 15px;
+    background-color: var(--bg-2);
 `;

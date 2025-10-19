@@ -648,7 +648,7 @@ export const SpreadsheetWrapper = () => {
     );
 };
 
-const Cell = styled(SpreadsheetCell)<{
+interface CellProps {
     $selected: boolean;
     $referenced: boolean;
     $bold: boolean;
@@ -656,7 +656,9 @@ const Cell = styled(SpreadsheetCell)<{
     $underline: boolean;
     $color?: string;
     $error: boolean;
-}>`
+}
+
+const Cell = styled(SpreadsheetCell)<CellProps>`
     position: relative;
 
     color: var(--text-1);

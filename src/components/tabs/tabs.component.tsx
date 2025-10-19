@@ -116,21 +116,16 @@ const TabLabel = styled.div`
 const Background = styled.div`
     position: absolute;
 
-    transition: all 150ms;
-
+    border: 1px solid var(--color-2);
     border-radius: 7px;
 
     background-color: var(--color-1);
 
-    border: 1px solid var(--color-2);
-
-    background-color: var(--color-1);
-
+    transition: all 150ms;
     z-index: 2;
 `;
 
 const Content = styled.div`
     width: 100%;
-
     padding: 10px;
 `;

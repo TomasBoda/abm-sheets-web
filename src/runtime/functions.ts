@@ -507,7 +507,7 @@ export namespace Functions {
         const lookupRange = expectRange(args, 0);
         const index = expectNumber(args, 1);
 
-        if (index.value < 0 && index.value > lookupRange.value.length - 1) {
+        if (index.value < 0 || index.value > lookupRange.value.length - 1) {
             return createNumber(-1);
         }
 

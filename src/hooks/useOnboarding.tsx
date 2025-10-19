@@ -8,7 +8,7 @@ import {
     useState,
 } from "react";
 import { useModal } from "./useModal";
-import { OnboardingModal } from "@/modals/onboarding.modal";
+import { OnboardingModal } from "@/components/modals/onboarding.modal";
 import { useLocalStorage } from "./useLocalStorage";
 
 type OnboardingContextType = {

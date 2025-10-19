@@ -2,12 +2,12 @@
 
 import { useModal } from "@/hooks/useModal";
 import { useProjects } from "@/hooks/useProjects";
-import { DeleteProjectModal } from "@/modals/delete-project.modal";
+import { DeleteProjectModal } from "@/components/modals/delete-project.modal";
 import { ExternalLink, Trash2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
-import { useSidebar } from "../hooks/useSidebar";
-import { StatusIcon } from "./status-icon";
+import { useSidebar } from "../../hooks/useSidebar";
+import { StatusIcon } from "../status-icon";
 
 export const ProjectsSidebar = () => {
     const router = useRouter();

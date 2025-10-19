@@ -1,18 +1,18 @@
 "use client";
 
-import { ProjectsSidebar } from "@/components/projects-sidebar";
+import { ProjectsSidebar } from "@/components/sidebars/projects.sidebar";
 import { Tab, Tabs } from "@/components/tabs/tabs.component";
 import { useModal } from "@/hooks/useModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { useSpreadsheet } from "@/hooks/useSpreadsheet";
-import { OnboardingModal } from "@/modals/onboarding.modal";
-import { SaveProjectModal } from "@/modals/save-project.modal";
+import { OnboardingModal } from "@/components/modals/onboarding.modal";
+import { SaveProjectModal } from "@/components/modals/save-project.modal";
 import { createClientClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 import { useSidebar } from "../../hooks/useSidebar";
-import { GraphSidebar } from "../graph-sidebar";
+import { GraphSidebar } from "../sidebars/graph.sidebar";
 import { HomeTab } from "./home.tab";
 import { ImportExportTab } from "./import-export.tab";
 import { SimulationTab } from "./simulation.tab";
@@ -202,5 +202,5 @@ const RightContent = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 `;

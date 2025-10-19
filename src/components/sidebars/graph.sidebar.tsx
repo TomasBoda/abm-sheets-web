@@ -7,7 +7,7 @@ import { GraphValue, ValueType } from "@/runtime/runtime";
 import { compost as c } from "compostjs";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { CellId } from "./spreadsheet/spreadsheet.model";
+import { CellId } from "../spreadsheet/spreadsheet.model";
 
 const GRAPH_RENDERER_ID = "graph-renderer";
 
