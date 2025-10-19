@@ -1,8 +1,4 @@
-import {
-    CellId,
-    SpreadsheetCell,
-    SpreadsheetData,
-} from "../spreadsheet/spreadsheet.model";
+import { CellId, SpreadsheetCell } from "../spreadsheet/spreadsheet.model";
 
 // number of rows/columns in spreadsheet
 export const SPREADSHEET_SIZE = 1000;
