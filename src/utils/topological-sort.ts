@@ -90,39 +90,58 @@ const buildCellDependencies = (cells: CellItem[]): CellDependencyItem[] => {
     return dependencyItems;
 };
 
-const topologicalSort = (cells: CellDependencyItem[]): CellId[] => {
+const topologicalSort = (
+    cells: CellDependencyItem[],
+): { error: false; cells: CellId[] } | { error: true; cells: CellId[] } => {
     const sorted: CellId[] = [];
     const visited = new Map<CellId, boolean>();
     const visiting = new Map<CellId, boolean>();
+    const cyclePath: CellId[] = [];
 
-    const visit = (id: CellId, itemsMap: Map<CellId, CellDependencyItem>) => {
-        if (visited.get(id)) return;
-        if (visiting.get(id))
-            throw new Error(`Cyclic dependency detected at: ${id}`);
+    const visit = (
+        id: CellId,
+        itemsMap: Map<CellId, CellDependencyItem>,
+    ): boolean => {
+        if (visited.get(id)) return true;
+        if (visiting.get(id)) {
+            const cycleStart = cyclePath.indexOf(id);
+
+            if (cycleStart !== -1) {
+                return false;
+            }
+            return false;
+        }
 
         visiting.set(id, true);
+        cyclePath.push(id);
         const currentItem = itemsMap.get(id);
 
         if (currentItem) {
             for (const dependency of currentItem.dependencies) {
-                visit(dependency, itemsMap);
+                if (!visit(dependency, itemsMap)) {
+                    return false;
+                }
             }
         }
 
         visiting.set(id, false);
+        cyclePath.pop();
         visited.set(id, true);
         sorted.push(id);
+        return true;
     };
 
     const itemsMap = new Map(cells.map((item) => [item.id, item]));
 
     for (const item of cells) {
         if (!visited.get(item.id)) {
-            visit(item.id, itemsMap);
+            if (!visit(item.id, itemsMap)) {
+                return { error: true, cells: [...cyclePath] };
+            }
         }
     }
 
-    return sorted;
+    return { error: false, cells: sorted };
 };
 
 export const getSortedCells = (cells: CellItem[]) => {

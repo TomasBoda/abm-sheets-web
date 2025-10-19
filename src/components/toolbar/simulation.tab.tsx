@@ -1,4 +1,6 @@
+import { useSessionId } from "@/hooks/useSessionId";
 import { useStepper } from "@/hooks/useStepper";
+import { Logger } from "@/utils/logger";
 import {
     ChevronLeft,
     ChevronRight,
@@ -9,14 +11,12 @@ import {
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { DEFAULT_STEP } from "../spreadsheet/spreadsheet.constants";
-import { TextFieldSmall } from "../text-field-small";
+import { TextField } from "../text-field/text-field.component";
 import {
     TabContainer,
     ToolbarButton,
     ToolbarDivider,
 } from "./toolbar.component";
-import { Logger } from "@/utils/logger";
-import { useSessionId } from "@/hooks/useSessionId";
 
 export const SimulationTab = () => {
     const stepper = useStepper();
@@ -124,7 +124,8 @@ export const SimulationTab = () => {
                     <ChevronLeft size={12} />
                 </ToolbarButton>
 
-                <TextFieldSmall
+                <TextField
+                    size="small"
                     value={stepFieldValue.toString()}
                     disabled={false}
                     onChange={(newValue) => handleStepsInput(newValue)}
@@ -139,7 +140,8 @@ export const SimulationTab = () => {
 
             <ToolbarDivider />
 
-            <TextFieldSmall
+            <TextField
+                size="small"
                 value={stepper.steps.toString()}
                 onChange={(value) =>
                     value === ""
@@ -158,7 +160,8 @@ export const SimulationTab = () => {
 
             <ToolbarDivider />
 
-            <TextFieldSmall
+            <TextField
+                size="small"
                 value={delay.toString()}
                 onChange={(value) =>
                     value === "" ? setDelay(0) : setDelay(parseInt(value))

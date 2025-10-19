@@ -20,7 +20,7 @@ import styled from "styled-components";
 import { v4 as uuid } from "uuid";
 
 interface SpreadsheetScreenProps {
-    user: User;
+    user?: User;
 }
 
 export default function SpreadsheetScreen({ user }: SpreadsheetScreenProps) {

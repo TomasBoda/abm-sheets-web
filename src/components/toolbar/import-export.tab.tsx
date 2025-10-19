@@ -1,13 +1,13 @@
 import { useSpreadsheet } from "@/hooks/useSpreadsheet";
 import { Utils } from "@/utils/utils";
+import { Download, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
+import { TextField } from "../text-field/text-field.component";
 import {
     TabContainer,
     ToolbarButton,
     ToolbarDivider,
 } from "./toolbar.component";
-import { Download, Upload } from "lucide-react";
-import { TextFieldSmall } from "../text-field-small";
 
 export const ImportExportTab = () => {
     const spreadsheet = useSpreadsheet();
@@ -66,7 +66,8 @@ export const ImportExportTab = () => {
 
             <ToolbarDivider />
 
-            <TextFieldSmall
+            <TextField
+                size="small"
                 value={filename}
                 onChange={setFilename}
                 placeholder="Enter filename"

@@ -119,7 +119,26 @@ export namespace SpreadsheetUtils {
             }),
         );
 
-        const history = new Evaluator().evaluateCells(sortedCells, steps);
+        const errorCells = sortedCells.error ? sortedCells.cells : [];
+        const successCells = sortedCells.error
+            ? cellsWithFormula.filter((cellId) => !errorCells.includes(cellId))
+            : cellsWithFormula;
+
+        const history = new Evaluator().evaluateCells(successCells, steps);
+
+        for (const errorCellId of errorCells) {
+            const value: Value[] = [];
+
+            for (let i = 0; i < steps; i++) {
+                value.push({
+                    type: ValueType.Error,
+                    value:
+                        "Cyclic dependency at cells " + errorCells.join(" > "),
+                });
+            }
+
+            history.set(errorCellId, value);
+        }
 
         return history;
     };

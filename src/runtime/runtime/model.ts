@@ -4,6 +4,7 @@ export enum ValueType {
     Number = "Number",
     Boolean = "Boolean",
     String = "String",
+
     CellLiteral = "CellLiteral",
     Range = "Range",
 
