@@ -120,7 +120,7 @@ export namespace SpreadsheetUtils {
         const errorCells = sortedCells.error ? sortedCells.cells : [];
         const successCells = sortedCells.error
             ? cellsWithFormula.filter((cellId) => !errorCells.includes(cellId))
-            : cellsWithFormula;
+            : sortedCells.cells;
 
         const history = new Evaluator().evaluateCells(successCells, steps);
 

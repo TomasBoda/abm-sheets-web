@@ -103,17 +103,11 @@ const topologicalSort = (
         itemsMap: Map<CellId, CellDependencyItem>,
     ): boolean => {
         if (visited.get(id)) return true;
-        if (visiting.get(id)) {
-            const cycleStart = cyclePath.indexOf(id);
-
-            if (cycleStart !== -1) {
-                return false;
-            }
-            return false;
-        }
+        if (visiting.get(id)) return false;
 
         visiting.set(id, true);
         cyclePath.push(id);
+
         const currentItem = itemsMap.get(id);
 
         if (currentItem) {
@@ -128,6 +122,7 @@ const topologicalSort = (
         cyclePath.pop();
         visited.set(id, true);
         sorted.push(id);
+
         return true;
     };
 
@@ -146,5 +141,7 @@ const topologicalSort = (
 
 export const getSortedCells = (cells: CellItem[]) => {
     const dependencies = buildCellDependencies(cells);
-    return topologicalSort(dependencies);
+    const sorted = topologicalSort(dependencies);
+
+    return sorted;
 };
