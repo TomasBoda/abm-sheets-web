@@ -19,6 +19,10 @@ export const GraphSidebar = () => {
     const [graphCellId, setGraphCellId] = useState<CellId>(graph.cells[0]?.id);
 
     useEffect(() => {
+        setGraphCellId(graph.cells[0]?.id);
+    }, [graph.cells]);
+
+    useEffect(() => {
         document.getElementById(GRAPH_RENDERER_ID).innerHTML = "";
 
         const value =

@@ -179,11 +179,23 @@ export namespace SpreadsheetUtils {
     };
 
     export const tryGetFormulaFromCellValue = (input: string) => {
-        if (!isNaN(Number(input)) && input.trim() !== "") {
+        if (input.trim() === "") {
+            return "";
+        }
+
+        if (input.trim().startsWith("=")) {
+            return input.trim();
+        }
+
+        if (!isNaN(Number(input))) {
             return `= ${input.trim()}`;
         }
 
-        return input.trim();
+        if (["TRUE", "FALSE"].includes(input.trim().toUpperCase())) {
+            return `= ${input.trim().toUpperCase()}`;
+        }
+
+        return `= "${input.trim()}"`;
     };
 
     export const getValueText = (value: Value) => {

@@ -35,6 +35,7 @@ export const GraphProvider = ({ children }: { children: ReactNode }) => {
         for (const cellId of spreadsheet.cells.usedCells) {
             const value =
                 spreadsheet.history.history.get(cellId)?.[stepper.step];
+
             if (!value || value.type !== ValueType.Graph) continue;
             graphCells.push({
                 id: cellId,
@@ -43,7 +44,11 @@ export const GraphProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setCells(graphCells);
-    }, [spreadsheet.cells.usedCells]);
+    }, [
+        spreadsheet.cells.usedCells,
+        spreadsheet.history.history,
+        stepper.step,
+    ]);
 
     const values = {
         cells,
