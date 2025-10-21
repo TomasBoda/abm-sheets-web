@@ -10,7 +10,10 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { DEFAULT_STEP } from "../spreadsheet/spreadsheet.constants";
+import {
+    DEFAULT_STEP,
+    DEFAULT_STEPS,
+} from "../spreadsheet/spreadsheet.constants";
 import { TextField } from "../text-field/text-field.component";
 import {
     TabContainer,
@@ -25,9 +28,12 @@ export const SimulationTab = () => {
     const [delay, setDelay] = useState<number>(100);
     const [isPlaying, setIsPlaying] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
     const [stepFieldValue, setStepFieldValue] = useState<number>(
         DEFAULT_STEP + 1,
     );
+    const [stepsFieldValue, setStepsFieldValue] =
+        useState<number>(DEFAULT_STEPS);
 
     const prevStep = () => {
         Logger.log(
@@ -91,29 +97,57 @@ export const SimulationTab = () => {
         setStepFieldValue(stepper.step + 1);
     }, [stepper.step]);
 
-    const handleStepsInput = (value: string) => {
+    useEffect(() => {
+        setStepsFieldValue(stepper.steps);
+    }, [stepper.steps]);
+
+    const onStepInputChange = (value: string) => {
         if (/^[0-9]*$/.test(value)) {
             setStepFieldValue(Number(value));
         }
     };
 
-    const confirmStep = () => {
-        const newStep = Number(stepFieldValue);
-
-        if (newStep === 0) {
-            stepper.setStep(0);
-            setStepFieldValue(1);
-        } else if (newStep > stepper.steps) {
-            stepper.setStep(stepper.steps - 1);
-            setStepFieldValue(stepper.steps);
-        } else {
-            stepper.setStep(newStep - 1);
+    const onStepsInputChange = (value: string) => {
+        if (/^[0-9]*$/.test(value)) {
+            setStepsFieldValue(Number(value));
         }
     };
 
-    const onHandleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const onStepInputBlur = () => {
+        if (stepFieldValue === 0) {
+            stepper.setStep(0);
+        } else if (stepFieldValue > stepsFieldValue) {
+            stepper.setStep(stepper.steps - 1);
+        } else {
+            stepper.setStep(stepFieldValue - 1);
+        }
+    };
+
+    const onStepsInputBlur = () => {
+        if (stepsFieldValue === 0) {
+            stepper.setSteps(1);
+        } else {
+            stepper.setSteps(stepsFieldValue);
+        }
+
+        if (stepFieldValue > stepsFieldValue) {
+            stepper.setStep(stepsFieldValue - 1);
+        }
+    };
+
+    const onStepInputKeyDown = (
+        event: React.KeyboardEvent<HTMLInputElement>,
+    ) => {
         if (event.key === "Enter") {
-            confirmStep();
+            onStepInputBlur();
+        }
+    };
+
+    const onStepsInputKeyDown = (
+        event: React.KeyboardEvent<HTMLInputElement>,
+    ) => {
+        if (event.key === "Enter") {
+            onStepsInputBlur();
         }
     };
 
@@ -128,9 +162,9 @@ export const SimulationTab = () => {
                     size="small"
                     value={stepFieldValue.toString()}
                     disabled={false}
-                    onChange={(newValue) => handleStepsInput(newValue)}
-                    onBlur={confirmStep}
-                    onKeyDown={onHandleKeyDown}
+                    onChange={onStepInputChange}
+                    onBlur={onStepInputBlur}
+                    onKeyDown={onStepInputKeyDown}
                 />
 
                 <ToolbarButton onClick={nextStep}>
@@ -142,12 +176,10 @@ export const SimulationTab = () => {
 
             <TextField
                 size="small"
-                value={stepper.steps.toString()}
-                onChange={(value) =>
-                    value === ""
-                        ? stepper.setSteps(0)
-                        : stepper.setSteps(parseInt(value))
-                }
+                value={stepsFieldValue.toString()}
+                onChange={onStepsInputChange}
+                onBlur={onStepsInputBlur}
+                onKeyDown={onStepsInputKeyDown}
                 placeholder="Steps"
             />
 

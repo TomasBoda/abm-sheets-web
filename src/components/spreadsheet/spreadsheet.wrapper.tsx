@@ -42,6 +42,7 @@ export const SpreadsheetWrapper = () => {
     const { step, steps } = useStepper();
     const spreadsheet = useSpreadsheet();
     const { project } = useProjects();
+    const stepper = useStepper();
 
     const { sessionId } = useSessionId();
 
@@ -60,7 +61,7 @@ export const SpreadsheetWrapper = () => {
     // evaluate cells on change
     useEffect(() => {
         evaluateUsedCells();
-    }, [spreadsheet.cells.usedCells]);
+    }, [spreadsheet.cells.usedCells, stepper.steps]);
 
     useEffect(() => {
         for (const cellId of spreadsheet.cells.usedCells) {
