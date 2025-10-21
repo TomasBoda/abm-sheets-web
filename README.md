@@ -13,7 +13,12 @@ The official repository of the **ABM Sheets** research project.
 
 - [Technical Documentation](/docs/tech-docs.md) - provides rationale about the specifics of design and implementation
 - [User Manual](/docs/user-manual.md) - serves as a walkthrough manual of ABM Sheets for new users
-- [Research Paper](/docs/research-paper.md) - describes the design, execution and results of research studies conducted
+- [Research Paper](/docs/research-paper.md) - describes the design, execution and results of the conducted user studies
+- [Case Studies](/docs/case-studies.md) - provides several example models developed in ABM Sheets
+
+## Workshop Submission
+
+ABM Sheets was submitted to the [Live 2025 Workshop](https://liveprog.org). The submission paper can be found on [this link](https://abm-sheets-web.vercel.app/about).
 
 ## Contribution
 
