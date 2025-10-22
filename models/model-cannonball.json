@@ -1,0 +1,209 @@
+{
+  "B2": {
+    "formula": "= \"Cannonball\"",
+    "color": "#FA9189"
+  },
+  "B4": {
+    "formula": "= \"Velocity\"",
+    "color": "#B3F5BC"
+  },
+  "C4": {
+    "formula": "= \"Angle\"",
+    "color": "#B3F5BC"
+  },
+  "D4": {
+    "formula": "= \"Gravity\"",
+    "color": "#B3F5BC"
+  },
+  "E4": {
+    "formula": "= \"X\"",
+    "color": "#B3F5BC"
+  },
+  "F4": {
+    "formula": "= \"Y\"",
+    "color": "#B3F5BC"
+  },
+  "G4": {
+    "formula": "= \"Color\"",
+    "color": "#FFE699"
+  },
+  "H4": {
+    "formula": "= \"Point\"",
+    "color": "#FFE699"
+  },
+  "I4": {
+    "formula": "= \"Line\"",
+    "color": "#FFE699"
+  },
+  "J4": {
+    "formula": "= \"Stroke color\"",
+    "color": "#FFE699"
+  },
+  "K4": {
+    "formula": "= \"Overlay\"",
+    "color": "#FFE699"
+  },
+  "L4": {
+    "formula": "= \"Graph\"",
+    "color": "#FFE699"
+  },
+  "B5": {
+    "formula": "= 500",
+    "color": "#f5f5f5"
+  },
+  "C5": {
+    "formula": "= 45",
+    "color": "#f5f5f5"
+  },
+  "D5": {
+    "formula": "= 9.81",
+    "color": "#f5f5f5"
+  },
+  "E5": {
+    "formula": "= 0 = IF(AND(F5 == 0, STEP() != 1), E5, E5 + B5 * COS(RADIANS(C5)))",
+    "color": "#f5f5f5"
+  },
+  "F5": {
+    "formula": "= 0 = MMAX(0, F5 + B5 * SIN(RADIANS(C5)) - 1/2 * D5 * POWER(STEP(), 2))",
+    "color": "#f5f5f5"
+  },
+  "G5": {
+    "formula": "= \"red\"",
+    "color": "#f5f5f5"
+  },
+  "H5": {
+    "formula": "= POINT(E5, F5)",
+    "color": "#f5f5f5"
+  },
+  "I5": {
+    "formula": "= LINE(TIMERANGE(H5, STEP()))",
+    "color": "#f5f5f5"
+  },
+  "J5": {
+    "formula": "= STROKECOLOR(G5, I5)",
+    "color": "#f5f5f5"
+  },
+  "K5": {
+    "formula": "= OVERLAY(J5:J9)"
+  },
+  "L5": {
+    "formula": "= RENDER(AXES(\"left bottom\", K5))"
+  },
+  "B6": {
+    "formula": "= 1000"
+  },
+  "C6": {
+    "formula": "= 45"
+  },
+  "D6": {
+    "formula": "= 9.81"
+  },
+  "E6": {
+    "formula": "= 0 = IF(AND(F6 == 0, STEP() != 1), E6, E6 + B6 * COS(RADIANS(C6)))"
+  },
+  "F6": {
+    "formula": "= 0 = MMAX(0, F6 + B6 * SIN(RADIANS(C6)) - 1/2 * D6 * POWER(STEP(), 2))"
+  },
+  "G6": {
+    "formula": "= \"green\""
+  },
+  "H6": {
+    "formula": "= POINT(E6, F6)"
+  },
+  "I6": {
+    "formula": "= LINE(TIMERANGE(H6, STEP()))"
+  },
+  "J6": {
+    "formula": "= STROKECOLOR(G6, I6)"
+  },
+  "B7": {
+    "formula": "= 1500",
+    "color": "#f5f5f5"
+  },
+  "C7": {
+    "formula": "= 45",
+    "color": "#f5f5f5"
+  },
+  "D7": {
+    "formula": "= 9.81",
+    "color": "#f5f5f5"
+  },
+  "E7": {
+    "formula": "= 0 = IF(AND(F7 == 0, STEP() != 1), E7, E7 + B7 * COS(RADIANS(C7)))",
+    "color": "#f5f5f5"
+  },
+  "F7": {
+    "formula": "= 0 = MMAX(0, F7 + B7 * SIN(RADIANS(C7)) - 1/2 * D7 * POWER(STEP(), 2))",
+    "color": "#f5f5f5"
+  },
+  "G7": {
+    "formula": "= \"blue\"",
+    "color": "#f5f5f5"
+  },
+  "H7": {
+    "formula": "= POINT(E7, F7)",
+    "color": "#f5f5f5"
+  },
+  "I7": {
+    "formula": "= LINE(TIMERANGE(H7, STEP()))",
+    "color": "#f5f5f5"
+  },
+  "J7": {
+    "formula": "= STROKECOLOR(G7, I7)",
+    "color": "#f5f5f5"
+  },
+  "B8": {
+    "formula": "= 2000"
+  },
+  "C8": {
+    "formula": "= 45"
+  },
+  "D8": {
+    "formula": "= 9.81"
+  },
+  "E8": {
+    "formula": "= 0 = IF(AND(F8 == 0, STEP() != 1), E8, E8 + B8 * COS(RADIANS(C8)))"
+  },
+  "F8": {
+    "formula": "= 0 = MMAX(0, F8 + B8 * SIN(RADIANS(C8)) - 1/2 * D8 * POWER(STEP(), 2))"
+  },
+  "G8": {
+    "formula": "= \"orange\""
+  },
+  "H8": {
+    "formula": "= POINT(E8, F8)"
+  },
+  "I8": {
+    "formula": "= LINE(TIMERANGE(H8, STEP()))"
+  },
+  "J8": {
+    "formula": "= STROKECOLOR(G8, I8)"
+  },
+  "B9": {
+    "formula": "= 2500"
+  },
+  "C9": {
+    "formula": "= 45"
+  },
+  "D9": {
+    "formula": "= 9.81"
+  },
+  "E9": {
+    "formula": "= 0 = IF(AND(F9 == 0, STEP() != 1), E9, E9 + B9 * COS(RADIANS(C9)))"
+  },
+  "F9": {
+    "formula": "= 0 = MMAX(0, F9 + B9 * SIN(RADIANS(C9)) - 1/2 * D9 * POWER(STEP(), 2))"
+  },
+  "G9": {
+    "formula": "= \"violet\""
+  },
+  "H9": {
+    "formula": "= POINT(E9, F9)"
+  },
+  "I9": {
+    "formula": "= LINE(TIMERANGE(H9, STEP()))"
+  },
+  "J9": {
+    "formula": "= STROKECOLOR(G9, I9)"
+  }
+}

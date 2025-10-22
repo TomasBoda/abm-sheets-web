@@ -1,0 +1,285 @@
+{
+  "B2": {
+    "formula": "= \"Running Race\"",
+    "color": "#FA9189"
+  },
+  "B4": {
+    "formula": "= \"Constants\"",
+    "color": "#FFE699"
+  },
+  "E4": {
+    "formula": "= \"Runners\"",
+    "color": "#FFE699"
+  },
+  "J4": {
+    "formula": "= \"Graph\"",
+    "color": "#FFE699"
+  },
+  "B5": {
+    "formula": "= \"Start Position\"",
+    "color": "#B3F5BC"
+  },
+  "C5": {
+    "formula": "= \"Finish Line\"",
+    "color": "#B3F5BC"
+  },
+  "E5": {
+    "formula": "= \"Runner ID\"",
+    "color": "#B3F5BC"
+  },
+  "F5": {
+    "formula": "= \"Position\"",
+    "color": "#B3F5BC"
+  },
+  "G5": {
+    "formula": "= \"Velocity\"",
+    "color": "#B3F5BC"
+  },
+  "H5": {
+    "formula": "= \"Finished\"",
+    "color": "#B3F5BC"
+  },
+  "J5": {
+    "formula": "= \"Column\"",
+    "color": "#B3F5BC"
+  },
+  "K5": {
+    "formula": "= \"Overlay\"",
+    "color": "#B3F5BC"
+  },
+  "L5": {
+    "formula": "= \"Axes\"",
+    "color": "#B3F5BC"
+  },
+  "M5": {
+    "formula": "= \"Graph\"",
+    "color": "#B3F5BC"
+  },
+  "B6": {
+    "formula": "= 0",
+    "color": "#f5f5f5"
+  },
+  "C6": {
+    "formula": "= 100",
+    "color": "#f5f5f5"
+  },
+  "E6": {
+    "formula": "= 1",
+    "color": ""
+  },
+  "F6": {
+    "formula": "= 0 = IF($B$10, F6, F6 + G6)",
+    "color": ""
+  },
+  "G6": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G6 + (RAND() - 0.5) * 2, 0)",
+    "color": ""
+  },
+  "H6": {
+    "formula": "= F6 >= $C$6",
+    "color": ""
+  },
+  "J6": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E6), F6))"
+  },
+  "K6": {
+    "formula": "= OVERLAY(J6:J15)"
+  },
+  "L6": {
+    "formula": "= AXES(\"left bottom\", SCALEY(SCALECONTINUOUS(0, $C$6), K6))"
+  },
+  "M6": {
+    "formula": "= RENDER(L6)"
+  },
+  "E7": {
+    "formula": "= E6 + 1",
+    "color": "#f5f5f5"
+  },
+  "F7": {
+    "formula": "= 0 = IF($B$10, F7, F7 + G7)",
+    "color": "#f5f5f5"
+  },
+  "G7": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G7 + (RAND() - 0.5) * 2, 0)",
+    "color": "#f5f5f5"
+  },
+  "H7": {
+    "formula": "= F7 >= $C$6",
+    "color": "#f5f5f5"
+  },
+  "J7": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E7), F7))"
+  },
+  "B8": {
+    "formula": "= \"Statistics\"",
+    "color": "#FFE699"
+  },
+  "E8": {
+    "formula": "= E7 + 1",
+    "color": ""
+  },
+  "F8": {
+    "formula": "= 0 = IF($B$10, F8, F8 + G8)",
+    "color": ""
+  },
+  "G8": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G8 + (RAND() - 0.5) * 2, 0)",
+    "color": ""
+  },
+  "H8": {
+    "formula": "= F8 >= $C$6",
+    "color": ""
+  },
+  "J8": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E8), F8))"
+  },
+  "B9": {
+    "formula": "= \"Any Finished\"",
+    "color": "#B3F5BC"
+  },
+  "C9": {
+    "formula": "= \"Winner ID\"",
+    "color": "#B3F5BC"
+  },
+  "E9": {
+    "formula": "= E8 + 1",
+    "color": "#f5f5f5"
+  },
+  "F9": {
+    "formula": "= 0 = IF($B$10, F9, F9 + G9)",
+    "color": "#f5f5f5"
+  },
+  "G9": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G9 + (RAND() - 0.5) * 2, 0)",
+    "color": "#f5f5f5"
+  },
+  "H9": {
+    "formula": "= F9 >= $C$6",
+    "color": "#f5f5f5"
+  },
+  "J9": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E9), F9))"
+  },
+  "B10": {
+    "formula": "= COUNTIF(H6:H15, TRUE) > 0",
+    "color": "#f5f5f5"
+  },
+  "C10": {
+    "formula": "= IF(INDEX(E6:E15, MATCH(TRUE, H6:H15)) == -1, \"None\", INDEX(E6:E15, MATCH(TRUE, H6:H15)))",
+    "color": "#f5f5f5"
+  },
+  "E10": {
+    "formula": "= E9 + 1",
+    "color": ""
+  },
+  "F10": {
+    "formula": "= 0 = IF($B$10, F10, F10 + G10)",
+    "color": ""
+  },
+  "G10": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G10 + (RAND() - 0.5) * 2, 0)",
+    "color": ""
+  },
+  "H10": {
+    "formula": "= F10 >= $C$6",
+    "color": ""
+  },
+  "J10": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E10), F10))"
+  },
+  "E11": {
+    "formula": "= E10 + 1",
+    "color": "#f5f5f5"
+  },
+  "F11": {
+    "formula": "= 0 = IF($B$10, F11, F11 + G11)",
+    "color": "#f5f5f5"
+  },
+  "G11": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G11 + (RAND() - 0.5) * 2, 0)",
+    "color": "#f5f5f5"
+  },
+  "H11": {
+    "formula": "= F11 >= $C$6",
+    "color": "#f5f5f5"
+  },
+  "J11": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E11), F11))"
+  },
+  "E12": {
+    "formula": "= E11 + 1",
+    "color": ""
+  },
+  "F12": {
+    "formula": "= 0 = IF($B$10, F12, F12 + G12)",
+    "color": ""
+  },
+  "G12": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G12 + (RAND() - 0.5) * 2, 0)",
+    "color": ""
+  },
+  "H12": {
+    "formula": "= F12 >= $C$6",
+    "color": ""
+  },
+  "J12": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E12), F12))"
+  },
+  "E13": {
+    "formula": "= E12 + 1",
+    "color": "#f5f5f5"
+  },
+  "F13": {
+    "formula": "= 0 = IF($B$10, F13, F13 + G13)",
+    "color": "#f5f5f5"
+  },
+  "G13": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G13 + (RAND() - 0.5) * 2, 0)",
+    "color": "#f5f5f5"
+  },
+  "H13": {
+    "formula": "= F13 >= $C$6",
+    "color": "#f5f5f5"
+  },
+  "J13": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E13), F13))"
+  },
+  "E14": {
+    "formula": "= E13 + 1",
+    "color": ""
+  },
+  "F14": {
+    "formula": "= 0 = IF($B$10, F14, F14 + G14)",
+    "color": ""
+  },
+  "G14": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G14 + (RAND() - 0.5) * 2, 0)",
+    "color": ""
+  },
+  "H14": {
+    "formula": "= F14 >= $C$6",
+    "color": ""
+  },
+  "J14": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E14), F14))"
+  },
+  "E15": {
+    "formula": "= E14 + 1",
+    "color": "#f5f5f5"
+  },
+  "F15": {
+    "formula": "= 0 = IF($B$10, F15, F15 + G15)",
+    "color": "#f5f5f5"
+  },
+  "G15": {
+    "formula": "= RANDBETWEEN(1, 5) = MMAX(G15 + (RAND() - 0.5) * 2, 0)",
+    "color": "#f5f5f5"
+  },
+  "H15": {
+    "formula": "= F15 >= $C$6",
+    "color": "#f5f5f5"
+  },
+  "J15": {
+    "formula": "= PADDING(10, 10, 10, 10, COLUMN(CONCAT(\"Runner \", E15), F15))"
+  }
+}

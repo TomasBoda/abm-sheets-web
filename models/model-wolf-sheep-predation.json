@@ -1,0 +1,671 @@
+{
+  "B2": {
+    "formula": "= \"Predation\"",
+    "color": "#FA9189"
+  },
+  "B4": {
+    "formula": "= \"Constants\"",
+    "color": "#FFE699"
+  },
+  "F4": {
+    "formula": "= \"Statistics\"",
+    "color": "#FFE699"
+  },
+  "K4": {
+    "formula": "= \"Graph\"",
+    "color": "#FFE699"
+  },
+  "B5": {
+    "formula": "= \"Grid Size\"",
+    "color": "#B3F5BC"
+  },
+  "C5": {
+    "formula": "= \"Wolf Health\"",
+    "color": "#B3F5BC"
+  },
+  "D5": {
+    "formula": "= \"Sheep Respawn\"",
+    "color": "#B3F5BC"
+  },
+  "F5": {
+    "formula": "= \"Sheep Count\"",
+    "color": "#B3F5BC"
+  },
+  "G5": {
+    "formula": "= \"Wolf Count\"",
+    "color": "#B3F5BC"
+  },
+  "K5": {
+    "formula": "= \"Sheep Point\"",
+    "color": "#9ae1f5"
+  },
+  "L5": {
+    "formula": "= \"Wolf Point\"",
+    "color": "#9ae1f5"
+  },
+  "B6": {
+    "formula": "= 9"
+  },
+  "C6": {
+    "formula": "= 10"
+  },
+  "D6": {
+    "formula": "= 5"
+  },
+  "F6": {
+    "formula": "= COUNTIF(H10:H19, \"ALIVE\")"
+  },
+  "G6": {
+    "formula": "= COUNTIF(H23:H32, \"ALIVE\")"
+  },
+  "K6": {
+    "formula": "= POINT(STEP(), F6)"
+  },
+  "L6": {
+    "formula": "= POINT(STEP(), G6)"
+  },
+  "B8": {
+    "formula": "= \"Sheep\"",
+    "color": "#FFE699"
+  },
+  "K8": {
+    "formula": "= \"Sheep Line\"",
+    "color": "#9ae1f5"
+  },
+  "L8": {
+    "formula": "= \"Wolf Line\"",
+    "color": "#9ae1f5"
+  },
+  "B9": {
+    "formula": "= \"Sheep ID\"",
+    "color": "#B3F5BC"
+  },
+  "C9": {
+    "formula": "= \"X Position\"",
+    "color": "#B3F5BC"
+  },
+  "D9": {
+    "formula": "= \"Y Position\"",
+    "color": "#B3F5BC"
+  },
+  "E9": {
+    "formula": "= \"Position\"",
+    "color": "#B3F5BC"
+  },
+  "F9": {
+    "formula": "= \"Wolf ID\"",
+    "color": "#B3F5BC"
+  },
+  "H9": {
+    "formula": "= \"Status\"",
+    "color": "#B3F5BC"
+  },
+  "I9": {
+    "formula": "= \"Respawn\"",
+    "color": "#B3F5BC"
+  },
+  "K9": {
+    "formula": "= STROKECOLOR(\"green\", LINE(TIMERANGE(K6, STEP())))"
+  },
+  "L9": {
+    "formula": "= STROKECOLOR(\"red\", LINE(TIMERANGE(L6, STEP())))"
+  },
+  "B10": {
+    "formula": "= 1"
+  },
+  "C10": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C10 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D10": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D10 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E10": {
+    "formula": "= CONCAT(C10, D10)"
+  },
+  "F10": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E10, $E$23:$E$32))",
+    "color": ""
+  },
+  "H10": {
+    "formula": "= \"ALIVE\" = IF(H10 == \"ALIVE\", IF(F10 != -1, \"DEAD\", \"ALIVE\"), IF(I10 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": ""
+  },
+  "I10": {
+    "formula": "= 0 = IF(H10 == \"ALIVE\", I10, IF(PREV(H10) == \"ALIVE\", $D$6, I10 - 1))"
+  },
+  "B11": {
+    "formula": "= B10 + 1",
+    "color": "#f5f5f5"
+  },
+  "C11": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C11 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D11": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D11 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E11": {
+    "formula": "= CONCAT(C11, D11)",
+    "color": "#f5f5f5"
+  },
+  "F11": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E11, $E$23:$E$32))",
+    "color": "#f5f5f5"
+  },
+  "H11": {
+    "formula": "= \"ALIVE\" = IF(H11 == \"ALIVE\", IF(F11 != -1, \"DEAD\", \"ALIVE\"), IF(I11 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": "#f5f5f5"
+  },
+  "I11": {
+    "formula": "= 0 = IF(H11 == \"ALIVE\", I11, IF(PREV(H11) == \"ALIVE\", $D$6, I11 - 1))",
+    "color": "#f5f5f5"
+  },
+  "K11": {
+    "formula": "= \"Overlay\"",
+    "color": "#9ae1f5"
+  },
+  "L11": {
+    "formula": "= \"Axes\"",
+    "color": "#9ae1f5"
+  },
+  "M11": {
+    "formula": "= \"Graph\"",
+    "color": "#9ae1f5"
+  },
+  "B12": {
+    "formula": "= B11 + 1"
+  },
+  "C12": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C12 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D12": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D12 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E12": {
+    "formula": "= CONCAT(C12, D12)"
+  },
+  "F12": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E12, $E$23:$E$32))",
+    "color": ""
+  },
+  "H12": {
+    "formula": "= \"ALIVE\" = IF(H12 == \"ALIVE\", IF(F12 != -1, \"DEAD\", \"ALIVE\"), IF(I12 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": ""
+  },
+  "I12": {
+    "formula": "= 0 = IF(H12 == \"ALIVE\", I12, IF(PREV(H12) == \"ALIVE\", $D$6, I12 - 1))"
+  },
+  "K12": {
+    "formula": "= OVERLAY(K9, L9)"
+  },
+  "L12": {
+    "formula": "= AXES(\"left bottom\", K12)"
+  },
+  "M12": {
+    "formula": "= RENDER(L12)"
+  },
+  "B13": {
+    "formula": "= B12 + 1",
+    "color": "#f5f5f5"
+  },
+  "C13": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C13 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D13": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D13 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E13": {
+    "formula": "= CONCAT(C13, D13)",
+    "color": "#f5f5f5"
+  },
+  "F13": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E13, $E$23:$E$32))",
+    "color": "#f5f5f5"
+  },
+  "H13": {
+    "formula": "= \"ALIVE\" = IF(H13 == \"ALIVE\", IF(F13 != -1, \"DEAD\", \"ALIVE\"), IF(I13 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": "#f5f5f5"
+  },
+  "I13": {
+    "formula": "= 0 = IF(H13 == \"ALIVE\", I13, IF(PREV(H13) == \"ALIVE\", $D$6, I13 - 1))",
+    "color": "#f5f5f5"
+  },
+  "B14": {
+    "formula": "= B13 + 1"
+  },
+  "C14": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C14 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D14": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D14 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E14": {
+    "formula": "= CONCAT(C14, D14)"
+  },
+  "F14": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E14, $E$23:$E$32))",
+    "color": ""
+  },
+  "H14": {
+    "formula": "= \"ALIVE\" = IF(H14 == \"ALIVE\", IF(F14 != -1, \"DEAD\", \"ALIVE\"), IF(I14 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": ""
+  },
+  "I14": {
+    "formula": "= 0 = IF(H14 == \"ALIVE\", I14, IF(PREV(H14) == \"ALIVE\", $D$6, I14 - 1))"
+  },
+  "B15": {
+    "formula": "= B14 + 1",
+    "color": "#f5f5f5"
+  },
+  "C15": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C15 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D15": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D15 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E15": {
+    "formula": "= CONCAT(C15, D15)",
+    "color": "#f5f5f5"
+  },
+  "F15": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E15, $E$23:$E$32))",
+    "color": "#f5f5f5"
+  },
+  "H15": {
+    "formula": "= \"ALIVE\" = IF(H15 == \"ALIVE\", IF(F15 != -1, \"DEAD\", \"ALIVE\"), IF(I15 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": "#f5f5f5"
+  },
+  "I15": {
+    "formula": "= 0 = IF(H15 == \"ALIVE\", I15, IF(PREV(H15) == \"ALIVE\", $D$6, I15 - 1))",
+    "color": "#f5f5f5"
+  },
+  "B16": {
+    "formula": "= B15 + 1"
+  },
+  "C16": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C16 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D16": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D16 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E16": {
+    "formula": "= CONCAT(C16, D16)"
+  },
+  "F16": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E16, $E$23:$E$32))",
+    "color": ""
+  },
+  "H16": {
+    "formula": "= \"ALIVE\" = IF(H16 == \"ALIVE\", IF(F16 != -1, \"DEAD\", \"ALIVE\"), IF(I16 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": ""
+  },
+  "I16": {
+    "formula": "= 0 = IF(H16 == \"ALIVE\", I16, IF(PREV(H16) == \"ALIVE\", $D$6, I16 - 1))"
+  },
+  "B17": {
+    "formula": "= B16 + 1",
+    "color": "#f5f5f5"
+  },
+  "C17": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C17 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D17": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D17 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E17": {
+    "formula": "= CONCAT(C17, D17)",
+    "color": "#f5f5f5"
+  },
+  "F17": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E17, $E$23:$E$32))",
+    "color": "#f5f5f5"
+  },
+  "H17": {
+    "formula": "= \"ALIVE\" = IF(H17 == \"ALIVE\", IF(F17 != -1, \"DEAD\", \"ALIVE\"), IF(I17 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": "#f5f5f5"
+  },
+  "I17": {
+    "formula": "= 0 = IF(H17 == \"ALIVE\", I17, IF(PREV(H17) == \"ALIVE\", $D$6, I17 - 1))",
+    "color": "#f5f5f5"
+  },
+  "B18": {
+    "formula": "= B17 + 1"
+  },
+  "C18": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C18 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D18": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D18 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E18": {
+    "formula": "= CONCAT(C18, D18)"
+  },
+  "F18": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E18, $E$23:$E$32))",
+    "color": ""
+  },
+  "H18": {
+    "formula": "= \"ALIVE\" = IF(H18 == \"ALIVE\", IF(F18 != -1, \"DEAD\", \"ALIVE\"), IF(I18 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": ""
+  },
+  "I18": {
+    "formula": "= 0 = IF(H18 == \"ALIVE\", I18, IF(PREV(H18) == \"ALIVE\", $D$6, I18 - 1))"
+  },
+  "B19": {
+    "formula": "= B18 + 1",
+    "color": "#f5f5f5"
+  },
+  "C19": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C19 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D19": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D19 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E19": {
+    "formula": "= CONCAT(C19, D19)",
+    "color": "#f5f5f5"
+  },
+  "F19": {
+    "formula": "= INDEX($B$23:$B$32, MATCH(E19, $E$23:$E$32))",
+    "color": "#f5f5f5"
+  },
+  "H19": {
+    "formula": "= \"ALIVE\" = IF(H19 == \"ALIVE\", IF(F19 != -1, \"DEAD\", \"ALIVE\"), IF(I19 == 0, \"ALIVE\", \"DEAD\"))",
+    "color": "#f5f5f5"
+  },
+  "I19": {
+    "formula": "= 0 = IF(H19 == \"ALIVE\", I19, IF(PREV(H19) == \"ALIVE\", $D$6, I19 - 1))",
+    "color": "#f5f5f5"
+  },
+  "B21": {
+    "formula": "= \"Wolves\"",
+    "color": "#FFE699"
+  },
+  "B22": {
+    "formula": "= \"Wolf ID\"",
+    "color": "#B3F5BC"
+  },
+  "C22": {
+    "formula": "= \"X Position\"",
+    "color": "#B3F5BC"
+  },
+  "D22": {
+    "formula": "= \"Y Position\"",
+    "color": "#B3F5BC"
+  },
+  "E22": {
+    "formula": "= \"Position\"",
+    "color": "#B3F5BC"
+  },
+  "F22": {
+    "formula": "= \"Sheep ID\"",
+    "color": "#B3F5BC"
+  },
+  "H22": {
+    "formula": "= \"Status\"",
+    "color": "#B3F5BC"
+  },
+  "I22": {
+    "formula": "= \"Health\"",
+    "color": "#B3F5BC"
+  },
+  "B23": {
+    "formula": "= 1"
+  },
+  "C23": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C23 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D23": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D23 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E23": {
+    "formula": "= CONCAT(C23, D23)"
+  },
+  "F23": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E23, $E$10:$E$19))",
+    "color": ""
+  },
+  "H23": {
+    "formula": "= \"ALIVE\" = IF(I23 == 0, \"DEAD\", \"ALIVE\")"
+  },
+  "I23": {
+    "formula": "= $C$6 = IF(H23 == \"ALIVE\", IF(F23 != -1, MMIN(I23 + $C$6, $C$6 * 2), MMAX(I23 - 1, 0)), IF(F23 != -1, $C$6, 0))"
+  },
+  "B24": {
+    "formula": "= B23 + 1",
+    "color": "#f5f5f5"
+  },
+  "C24": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C24 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D24": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D24 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E24": {
+    "formula": "= CONCAT(C24, D24)",
+    "color": "#f5f5f5"
+  },
+  "F24": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E24, $E$10:$E$19))",
+    "color": "#f5f5f5"
+  },
+  "H24": {
+    "formula": "= \"ALIVE\" = IF(I24 == 0, \"DEAD\", \"ALIVE\")",
+    "color": "#f5f5f5"
+  },
+  "I24": {
+    "formula": "= $C$6 = IF(H24 == \"ALIVE\", IF(F24 != -1, MMIN(I24 + $C$6, $C$6 * 2), MMAX(I24 - 1, 0)), IF(F24 != -1, $C$6, 0))",
+    "color": "#f5f5f5"
+  },
+  "B25": {
+    "formula": "= B24 + 1"
+  },
+  "C25": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C25 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D25": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D25 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E25": {
+    "formula": "= CONCAT(C25, D25)"
+  },
+  "F25": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E25, $E$10:$E$19))",
+    "color": ""
+  },
+  "H25": {
+    "formula": "= \"ALIVE\" = IF(I25 == 0, \"DEAD\", \"ALIVE\")"
+  },
+  "I25": {
+    "formula": "= $C$6 = IF(H25 == \"ALIVE\", IF(F25 != -1, MMIN(I25 + $C$6, $C$6 * 2), MMAX(I25 - 1, 0)), IF(F25 != -1, $C$6, 0))"
+  },
+  "B26": {
+    "formula": "= B25 + 1",
+    "color": "#f5f5f5"
+  },
+  "C26": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C26 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D26": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D26 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E26": {
+    "formula": "= CONCAT(C26, D26)",
+    "color": "#f5f5f5"
+  },
+  "F26": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E26, $E$10:$E$19))",
+    "color": "#f5f5f5"
+  },
+  "H26": {
+    "formula": "= \"ALIVE\" = IF(I26 == 0, \"DEAD\", \"ALIVE\")",
+    "color": "#f5f5f5"
+  },
+  "I26": {
+    "formula": "= $C$6 = IF(H26 == \"ALIVE\", IF(F26 != -1, MMIN(I26 + $C$6, $C$6 * 2), MMAX(I26 - 1, 0)), IF(F26 != -1, $C$6, 0))",
+    "color": "#f5f5f5"
+  },
+  "B27": {
+    "formula": "= B26 + 1"
+  },
+  "C27": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C27 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D27": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D27 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E27": {
+    "formula": "= CONCAT(C27, D27)"
+  },
+  "F27": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E27, $E$10:$E$19))",
+    "color": ""
+  },
+  "H27": {
+    "formula": "= \"ALIVE\" = IF(I27 == 0, \"DEAD\", \"ALIVE\")"
+  },
+  "I27": {
+    "formula": "= $C$6 = IF(H27 == \"ALIVE\", IF(F27 != -1, MMIN(I27 + $C$6, $C$6 * 2), MMAX(I27 - 1, 0)), IF(F27 != -1, $C$6, 0))"
+  },
+  "B28": {
+    "formula": "= B27 + 1",
+    "color": "#f5f5f5"
+  },
+  "C28": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C28 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D28": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D28 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E28": {
+    "formula": "= CONCAT(C28, D28)",
+    "color": "#f5f5f5"
+  },
+  "F28": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E28, $E$10:$E$19))",
+    "color": "#f5f5f5"
+  },
+  "H28": {
+    "formula": "= \"ALIVE\" = IF(I28 == 0, \"DEAD\", \"ALIVE\")",
+    "color": "#f5f5f5"
+  },
+  "I28": {
+    "formula": "= $C$6 = IF(H28 == \"ALIVE\", IF(F28 != -1, MMIN(I28 + $C$6, $C$6 * 2), MMAX(I28 - 1, 0)), IF(F28 != -1, $C$6, 0))",
+    "color": "#f5f5f5"
+  },
+  "B29": {
+    "formula": "= B28 + 1"
+  },
+  "C29": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C29 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D29": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D29 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E29": {
+    "formula": "= CONCAT(C29, D29)"
+  },
+  "F29": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E29, $E$10:$E$19))",
+    "color": ""
+  },
+  "H29": {
+    "formula": "= \"ALIVE\" = IF(I29 == 0, \"DEAD\", \"ALIVE\")"
+  },
+  "I29": {
+    "formula": "= $C$6 = IF(H29 == \"ALIVE\", IF(F29 != -1, MMIN(I29 + $C$6, $C$6 * 2), MMAX(I29 - 1, 0)), IF(F29 != -1, $C$6, 0))"
+  },
+  "B30": {
+    "formula": "= B29 + 1",
+    "color": "#f5f5f5"
+  },
+  "C30": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C30 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D30": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D30 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E30": {
+    "formula": "= CONCAT(C30, D30)",
+    "color": "#f5f5f5"
+  },
+  "F30": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E30, $E$10:$E$19))",
+    "color": "#f5f5f5"
+  },
+  "H30": {
+    "formula": "= \"ALIVE\" = IF(I30 == 0, \"DEAD\", \"ALIVE\")",
+    "color": "#f5f5f5"
+  },
+  "I30": {
+    "formula": "= $C$6 = IF(H30 == \"ALIVE\", IF(F30 != -1, MMIN(I30 + $C$6, $C$6 * 2), MMAX(I30 - 1, 0)), IF(F30 != -1, $C$6, 0))",
+    "color": "#f5f5f5"
+  },
+  "B31": {
+    "formula": "= B30 + 1"
+  },
+  "C31": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C31 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "D31": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D31 + CHOICE(-1, 0, 1), 0), $B$6)"
+  },
+  "E31": {
+    "formula": "= CONCAT(C31, D31)"
+  },
+  "F31": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E31, $E$10:$E$19))",
+    "color": ""
+  },
+  "H31": {
+    "formula": "= \"ALIVE\" = IF(I31 == 0, \"DEAD\", \"ALIVE\")"
+  },
+  "I31": {
+    "formula": "= $C$6 = IF(H31 == \"ALIVE\", IF(F31 != -1, MMIN(I31 + $C$6, $C$6 * 2), MMAX(I31 - 1, 0)), IF(F31 != -1, $C$6, 0))"
+  },
+  "B32": {
+    "formula": "= B31 + 1",
+    "color": "#f5f5f5"
+  },
+  "C32": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(C32 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "D32": {
+    "formula": "= RANDBETWEEN(1, $B$6) = MMIN(MMAX(D32 + CHOICE(-1, 0, 1), 0), $B$6)",
+    "color": "#f5f5f5"
+  },
+  "E32": {
+    "formula": "= CONCAT(C32, D32)",
+    "color": "#f5f5f5"
+  },
+  "F32": {
+    "formula": "= INDEX($B$10:$B$19, MATCH(E32, $E$10:$E$19))",
+    "color": "#f5f5f5"
+  },
+  "H32": {
+    "formula": "= \"ALIVE\" = IF(I32 == 0, \"DEAD\", \"ALIVE\")",
+    "color": "#f5f5f5"
+  },
+  "I32": {
+    "formula": "= $C$6 = IF(H32 == \"ALIVE\", IF(F32 != -1, MMIN(I32 + $C$6, $C$6 * 2), MMAX(I32 - 1, 0)), IF(F32 != -1, $C$6, 0))",
+    "color": "#f5f5f5"
+  }
+}

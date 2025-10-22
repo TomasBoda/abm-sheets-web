@@ -20,6 +20,14 @@ The official repository of the **ABM Sheets** research project.
 
 ABM Sheets was submitted to the [Live 2025 Workshop](https://liveprog.org). The submission paper can be found on [this link](https://abm-sheets-web.vercel.app/about).
 
+## Examples
+
+Example models can be found in [this folder](/models/):
+
+- [Running Race](/models/model-running-race.json) - agent-based simulation of a running race
+- [Cannonball](/models/model-cannonball.json) - physics simulation of shooting cannonballs
+- [Wolf-Sheep Predation](/models/model-wolf-sheep-predation.json) - agent-based simulation of predator-prey ecosystems
+
 ## Contribution
 
 Contributions are welcome! If you would like to improve ABM Sheets, please follow these guidelines:
