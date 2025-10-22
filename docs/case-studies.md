@@ -34,7 +34,7 @@ Live demo of the model can be found on [this link](https://abm-sheets-web.vercel
 
 The wolf-sheep predation model explores the stability of predator-prey ecosystems. It is an agent-based simulation that consists of two types of agents - predators (wolves) and prey (sheep). Wolves attempt to eat the sheep in order to survive. If their energy runs out, they die and respawn only after eating a sheep that crosses their path. On the other hand, if a sheep gets eaten, it dies and respawns after a certain time passes. This simulation aims to observe the changes in the wolf and sheep population over time.
 
-In the plotted graph, we can observe two ldynamic ines representing the population of the wolves and the sheep as time progresses.
+In the plotted graph, we can observe two dynamic lines representing the population of the wolves and the sheep as time progresses.
 
 We can observe that at first, the population of sheep decreases as the wolves eat the sheep. As there is less sheep for the wolves to eat, their energy runs out shortly, resulting in the decrease of the wolf population. With this decrease, the sheep can regenerate and respawn and with less wolves to eat them, they prosper. However, with more sheep in the area, there is a higher probability of an encounter with the wolves, resulting in the increase of the wolf population.
 
