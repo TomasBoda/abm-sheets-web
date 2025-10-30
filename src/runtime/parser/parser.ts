@@ -159,7 +159,7 @@ export class Parser {
                 return this.parseParenthesisedExpression();
             default:
                 throw new Error(
-                    `Unknown token '${TokenType[this.at().type]}' during parsing`,
+                    `Unknown token '${this.at().value}' during parsing`,
                 );
         }
     }
