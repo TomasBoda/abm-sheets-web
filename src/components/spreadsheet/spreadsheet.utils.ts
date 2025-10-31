@@ -17,12 +17,24 @@ import { Spreadsheet } from "./spreadsheet.constants";
 import { CellCoords, CellId, History } from "./spreadsheet.model";
 
 export namespace SpreadsheetUtils {
+    /**
+     * Converts cell coordinates to cell id
+     *
+     * @param coords - cell coordinates
+     * @returns cell id
+     */
     export const cellCoordsToId = ({ ri, ci }: CellCoords): CellId => {
         const col = SpreadsheetUtils.columnIndexToText(ci);
         const row = ri + 1;
         return `${col}${row}`;
     };
 
+    /**
+     * Converts cell id to cell coordinates
+     *
+     * @param cellId - cell id
+     * @returns cell coordinates
+     */
     export const cellIdToCoords = (cellId: CellId): CellCoords => {
         const match = cellId.match(/(\D+)(\d+)$/);
 
@@ -39,6 +51,12 @@ export namespace SpreadsheetUtils {
         return { ri, ci };
     };
 
+    /**
+     * Converts column index to column text (e.g. 0 -> "A", 1 -> "B")
+     *
+     * @param index - column index
+     * @returns column text
+     */
     export const columnIndexToText = (index: number): string => {
         let column = "";
         index += 1;
@@ -53,6 +71,12 @@ export namespace SpreadsheetUtils {
         return column;
     };
 
+    /**
+     * Converts column text to column index (e.g. "A" -> 0, "B" -> 1)
+     *
+     * @param text - column text
+     * @returns column index
+     */
     export const columnTextToIndex = (text: string): number => {
         let index = 0;
 
@@ -63,6 +87,12 @@ export namespace SpreadsheetUtils {
         return index - 1;
     };
 
+    /**
+     * Parses raw cell formula string into the default and primary formula
+     *
+     * @param formula - formula string
+     * @returns default and primary formula
+     */
     export const getFormula = (
         formula: string,
     ): { defaultFormula?: string; primaryFormula?: string } => {
@@ -88,6 +118,12 @@ export namespace SpreadsheetUtils {
         };
     };
 
+    /**
+     * Retrieves the cell ids from a formula string
+     *
+     * @param formula - formula string
+     * @returns cell ids
+     */
     export const getCellIdsFromFormula = (formula: string): CellId[] => {
         const regex = /\$?([A-Z]+)\$?([0-9]+)/g;
         const cellIds = [...formula.matchAll(regex)].map((match) => {
@@ -98,6 +134,13 @@ export namespace SpreadsheetUtils {
         return cellIds;
     };
 
+    /**
+     * Evaluates the cells in spreadsheet and returns the history object
+     *
+     * @param cells - cell ids
+     * @param steps - number of steps
+     * @returns history object
+     */
     export const evaluate = (
         cells: CellId[],
         steps: number,
@@ -141,6 +184,14 @@ export namespace SpreadsheetUtils {
         return history;
     };
 
+    /**
+     * Shifts the cell reference by the given offset
+     *
+     * @param ref - cell reference
+     * @param colOffset - column offset
+     * @param rowOffset - row offset
+     * @returns shifted cell reference
+     */
     export const shiftCellReference = (
         ref: string,
         colOffset: number,
@@ -178,6 +229,12 @@ export namespace SpreadsheetUtils {
         return `${colDollar}${newColLetters}${rowDollar}${newRowNumber}`;
     };
 
+    /**
+     * Parses raw formula input into a runtime value (e.g. "1" to "= 1")
+     *
+     * @param input - original formula
+     * @returns new formula
+     */
     export const tryGetFormulaFromCellValue = (input: string) => {
         if (input.trim() === "") {
             return "";
@@ -198,6 +255,12 @@ export namespace SpreadsheetUtils {
         return `= "${input.trim()}"`;
     };
 
+    /**
+     * Converts runtime value to textual representation (used in rendering cell text)
+     *
+     * @param value - runtime value
+     * @returns text
+     */
     export const getValueText = (value: Value) => {
         switch (value.type) {
             case ValueType.Number:
@@ -282,6 +345,7 @@ export namespace SpreadsheetUtils {
             ?.childNodes[0] as HTMLSpanElement;
     };
 
+    // inserts text into formula element in the DOM
     export const updateCellText = (cellId: CellId, value: string) => {
         const element = getCellElement(cellId);
         if (!element) return;

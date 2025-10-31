@@ -2,6 +2,9 @@
 
 import { useEffect } from "react";
 
+/**
+ * Hook that prevents the page from scrolling
+ */
 export const usePageNoScroll = () => {
     useEffect(() => {
         const original = document.body.style.overflow;

@@ -21,6 +21,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
 
     const timeoutRef = useRef(null);
 
+    // display a message on the screen
     const showMessage = (type: MessageType, content: ReactNode) => {
         hideMessage();
 
@@ -28,9 +29,11 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
         setMessage(content);
         setKey(uuid());
 
+        // automatically hide the message after 3 seconds
         timeoutRef.current = setTimeout(hideMessage, 3000);
     };
 
+    // hide the displayed message
     const hideMessage = () => {
         setMessage(undefined);
 

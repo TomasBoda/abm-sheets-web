@@ -64,6 +64,7 @@ const SpreadsheetContext = createContext<SpreadsheetContextType | undefined>(
     undefined,
 );
 
+// holds cells on the spreadsheet
 const useCells = () => {
     const [usedCells, setUsedCells] = useState<Set<CellId>>(new Set());
 
@@ -82,6 +83,7 @@ const useCells = () => {
     return { usedCells, setUsedCells, addUsedCell, removeUsedCell };
 };
 
+// holds the cell styles
 const useStyle = () => {
     const [cellStyles, setCellStyles] = useState<CellStyleMap>(new Map());
 
@@ -129,17 +131,22 @@ const useStyle = () => {
     };
 };
 
+// holds the cell history
 const useHistory = () => {
     const [history, setHistory] = useState<History>(new Map<CellId, Value[]>());
 
     return { history, setHistory };
 };
 
+/**
+ * Holds all spreadsheet cell data and exposes spreadsheet-specific functionality
+ */
 export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
     const cells = useCells();
     const style = useStyle();
     const history = useHistory();
 
+    // clear the entire spreadsheet (all cells)
     const clear = () => {
         for (let ri = 0; ri < SPREADSHEET_SIZE; ri++) {
             for (let ci = 0; ci < SPREADSHEET_SIZE; ci++) {
@@ -154,6 +161,7 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
         history.setHistory(new Map());
     };
 
+    // export the spreadsheet data to a JSON object
     const getExportedData = (): object => {
         const object = {};
 
@@ -172,6 +180,7 @@ export const SpreadsheetProvider = ({ children }: { children: ReactNode }) => {
         return object;
     };
 
+    // load a JSON object into the spreadsheet
     const loadImportedData = (importedData: object) => {
         clear();
 

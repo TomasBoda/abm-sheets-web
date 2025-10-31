@@ -20,17 +20,23 @@ export const DEFAULT_STEP = 0;
 // default number of simulation steps
 export const DEFAULT_STEPS = 50;
 
+/**
+ * Holds cell data in the spreadsheet
+ */
 export namespace Spreadsheet {
     export const data: Map<CellId, SpreadsheetCell> = new Map();
 
+    // retrieve cell data by cell id
     export const get = (cellId: CellId): SpreadsheetCell => {
         return data.get(cellId) ?? { formula: "" };
     };
 
+    // set cell data by cell id
     export const set = (cellId: CellId, cell: SpreadsheetCell): void => {
         data.set(cellId, cell);
     };
 
+    // update cell data by cell id
     export const update = (
         cellId: CellId,
         cell: Partial<SpreadsheetCell>,
@@ -39,10 +45,12 @@ export namespace Spreadsheet {
         Spreadsheet.set(cellId, { ...data, ...cell });
     };
 
+    // remove cell data by cell id
     export const remove = (cellId: CellId): void => {
         Spreadsheet.data.delete(cellId);
     };
 
+    // clear all cell data
     export const clear = (): void => {
         Spreadsheet.data.clear();
     };

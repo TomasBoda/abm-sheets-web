@@ -9,6 +9,7 @@ interface SpreadsheetSize {
     height: number;
 }
 
+// hook that calculates the size of the spreadsheet container (in pixels)
 export const useSpreadsheetSize = ({ toolbarRef }: UseSpreadsheetSizeProps) => {
     const [size, setSize] = useState<SpreadsheetSize>({ width: 0, height: 0 });
 
@@ -17,6 +18,7 @@ export const useSpreadsheetSize = ({ toolbarRef }: UseSpreadsheetSizeProps) => {
             return;
         }
 
+        // update spreadsheet container size on window resize
         const handleResize = () => {
             const toolbarHeight = toolbarRef.current.clientHeight;
             const contentWidth = window.innerWidth;

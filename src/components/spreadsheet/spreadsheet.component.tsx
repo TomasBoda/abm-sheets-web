@@ -23,6 +23,12 @@ interface UseRenderedPanelsProps {
     containerRef: MutableRefObject<HTMLDivElement>;
 }
 
+/**
+ * Hook that calculates the indexes of spreadsheet panels visible in the viewport
+ *
+ * @param containerRef - React Ref object to the container element
+ * @returns indexes of visible spreadsheet panels
+ */
 const useRenderedPanels = ({ containerRef }: UseRenderedPanelsProps) => {
     const [renderedPanels, setRenderedPanels] = useState(new Set<number>());
 
@@ -44,6 +50,7 @@ const useRenderedPanels = ({ containerRef }: UseRenderedPanelsProps) => {
 
             const panelBounds = [];
 
+            // map panel indixes to pixel bounds in the DOM (x, y, width, height)
             for (let y = 0; y < PANEL_COUNT; y++) {
                 for (let x = 0; x < PANEL_COUNT; x++) {
                     const bounds = {
@@ -59,6 +66,7 @@ const useRenderedPanels = ({ containerRef }: UseRenderedPanelsProps) => {
 
             const newRenderedPanels = new Set<number>();
 
+            // calculate panel/viewport intersections
             for (let i = 0; i < PANEL_COUNT * PANEL_COUNT; i++) {
                 const bounds = panelBounds[i];
 
@@ -73,6 +81,7 @@ const useRenderedPanels = ({ containerRef }: UseRenderedPanelsProps) => {
                 }
             }
 
+            // update the rendered panels
             setRenderedPanels((prevRenderedPanels) => {
                 if (
                     prevRenderedPanels.size === newRenderedPanels.size &&
@@ -104,12 +113,14 @@ const useRenderedPanels = ({ containerRef }: UseRenderedPanelsProps) => {
     return { renderedPanels };
 };
 
+// returns panel row and column indexes based on the panel index
 const getPanelRowAndColumn = (panelIndex: number) => {
     const panelRow = Math.floor(panelIndex / PANEL_COUNT);
     const panelCol = panelIndex % PANEL_COUNT;
     return { panelRow, panelCol };
 };
 
+// returns cell row and column indexes based on the panel row and column indexes
 const getCellRowAndColumn = (
     cellIndex: number,
     panelRow: number,
@@ -130,6 +141,14 @@ interface SpreadsheetSpecificProps {
 type SpreadsheetProps = SpreadsheetSpecificProps &
     Omit<ComponentProps<"div">, "children">;
 
+/**
+ * Renders the spreadsheet grid with the ability to render only the panels visible in the viewport
+ *
+ * @param children - function that renders the cell component
+ * @param selectedRows - set of indexes of selected rows
+ * @param selectedCols - set of indexes of selected columns
+ * @returns Spreadsheet component
+ */
 export const SpreadsheetComponent = ({
     children,
     selectedRows,
@@ -139,6 +158,7 @@ export const SpreadsheetComponent = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const { renderedPanels } = useRenderedPanels({ containerRef });
 
+    // renders the column indicators
     const ColumnRow = useCallback(() => {
         const data = Array.from(Array(SPREADSHEET_SIZE + 1));
 
@@ -156,6 +176,7 @@ export const SpreadsheetComponent = ({
         );
     }, [selectedRows]);
 
+    // renders the row indicators
     const RowColumn = useCallback(() => {
         const data = Array.from(Array(SPREADSHEET_SIZE));
 

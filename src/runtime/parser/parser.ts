@@ -18,15 +18,24 @@ import {
 export class Parser {
     private tokens: Token[] = [];
 
+    /**
+     * Parse a raw formula string into an AST (Abstract Syntax Tree)
+     *
+     * @param formula - raw formula string
+     * @returns AST as an Expression
+     */
     public parse(formula: string): Expression {
+        // use lexer to tokenize the formula
         this.tokens = new Lexer().tokenize(formula);
         return this.parseExpression();
     }
 
+    // parses any expression
     private parseExpression(): Expression {
         return this.parseRelationalExpression();
     }
 
+    // parses a relational expression (e.g. A3 < 12)
     private parseRelationalExpression(): Expression {
         let left: Expression = this.parseAdditiveExpression();
 
@@ -49,6 +58,7 @@ export class Parser {
         return left;
     }
 
+    // parses an additive expression (e.g. 3 + 5)
     private parseAdditiveExpression(): Expression {
         let left: Expression = this.parseMultiplicativeExpression();
 
@@ -71,6 +81,7 @@ export class Parser {
         return left;
     }
 
+    // parses a multiplicative expression (e.g. 6 / 4)
     private parseMultiplicativeExpression(): Expression {
         let left: Expression = this.parseCallExpression();
 
@@ -93,6 +104,7 @@ export class Parser {
         return left;
     }
 
+    // parses a call expression (e.g. RANDBETWEEN(1, 2))
     private parseCallExpression(): Expression {
         const result = this.parseCellRangeExpression();
 
@@ -125,6 +137,7 @@ export class Parser {
         return result;
     }
 
+    // parses a cell range expression (e.g. A1:B2)
     private parseCellRangeExpression(): Expression {
         const left = this.parsePrimaryExpression();
 
@@ -142,6 +155,7 @@ export class Parser {
         return left;
     }
 
+    // parses a primary expression (e.g. 12, TRUE, "Hello, World!")
     private parsePrimaryExpression(): Expression {
         switch (this.at().type) {
             case TokenType.Number:
@@ -164,6 +178,7 @@ export class Parser {
         }
     }
 
+    // parses a numeric literal (e.g. 12, 15.85)
     private parseNumericLiteral(): Expression {
         const value = this.expect(TokenType.Number).value;
         return {
@@ -172,6 +187,7 @@ export class Parser {
         } as NumericLiteral;
     }
 
+    // parses a boolean literal (e.g. TRUE, FALSE)
     private parseBooleanLiteral(): Expression {
         const value = this.expect(TokenType.Boolean).value;
         return {
@@ -180,11 +196,13 @@ export class Parser {
         } as BooleanLiteral;
     }
 
+    // parses a string literal (e.g. "Hello, World!")
     private parseStringLiteral(): Expression {
         const value = this.expect(TokenType.String).value;
         return { type: NodeType.StringLiteral, value } as StringLiteral;
     }
 
+    // parses an identifier (e.g. A1, B2, C3, etc.)
     private parseIdentifier(): Expression {
         const value = this.expect(TokenType.Identifier).value;
 
@@ -209,6 +227,7 @@ export class Parser {
         return cellLiteral;
     }
 
+    // parses a unary expression (e.g. !TRUE, -12)
     private parseUnaryExpression(): Expression {
         switch (this.at().type) {
             case TokenType.UnOp: {
@@ -244,6 +263,7 @@ export class Parser {
         }
     }
 
+    // parses a parenthesised expression (e.g. (12 + 5))
     private parseParenthesisedExpression(): Expression {
         this.expect(TokenType.OpenParen);
         const expression = this.parseExpression();
@@ -251,6 +271,7 @@ export class Parser {
         return expression;
     }
 
+    // returns the current token
     private at(): Token {
         if (this.tokens.length === 0) {
             throw new Error("No more tokens to parse");
@@ -259,6 +280,7 @@ export class Parser {
         return this.tokens[0];
     }
 
+    // returns the current token and advances to the next token
     private next(): Token {
         if (this.tokens.length === 0) {
             throw new Error("No more tokens to parse");
@@ -267,6 +289,7 @@ export class Parser {
         return this.tokens.shift()!;
     }
 
+    // expects a token of a specific type and returns it and advances to the next token or throws an error
     private expect(type: TokenType): Token {
         if (this.at()?.type !== type) {
             throw new Error(

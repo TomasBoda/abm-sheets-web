@@ -20,6 +20,7 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(
     undefined,
 );
 
+// handles showing/hiding the user onboarding modal
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     const modal = useModal();
     const storage = useLocalStorage();

@@ -31,6 +31,12 @@ interface UseSyntaxHighlightingProps {
     value: string;
 }
 
+/**
+ * Hook that converts a formula string into a syntax-highlighted HTML
+ *
+ * @param value - formula string
+ * @returns syntax-highlighted HTML
+ */
 export const useSyntaxHighlighting = ({
     value,
 }: UseSyntaxHighlightingProps) => {

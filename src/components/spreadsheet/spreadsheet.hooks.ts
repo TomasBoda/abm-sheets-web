@@ -6,6 +6,12 @@ export interface UseSelectedRowsAndColsProps {
     selectedCells: Set<CellId>;
 }
 
+/**
+ * Hook that calculates the indexes of selected rows and columns
+ *
+ * @param selectedCells - set of selected cell ids
+ * @returns indexes of selected rows and columns
+ */
 export const useSelectedRowsAndCols = ({
     selectedCells,
 }: UseSelectedRowsAndColsProps) => {
@@ -34,6 +40,12 @@ export interface UseFormulaFocusProps {
     ref: MutableRefObject<HTMLInputElement>;
 }
 
+/**
+ * Hook that manages the focus state of the formula input
+ *
+ * @param ref - React Ref object to the formula input element
+ * @returns focus state of the formula input
+ */
 export const useFormulaFocus = ({ ref }: UseFormulaFocusProps) => {
     const [focused, setFocused] = useState(false);
 

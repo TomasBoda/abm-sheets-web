@@ -42,6 +42,7 @@ const SelectionContext = createContext<SelectionContextType | undefined>(
     undefined,
 );
 
+// hook that manages cell selection (single/multiple) and dragging
 export const SelectionProvider = ({ children }: { children: ReactNode }) => {
     const [selectedCells, setSelectedCells] = useState(
         new Set<CellId>([DEFAULT_CELL]),

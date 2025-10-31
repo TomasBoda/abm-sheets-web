@@ -17,10 +17,12 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [modals, setModals] = useState<ReactNode[]>([]);
 
+    // display the provided modal
     const showModal = (content: (props: ModalControls) => ReactNode) => {
         setModals((prev) => [...prev, content({ hideModal })]);
     };
 
+    // hide the currently displayed modal
     const hideModal = () => {
         setModals((prev) => prev.slice(0, -1));
     };
