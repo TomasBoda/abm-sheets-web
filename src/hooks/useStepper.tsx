@@ -23,6 +23,7 @@ type StepperContextType = {
 
 const StepperContext = createContext<StepperContextType | undefined>(undefined);
 
+// holds the current step and total number of steps
 export const StepperProvider = ({ children }: { children: ReactNode }) => {
     const [step, setStep] = useState<number>(DEFAULT_STEP);
     const [steps, setSteps] = useState<number>(DEFAULT_STEPS);

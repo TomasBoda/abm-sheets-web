@@ -29,6 +29,7 @@ export const GraphProvider = ({ children }: { children: ReactNode }) => {
 
     const [cells, setCells] = useState<GraphCell[]>([]);
 
+    // track cells that return a graph object
     useEffect(() => {
         const graphCells: GraphCell[] = [];
 
@@ -50,9 +51,7 @@ export const GraphProvider = ({ children }: { children: ReactNode }) => {
         stepper.step,
     ]);
 
-    const values = {
-        cells,
-    };
+    const values = { cells };
 
     return (
         <GraphContext.Provider value={values}>{children}</GraphContext.Provider>

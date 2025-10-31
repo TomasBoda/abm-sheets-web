@@ -27,6 +27,7 @@ import {
     ValueType,
 } from "./runtime";
 
+// list of all supported language functions
 export const supportedFunctions = [
     "ABS",
     "FLOOR",
@@ -109,7 +110,7 @@ export const supportedFunctions = [
 
 export type FunctionName = (typeof supportedFunctions)[number];
 
-// utils
+// utilities
 
 const createNumber = (value: NumberType): NumberValue => ({
     type: ValueType.Number,
@@ -222,6 +223,8 @@ const expectArg = (args: Value[], index: number, type?: ValueType): Value => {
     return args[index];
 };
 
+// return a value from the history based on cell id and step
+
 const getHistoryValue = (cellId: CellId, step: number, history: History) => {
     const historyValue = history.get(cellId);
 
@@ -232,6 +235,7 @@ const getHistoryValue = (cellId: CellId, step: number, history: History) => {
     return undefined;
 };
 
+// function to retrieve mixed arguments (ranges and single values, mixed together)
 const parseArgs = (args: Value[]): Value[] => {
     const parsedArgs: Value[] = [];
 
@@ -250,6 +254,7 @@ const parseArgs = (args: Value[]): Value[] => {
     return parsedArgs;
 };
 
+// standard library functions
 export namespace Functions {
     // IF (BOOLEAN, ANY, ANY)
     export const conditional = ({ args }: FuncProps): Value => {
@@ -718,6 +723,7 @@ export namespace Functions {
     };
 }
 
+// functions that return graph (Compost.js) objects
 export namespace GraphFunctions {
     // SCALECONTINUOUS (NUMBER, NUMBER)
     export const scaleContinuous = ({ args }: FuncProps): Value => {

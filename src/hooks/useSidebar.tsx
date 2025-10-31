@@ -13,6 +13,7 @@ interface Props {
     content: ReactNode;
 }
 
+// hook that manages the sidebar state
 export const SidebarProvider = (props: Props) => {
     const [toggled, setToggled] = useState<boolean>(false);
 

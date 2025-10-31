@@ -15,6 +15,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// hook that manages authenticated user id
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [userId, setUserId] = useState<string | undefined>(undefined);
 
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    // load authenticated user id on mount
     useEffect(() => {
         loadAuthUser();
     }, []);

@@ -5,6 +5,12 @@ export class Lexer {
     private formula: string[] = [];
     private tokens: Token[] = [];
 
+    /**
+     * Converts a raw formula string into an array of tokens
+     *
+     * @param formula - raw formula string
+     * @returns array of tokens
+     */
     public tokenize(formula: string): Token[] {
         this.formula = formula.split("");
         this.tokens = [];
@@ -120,6 +126,7 @@ export class Lexer {
         return this.tokens;
     }
 
+    // tokenizes identifiers, e.g. MAX, SUM, A1, B2, C3, etc.
     private tokenizeIdentifier(value: string): void {
         let identifier = value;
 
@@ -149,6 +156,7 @@ export class Lexer {
         }
     }
 
+    // tokenizes numbers, e.g. 12, 15.85
     private tokenizeNumber(value: string): void {
         let number = value;
         let foundDot = false;
@@ -175,6 +183,7 @@ export class Lexer {
         this.token(TokenType.Number, number);
     }
 
+    // tokenizes strings, e.g. "Hello, World!"
     private tokenizeString(): void {
         this.next();
 
@@ -188,10 +197,12 @@ export class Lexer {
         this.token(TokenType.String, string);
     }
 
+    // append a new token to the tokens array
     private token(type: TokenType, value: string): void {
         this.tokens.push({ type, value });
     }
 
+    // returns the current symbol in the formula
     private at(): string | undefined {
         if (this.formula.length === 0) {
             return undefined;
@@ -200,6 +211,7 @@ export class Lexer {
         return this.formula[0];
     }
 
+    // returns the current symbol in the formula and advances to the next symbol
     private next(): string | undefined {
         return this.formula.shift();
     }

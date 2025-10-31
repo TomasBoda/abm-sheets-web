@@ -16,6 +16,11 @@ import { useSyntaxHighlighting } from "@/hooks/useSyntaxHighlighting";
 import { Logger } from "@/utils/logger";
 import { StatusIcon } from "../status-icon";
 
+/**
+ * Main spreadsheet component that handles the user interaction and rendering of the spreadsheet
+ *
+ * @returns Spreadsheet component
+ */
 export const SpreadsheetWrapper = () => {
     const formulaRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +55,7 @@ export const SpreadsheetWrapper = () => {
         Logger.log(sessionId, "formula-input", formula);
     }, [formula]);
 
+    // load project into the spreadsheet
     useEffect(() => {
         if (project !== undefined) {
             spreadsheet.file.loadImportedData(JSON.parse(project.data));
@@ -63,6 +69,7 @@ export const SpreadsheetWrapper = () => {
         evaluateUsedCells();
     }, [spreadsheet.cells.usedCells, stepper.steps]);
 
+    // propagate history values to the spreadsheet cells in the DOM
     useEffect(() => {
         for (const cellId of spreadsheet.cells.usedCells) {
             const value = spreadsheet.history.history.get(cellId)?.[step];
@@ -93,7 +100,7 @@ export const SpreadsheetWrapper = () => {
         }
     }, [formula, isFormulaFocused]);
 
-    // set referenced cells
+    // retrieve references cells when the formula is focused
     useEffect(() => {
         if (!isFormulaFocused) {
             setReferencedCells(new Set());
@@ -110,6 +117,7 @@ export const SpreadsheetWrapper = () => {
         onCellClick(getFirstSelectedCell());
     }, []);
 
+    // evaluate used cells
     const evaluateUsedCells = () => {
         const cells = Array.from(spreadsheet.cells.usedCells);
         const history = SpreadsheetUtils.evaluate(cells, steps);
@@ -117,6 +125,7 @@ export const SpreadsheetWrapper = () => {
         spreadsheet.history.setHistory(history);
     };
 
+    // handles cell click events
     const onCellClick = ({ ri, ci }: CellCoords, event?: any) => {
         event?.preventDefault();
 
@@ -126,6 +135,7 @@ export const SpreadsheetWrapper = () => {
             SpreadsheetUtils.cellCoordsToId({ ri, ci }),
         );
 
+        // if the formula is focused, append the cell reference to the formula
         if (isFormulaFocused) {
             onCellReferenceClick({ ri, ci });
             return;
@@ -135,13 +145,16 @@ export const SpreadsheetWrapper = () => {
             selectionListeners.handleMouseDown({ ri, ci });
         }
 
+        // otherwise propagate the cell formula to the formula input
         setFormula(
             Spreadsheet.get(SpreadsheetUtils.cellCoordsToId({ ri, ci }))
                 .formula,
         );
+        // and focus the clicked cell
         getCellElement({ ri, ci })?.focus();
     };
 
+    // if the formula is focused, append the clicked cell reference to the formula input
     const onCellReferenceClick = ({ ri, ci }: CellCoords) => {
         if (!formulaRef.current) return;
 
@@ -162,11 +175,13 @@ export const SpreadsheetWrapper = () => {
         formulaRef.current.focus();
     };
 
+    // focus formula input on cell double click
     const onCellDoubleClick = () => {
         formulaRef.current?.focus();
         formulaRef.current.setSelectionRange(formula.length, formula.length);
     };
 
+    // clear selected cells on backspace
     const onCellBackspace = () => {
         for (const selectedCellId of selectedCells) {
             Spreadsheet.update(selectedCellId, { formula: "" });
@@ -178,6 +193,7 @@ export const SpreadsheetWrapper = () => {
         evaluateUsedCells();
     };
 
+    // handle copying cells onctrl + c
     const onCellCopy = () => {
         const newCopiedCells = new Set<CellId>();
 
@@ -248,6 +264,7 @@ export const SpreadsheetWrapper = () => {
         return cellMap;
     };
 
+    // handle pasting cells on copy & drag
     const onMouseUp = () => {
         if (!dragWithCopy || !selectionBounds) return;
 
@@ -288,6 +305,7 @@ export const SpreadsheetWrapper = () => {
         evaluateUsedCells();
     };
 
+    // handle pasting cells on ctrl + v
     const onCellPaste = () => {
         const currentCellCoors = SpreadsheetUtils.cellIdToCoords(
             Array.from(selectedCells)[0],
@@ -350,6 +368,7 @@ export const SpreadsheetWrapper = () => {
         evaluateUsedCells();
     };
 
+    // move the selected cell on the spreadsheet with arrow keys
     const onCellArrowKeys = (
         key: "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight",
         cellId: CellId,
@@ -381,16 +400,19 @@ export const SpreadsheetWrapper = () => {
         setFormula(Spreadsheet.get(newCellId).formula);
     };
 
+    // handle keyboard events on cells
     const onCellKeyDown = (
         cellId: CellId,
         event: KeyboardEvent<HTMLDivElement>,
     ) => {
+        // remove selected cells
         if (event.key === "Backspace") {
             event.preventDefault();
             onCellBackspace();
             return;
         }
 
+        // move the selected cell on the spreadsheet with arrow keys
         if (
             event.key === "ArrowUp" ||
             event.key === "ArrowDown" ||
@@ -403,12 +425,14 @@ export const SpreadsheetWrapper = () => {
         }
 
         if (event.ctrlKey || event.metaKey) {
+            // copy selected cells
             if (event.key === "c") {
                 event.preventDefault();
                 onCellCopy();
                 return;
             }
 
+            // paste copied cells
             if (event.key === "v") {
                 event.preventDefault();
                 onCellPaste();
@@ -428,6 +452,7 @@ export const SpreadsheetWrapper = () => {
         );
     };
 
+    // handle formula enter keypress
     const onFormulaEnter = () => {
         const coords = getFirstSelectedCell();
 
@@ -448,10 +473,13 @@ export const SpreadsheetWrapper = () => {
             );
         }
 
+        // move one cell below as in Microsoft Excel
         moveToCellBelow(coords);
+        // reevaluate the spreadsheet
         evaluateUsedCells();
     };
 
+    // handle formula keypress events
     const onFormulaKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -465,11 +493,13 @@ export const SpreadsheetWrapper = () => {
         return document.getElementById(cellId);
     };
 
+    // used for displaying selection indicator
     const getFirstSelectedCell = (): CellCoords => {
         const cellId = Array.from(selectedCells)[0];
         return SpreadsheetUtils.cellIdToCoords(cellId);
     };
 
+    // used for displaying selection indicator
     const getLastSelectedCell = (): CellCoords => {
         const cellId = Array.from(selectedCells)[selectedCells.size - 1];
         return SpreadsheetUtils.cellIdToCoords(cellId);
@@ -512,6 +542,7 @@ export const SpreadsheetWrapper = () => {
         return (value as ErrorValue).value;
     };
 
+    // convert selection to indicator text
     const getSelectedCellIndicatorText = () => {
         const first = SpreadsheetUtils.cellCoordsToId(getFirstSelectedCell());
         const last = SpreadsheetUtils.cellCoordsToId(getLastSelectedCell());
@@ -523,6 +554,7 @@ export const SpreadsheetWrapper = () => {
         return `${first}:${last}`;
     };
 
+    // component that displays potential error message of selected cell
     const ErrorDisplay = () => {
         if (selectedCells.size !== 1) return null;
 

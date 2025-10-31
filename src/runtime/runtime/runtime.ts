@@ -113,6 +113,15 @@ export class Runtime {
         ["RENDER", GraphFunctions.render],
     ]);
 
+    /**
+     * Evaluate an AST (Abstract Syntax Tree) of a cell's formula
+     *
+     * @param expression - AST of a cell's formula
+     * @param history - history of the spreadsheet
+     * @param step - current step
+     * @param steps - total number of steps
+     * @returns evaluated runtime value of the formula
+     */
     public run(
         expression: Expression,
         history: History,
@@ -126,10 +135,11 @@ export class Runtime {
         return this.runFormula(expression);
     }
 
-    public runFormula(expression: Expression): Value {
+    private runFormula(expression: Expression): Value {
         return this.runExpression(expression);
     }
 
+    // evaluates any expression
     public runExpression(expression: Expression): Value {
         switch (expression.type) {
             case NodeType.CallExpression:
@@ -161,6 +171,7 @@ export class Runtime {
         }
     }
 
+    // evaluates a call expression (e.g. MAX(A1, B2))
     private runCallExpression(expression: CallExpression): Value {
         const { identifier, args } = expression;
 
@@ -170,6 +181,7 @@ export class Runtime {
             throw new Error(`Function '${identifier}' does not exist`);
         }
 
+        // if the function is PREV or TIMERANGE, don't evaluate the cell reference, insert it into the arg list
         if (identifier === "PREV" || identifier === "TIMERANGE") {
             this.inCallExpression = true;
         }
@@ -185,6 +197,7 @@ export class Runtime {
         });
     }
 
+    // evaluates a relational expression (e.g. A3 < 12)
     private runRelationalExpression(
         expression: RelationalExpression,
     ): BooleanValue {
@@ -193,6 +206,7 @@ export class Runtime {
         const leftValue = this.runExpression(left);
         const rightValue = this.runExpression(right);
 
+        // NUMBER and NUMBER
         if (
             leftValue.type === ValueType.Number &&
             rightValue.type === ValueType.Number
@@ -222,6 +236,7 @@ export class Runtime {
             return { type: ValueType.Boolean, value: result };
         }
 
+        // BOOLEAN and BOOLEAN
         if (
             leftValue.type === ValueType.Boolean &&
             rightValue.type === ValueType.Boolean
@@ -247,6 +262,7 @@ export class Runtime {
             return { type: ValueType.Boolean, value: result };
         }
 
+        // STRING and STRING
         if (
             leftValue.type === ValueType.String &&
             rightValue.type === ValueType.String
@@ -277,6 +293,7 @@ export class Runtime {
         );
     }
 
+    // evaluates a binary expression (e.g. 3 + 5)
     private runBinaryExpression(expression: BinaryExpression): NumberValue {
         const { left, right, operator } = expression;
 
@@ -312,6 +329,7 @@ export class Runtime {
         return { type: ValueType.Number, value: result };
     }
 
+    // evaluates a unary expression (e.g. !TRUE, -12)
     private runUnaryExpression(
         expression: UnaryExpression,
     ): NumberValue | BooleanValue {
@@ -321,6 +339,7 @@ export class Runtime {
             case "!": {
                 const result = this.runExpression(value);
 
+                // cannot do !12 or !"Hello, World!"
                 if (result.type !== ValueType.Boolean) {
                     throw new Error("Expected boolean in unary expression");
                 }
@@ -333,6 +352,7 @@ export class Runtime {
             case "-": {
                 const result = this.runExpression(value);
 
+                // cannot do -TRUE or -"Hello, World!"
                 if (result.type !== ValueType.Number) {
                     throw new Error("Expected number in unary expression");
                 }
@@ -345,16 +365,19 @@ export class Runtime {
         }
     }
 
+    // evaluates a numeric literal (e.g. 12, 15.85)
     private runNumericLiteral(expression: NumericLiteral): NumberValue {
         const { value } = expression;
         return { type: ValueType.Number, value };
     }
 
+    // evaluates a boolean literal (e.g. TRUE, FALSE)
     private runBooleanLiteral(expression: BooleanLiteral): BooleanValue {
         const { value } = expression;
         return { type: ValueType.Boolean, value };
     }
 
+    // evaluates a string literal (e.g. "Hello, World!")
     private runStringLiteral(expression: StringLiteral): StringValue {
         const { value } = expression;
         return { type: ValueType.String, value };
@@ -364,11 +387,13 @@ export class Runtime {
         throw new Error(`Variable '${expression.value}' does not exist`);
     }
 
+    // evaluates a cell literal (e.g. A1)
     private runCellLiteral(expression: CellLiteral): Value {
         const ri = expression.row.index;
         const ci = expression.col.index;
         const cellId = SpreadsheetUtils.cellCoordsToId({ ri, ci });
 
+        // if the function is PREV or TIMERANGE, don't evaluate the cell reference, just return it as it is
         if (this.inCallExpression) {
             return {
                 type: ValueType.CellLiteral,
@@ -385,11 +410,13 @@ export class Runtime {
         return cellValue;
     }
 
+    // evaluates a cell range literal (e.g. A1:B2)
     private runCellRangeLiteral(expression: CellRangeLiteral): Value {
         const { left, right } = expression;
 
         const values: Value[] = [];
 
+        // generate cells in the given range
         for (let ri = left.row.index; ri <= right.row.index; ri++) {
             for (let ci = left.col.index; ci <= right.col.index; ci++) {
                 const value = this.runCellLiteral({
@@ -407,6 +434,7 @@ export class Runtime {
 
     // utilities
 
+    // retrieves the latest history value of a cell
     private getHistoryValue(cellId: CellId) {
         const historyValue = this.history.get(cellId);
 

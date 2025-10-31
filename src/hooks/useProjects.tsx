@@ -35,6 +35,7 @@ const ProjectsContext = createContext<ProjectsContextType | undefined>(
     undefined,
 );
 
+// manages authenticated user projects
 export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -60,6 +61,12 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         setProjects(response.data ?? []);
     };
 
+    /**
+     * Loads a project by its id
+     *
+     * @param projectId - id of the project to load
+     * @returns project object
+     */
     const loadProject = async (projectId: string) => {
         const supabase = createClientClient();
 
@@ -76,6 +83,12 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         setProject(response.data[0]);
     };
 
+    /**
+     * Saves a new project
+     *
+     * @param project - project object to save
+     * @returns id of the saved project
+     */
     const saveProject = async (project: ProjectInsert) => {
         const supabase = createClientClient();
 
@@ -94,6 +107,12 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         return response.data[0].id;
     };
 
+    /**
+     * Updates an existing project
+     *
+     * @param project - project object to update
+     * @returns id of the updated project
+     */
     const updateProject = async (project: ProjectUpdate) => {
         const supabase = createClientClient();
 
@@ -113,6 +132,12 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         return response.data[0].id;
     };
 
+    /**
+     * Deletes a project by its id
+     *
+     * @param projectId - id of the project to delete
+     * @returns true if the project was deleted, false otherwise
+     */
     const deleteProject = async (projectId: string) => {
         const supabase = createClientClient();
 
@@ -129,10 +154,12 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
         return true;
     };
 
+    // load projects on mount
     useEffect(() => {
         loadProjects();
     }, []);
 
+    // load project based on the project id in the URL search params
     useEffect(() => {
         const projectId = searchParams.get("projectId");
 
